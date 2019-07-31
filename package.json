@@ -1,0 +1,25 @@
+{
+  "name": "marker",
+  "version": "0.1.0",
+  "description": "Student Forum",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladimirV99/Marker.git"
+  },
+  "author": "Vladimir Vuksanovic",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/VladimirV99/Marker/issues"
+  },
+  "homepage": "https://github.com/VladimirV99/Marker#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.12.2"
+  }
+}
