@@ -1,5 +1,14 @@
 const express = require('express');
 
+const users = require('./routes/users');
+
+const { db } = require('./config/database');
+db.authenticate().then(() => {
+  console.log('Connected to Database.');
+}).catch(err => {
+  console.error('Unable to Connect to the Database:', err);
+});
+
 const app = express();
 
 /* CORS */
@@ -14,6 +23,12 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('Index');
+});
+
+app.use('/api/users', users);
+
+app.get('/', (req, res) => {
+  res.send('Invalid Endpoint');
 });
 
 const port = process.env.port || 5000
