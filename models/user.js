@@ -88,33 +88,53 @@ const User = (sequelize, types) => {
     underscored: true
   });
 
+  model.comparePassword = (candidatePassword, currentHash, callback) => {
+    bcrypt.compare(candidatePassword, currentHash, (err, isMatch) => {
+      if(err) {
+        callback({ status: 500, message: 'Something went wrong' });
+      } else {
+        callback(null, isMatch);
+      }
+    });
+  };
+
+  model.encryptPassword = (password, callback) => {
+    for(let i = 0; i < passwordValidators.length; i++){
+      if(!passwordValidators[i].validator(password)){
+        callback({ status: 200, message: passwordValidators[i].message });
+        return;
+      }
+    }
+    bcrypt.genSalt(10, (err, salt) => {
+      if(err) {
+        callback({ status: 500, message: 'Something went wrong' });
+      } else {
+        bcrypt.hash(password, salt, (err, hash) => {
+          if(err) {
+            callback({ status: 500, message: 'Something went wrong' });
+          } else {
+            callback(null, hash);
+          }
+        });
+      }
+    });
+  }
+
   model.register = (newUser, callback) => {
     if(!newUser.email) {
       callback({ status: 200, message: 'You must provide an email' });
     } else if(!newUser.password) {
       callback({ status: 200, message: 'You must provide a password' });
     } else {
-      for(let i = 0; i < passwordValidators.length; i++){
-        if(!passwordValidators[i].validator(newUser.password)){
-          callback({ status: 200, message: passwordValidators[i].message });
-          return;
-        }
-      }
-      bcrypt.genSalt(10, (err, salt) => {
+      model.encryptPassword(newUser.password, (err, password) => {
         if(err) {
-          callback({ status: 500, message: err.message });
+          callback(err);
         } else {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if(err) {
-              callback({ status: 500, message: err.message });
-            } else {
-              newUser.password = hash;
-              model.create(newUser).then((user) => {
-                callback(null, user);
-              }).catch(err => {
-                callback({ status: 200, message: err.errors[0].message });
-              });
-            }
+          newUser.password = password;
+          model.create(newUser).then((user) => {
+            callback(null, user);
+          }).catch(err => {
+            callback({ status: 200, message: err.errors[0].message });
           });
         }
       });
@@ -131,9 +151,9 @@ const User = (sequelize, types) => {
         if(!user) {
           callback({ status: 200, message: 'User not found' });
         } else {
-          bcrypt.compare(password, user.password, (err, isMatch) => {
+          model.comparePassword(password, user.password, (err, isMatch) => {
             if(err) {
-              callback({ status: 500, message: 'Something went wrong' });
+              callback(err);
             } else {
               if(isMatch){
                 const token = jwt.sign({ user_id: user.id }, credentials.passport_secret, {

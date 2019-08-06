@@ -5,6 +5,22 @@ const Sequelize = require('sequelize');
 const { User } = require('../config/database');
 const Op = Sequelize.Op;
 
+router.get('/checkEmail/:email', (req, res) => {
+  if (!req.params.email) {
+    res.status(400).json({ success: false, message: 'E-mail was not provided' });
+  } else {
+    User.findOne({ where: { email: req.params.email } }).then(user => {
+      if (user) {
+        res.status(200).json({ success: false, message: 'E-mail is already taken' });
+      } else {
+        res.status(200).json({ success: true, message: 'E-mail is available' });
+      }
+    }).catch(err => {
+      res.status(500).json({ success: false, message: 'Something went wrong' });
+    });
+  }
+});
+
 router.post('/register', (req, res) => {
   let newUser = {
     first_name: req.body.first_name,
@@ -60,6 +76,39 @@ router.put('/update', passport.authenticate('jwt', { session: false }), (req, re
         res.status(200).json({ success: true, message: 'Profile Updated' });
       }).catch(err => {
         res.status(200).json({ success: false, message: err.errors[0].message });
+      });
+    }
+  }).catch(err => {
+    res.status(500).json({ success: false, message: 'Something went wrong' });
+  });
+});
+
+router.put('/changePassword', passport.authenticate('jwt', { session: false }), (req, res) => {
+  User.findByPk(req.user.id).then(user => {
+    if(!user) {
+      res.status(404).json({ success: false, message: 'User not found' });
+    } else {
+      User.comparePassword(req.body.old_password, user.password, (err, isMatch) => {
+        if(err) {
+          res.status(err.status).json({ success: false, message: err.message });
+        } else {
+          if(isMatch){
+            User.encryptPassword(req.body.new_password, (err, password) => {
+              if(err) {
+                res.status(err.status).json({ success: false, message: err.message });
+              } else {
+                user.password = password;
+                user.save().then(() => {
+                  res.status(200).json({ success: true, message: 'Password Changed'});
+                }).catch(err => {
+                  res.status(500).json({ success: false, message: 'Something went wrong' });
+                });
+              }
+            });
+          } else {
+            return res.status(200).json({success: false, message: 'Wrong password'});
+          }
+        }
       });
     }
   }).catch(err => {
