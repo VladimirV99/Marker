@@ -23,6 +23,7 @@ const Category = CategoryModel(sequelize, Sequelize);
 const Thread = ThreadModel(sequelize, Sequelize);
 const Post = PostModel(sequelize, Sequelize);
 
+// TODO Move to models associate(models) class method. If exists call it
 Thread.belongsTo(Category);
 Thread.belongsTo(User);
 

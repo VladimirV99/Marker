@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const Sequelize = require('sequelize');
-const { db, User } = require('../config/database');
+const { User } = require('../config/database');
 const Op = Sequelize.Op;
 
 router.post('/register', (req, res) => {
@@ -49,7 +49,26 @@ router.post('/login', (req, res) => {
   });
 });
 
+router.put('/update', passport.authenticate('jwt', { session: false }), (req, res) => {
+  User.findOne({ where: { id: req.user.id } }).then(user => {
+    if(!user) {
+      res.status(404).json({ success: false, message: 'User not found' });
+    } else {
+      user.first_name = req.body.first_name;
+      user.last_name = req.body.last_name;
+      user.save().then(() => {
+        res.status(200).json({ success: true, message: 'Profile Updated' });
+      }).catch(err => {
+        res.status(200).json({ success: false, message: err.errors[0].message });
+      });
+    }
+  }).catch(err => {
+    res.status(500).json({ success: false, message: 'Something went wrong' });
+  });
+});
+
 router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
+  console.log(req.user);
   res.json({ message: 'Access granted' });
 });
 

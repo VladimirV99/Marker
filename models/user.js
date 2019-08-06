@@ -1,11 +1,36 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
 const credentials = require('../config/credentials');
 
 // const minLengthValidator = (value) => {
 //   if(value.length < 5)
 //     throw new Error('Name must be at least 5 characters long');
 // }
+
+let passwordLengthChecker = (password) => {
+  if (!password || password.length < 8 || password.length > 35)
+    return false;
+  return true;
+};
+
+let passwordValidityChecker = (password) => {
+  if (!password)
+    return false;
+  const passwordRegExp = new RegExp(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d]).{0,}$/i);
+  return passwordRegExp.test(password);
+};
+
+const passwordValidators = [
+  {
+    validator: passwordLengthChecker,
+    message: 'Password must between 8 and 35 characters long'
+  },
+  {
+    validator: passwordValidityChecker,
+    message: 'Password must have at least one uppercase, lowercase and special character, and a number'
+  }
+];
 
 const User = (sequelize, types) => {
   let model = sequelize.define('user', {
@@ -17,28 +42,37 @@ const User = (sequelize, types) => {
     email: {
       type: types.STRING,
       allowNull: false,
-      unique: true,
+      unique: {
+        args: true,
+        msg: 'User with this email already exists'
+      },
       validate: {
-        isEmail: true
+        isEmail: {
+          msg: 'Invalid email'
+        }
       }
     },
     first_name: {
       type: types.STRING,
       validate: {
-        isAlphanumeric: true,
         len: {
-          args: [5, 30],
-          msg: 'First name must between 5 and 30 characters long'
+          args: [1, 30],
+          msg: 'First name must between 1 and 30 characters long'
+        },
+        isAlphanumeric: {
+          msg: 'First name can\'t contain special characters'
         }
       }
     },
     last_name: {
       type: types.STRING,
       validate: {
-        isAlphanumeric: true,
         len: {
-          args: [5, 30],
-          msg: 'Last name must between 5 and 30 characters long'
+          args: [1, 30],
+          msg: 'Last name must between 1 and 30 characters long'
+        },
+        isAlphanumeric: {
+          msg: 'Last name can\'t contain special characters'
         }
       }
     },
@@ -60,7 +94,12 @@ const User = (sequelize, types) => {
     } else if(!newUser.password) {
       callback({ status: 200, message: 'You must provide a password' });
     } else {
-      // TODO Validate password
+      for(let i = 0; i < passwordValidators.length; i++){
+        if(!passwordValidators[i].validator(newUser.password)){
+          callback({ status: 200, message: passwordValidators[i].message });
+          return;
+        }
+      }
       bcrypt.genSalt(10, (err, salt) => {
         if(err) {
           callback({ status: 500, message: err.message });
@@ -72,6 +111,8 @@ const User = (sequelize, types) => {
               newUser.password = hash;
               model.create(newUser).then((user) => {
                 callback(null, user);
+              }).catch(err => {
+                callback({ status: 200, message: err.errors[0].message });
               });
             }
           });
@@ -114,6 +155,8 @@ const User = (sequelize, types) => {
             }
           });
         }
+      }).catch(err => {
+        callback({ status: 500, message: 'Something went wrong' });
       });
     }
   };
