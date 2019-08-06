@@ -1,12 +1,13 @@
 const Sequelize = require('sequelize');
+const credentials = require('./credentials');
 
 const UserModel = require('../models/user');
 const CategoryModel = require('../models/category');
 const ThreadModel = require('../models/thread');
 const PostModel = require('../models/post');
 
-const sequelize = new Sequelize('marker', 'root', 'marker', {
-  host: 'localhost',
+const sequelize = new Sequelize(credentials.db_name, credentials.db_user, credentials.db_password, {
+  host: credentials.db_host,
   dialect: 'mysql',
 
   pool: {
@@ -28,9 +29,10 @@ Thread.belongsTo(User);
 Post.belongsTo(Thread);
 Post.belongsTo(User);
 
-sequelize.sync({ force: true }).then(() => { // TODO Migrations
-  console.log('Synced Database Tables');
-});
+// TODO Migrations
+// sequelize.sync({ force: true }).then(() => { 
+//   console.log('Synced Database Tables');
+// });
 
 module.exports = {
   db: sequelize,

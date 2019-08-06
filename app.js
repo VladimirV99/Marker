@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 
 const users = require('./routes/users');
 
@@ -20,6 +21,10 @@ app.use(function(req, res, next) {
 });
 
 app.use(express.json());
+
+require('./config/passport')(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
   res.send('Index');
