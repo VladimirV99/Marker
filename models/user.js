@@ -3,11 +3,6 @@ const jwt = require('jsonwebtoken');
 
 const credentials = require('../config/credentials');
 
-// const minLengthValidator = (value) => {
-//   if(value.length < 5)
-//     throw new Error('Name must be at least 5 characters long');
-// }
-
 let passwordLengthChecker = (password) => {
   if (!password || password.length < 8 || password.length > 35)
     return false;
@@ -39,6 +34,49 @@ const User = (sequelize, types) => {
       primaryKey: true,
       autoIncrement: true
     },
+    username: {
+      type: types.STRING,
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: 'This username is already taken'
+      },
+      validate: {
+        len: {
+          args: [3, 15],
+          msg: 'First name must between 3 and 15 characters long'
+        },
+        isAlphanumeric: {
+          msg: 'First name can\'t contain special characters'
+        }
+      }
+    },
+    first_name: {
+      type: types.STRING,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [1, 30],
+          msg: 'First name must between 1 and 30 characters long'
+        },
+        isAlphanumeric: {
+          msg: 'First name can\'t contain special characters'
+        }
+      }
+    },
+    last_name: {
+      type: types.STRING,
+      allowNull: false,
+      validate: {
+        len: {
+          args: [1, 30],
+          msg: 'Last name must between 1 and 30 characters long'
+        },
+        isAlphanumeric: {
+          msg: 'Last name can\'t contain special characters'
+        }
+      }
+    },
     email: {
       type: types.STRING,
       allowNull: false,
@@ -52,30 +90,6 @@ const User = (sequelize, types) => {
         }
       }
     },
-    first_name: {
-      type: types.STRING,
-      validate: {
-        len: {
-          args: [1, 30],
-          msg: 'First name must between 1 and 30 characters long'
-        },
-        isAlphanumeric: {
-          msg: 'First name can\'t contain special characters'
-        }
-      }
-    },
-    last_name: {
-      type: types.STRING,
-      validate: {
-        len: {
-          args: [1, 30],
-          msg: 'Last name must between 1 and 30 characters long'
-        },
-        isAlphanumeric: {
-          msg: 'Last name can\'t contain special characters'
-        }
-      }
-    },
     photo: {
       type: types.STRING,
       defaultValue: 'photos/no_photo.png'
@@ -83,6 +97,10 @@ const User = (sequelize, types) => {
     password: {
       type: types.STRING,
       allowNull: false
+    },
+    is_moderator: {
+      type: types.BOOLEAN,
+      defaultValue: false
     }
   }, {
     underscored: true
@@ -131,7 +149,7 @@ const User = (sequelize, types) => {
           callback(err);
         } else {
           newUser.password = password;
-          model.create(newUser).then((user) => {
+          model.create(newUser).then(user => {
             callback(null, user);
           }).catch(err => {
             callback({ status: 200, message: err.errors[0].message });
@@ -141,13 +159,13 @@ const User = (sequelize, types) => {
     }
   };
 
-  model.login = (email, password, callback) => {
-    if(!email) {
-      callback({ status: 200, message: 'You must provide an email' });
+  model.login = (username, password, callback) => {
+    if(!username) {
+      callback({ status: 200, message: 'You must provide a username' });
     } else if(!password) {
       callback({ status: 200, message: 'You must provide a password' });
     } else {
-      model.findOne({ where: { email: email } }).then((user) => {
+      model.findOne({ where: { username: username } }).then((user) => {
         if(!user) {
           callback({ status: 200, message: 'User not found' });
         } else {
@@ -163,6 +181,7 @@ const User = (sequelize, types) => {
                   token: 'bearer ' + token,
                   user: {
                     id: user.id,
+                    username: user.username,
                     first_name: user.first_name,
                     last_name: user.last_name,
                     email: user.email,

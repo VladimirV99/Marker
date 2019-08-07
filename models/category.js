@@ -5,7 +5,7 @@ const Category = (sequelize, types) => {
       primaryKey: true,
       autoIncrement: true
     },
-    title: {
+    name: {
       type: types.STRING,
       allowNull: false,
       unique: true

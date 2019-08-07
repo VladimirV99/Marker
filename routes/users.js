@@ -5,6 +5,22 @@ const Sequelize = require('sequelize');
 const { User } = require('../config/database');
 const Op = Sequelize.Op;
 
+router.get('/checkUsername/:username', (req, res) => {
+  if (!req.params.username) {
+    res.status(400).json({ success: false, message: 'E-mail was not provided' });
+  } else {
+    User.findOne({ where: { username: req.params.username } }).then(user => {
+      if (user) {
+        res.status(200).json({ success: false, message: 'Username is already taken' });
+      } else {
+        res.status(200).json({ success: true, message: 'Username is available' });
+      }
+    }).catch(err => {
+      res.status(500).json({ success: false, message: 'Something went wrong' });
+    });
+  }
+});
+
 router.get('/checkEmail/:email', (req, res) => {
   if (!req.params.email) {
     res.status(400).json({ success: false, message: 'E-mail was not provided' });
@@ -23,6 +39,7 @@ router.get('/checkEmail/:email', (req, res) => {
 
 router.post('/register', (req, res) => {
   let newUser = {
+    username: req.body.username,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     email: req.body.email,
@@ -32,7 +49,7 @@ router.post('/register', (req, res) => {
     if(err) {
       res.status(err.status).json({ success: false, message: err.message });
     } else {
-      User.login(req.body.email, req.body.password, (err, login) => {
+      User.login(req.body.username, req.body.password, (err, login) => {
         if(err) {
           res.status(err.status).json({success: false, message: err.message});
         } else {
@@ -49,9 +66,9 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  let email = req.body.email;
+  let username = req.body.username;
   let password = req.body.password;
-  User.login(email, password, (err, login) => {
+  User.login(username, password, (err, login) => {
     if(err) {
       res.status(err.status).json({ success: false, message: err.message });
     } else {
@@ -114,6 +131,48 @@ router.put('/changePassword', passport.authenticate('jwt', { session: false }), 
   }).catch(err => {
     res.status(500).json({ success: false, message: 'Something went wrong' });
   });
+});
+
+router.post('/addModerator/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if(!req.user.is_moderator) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+  } else {
+    User.findOne({ where: { username: req.params.username } }).then(user => {
+      if(!user) {
+        res.status(404).json({ success: false, message: 'User not found' });
+      } else {
+        user.is_moderator = true;
+        user.save().then(savedUser => {
+          res.status(200).json({ success: true, message: 'Added moderator privileges to user' });
+        }).catch(err => {
+          res.status(500).json({ success: false, message: 'Something went wrong' });
+        })
+      }
+    }).catch(err => {
+      res.status(500).json({ success: false, message: 'Something went wrong' });
+    });
+  }
+});
+
+router.post('/removeModerator/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if(!req.user.is_moderator) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+  } else {
+    User.findOne({ where: { username: req.params.username } }).then(user => {
+      if(!user) {
+        res.status(404).json({ success: false, message: 'User not found' });
+      } else {
+        user.is_moderator = false;
+        user.save().then(savedUser => {
+          res.status(200).json({ success: true, message: 'Removed moderator privileges from user' });
+        }).catch(err => {
+          res.status(500).json({ success: false, message: 'Something went wrong' });
+        })
+      }
+    }).catch(err => {
+      res.status(500).json({ success: false, message: 'Something went wrong' });
+    });
+  }
 });
 
 router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
