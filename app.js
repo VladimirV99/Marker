@@ -3,6 +3,7 @@ const passport = require('passport');
 
 const users = require('./routes/users');
 const categories = require('./routes/categories');
+const threads = require('./routes/threads');
 
 const { db } = require('./config/database');
 db.authenticate().then(() => {
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', users);
 app.use('/api/categories', categories);
+app.use('/api/threads', threads);
 
 app.get('/', (req, res) => {
   res.send('Invalid Endpoint');

@@ -19,6 +19,8 @@ module.exports = (passport) => {
         userData.authenticated = true;
         return next(null, userData);
       }
+    }).catch(err => {
+      next(err, false);
     });
   }));
 }

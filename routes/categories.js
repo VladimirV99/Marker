@@ -44,4 +44,12 @@ router.delete('/delete/:name', passport.authenticate('jwt', { session: false }),
   }
 });
 
+router.get('/all', (req, res) => {
+  Category.findAll().then(categories => {
+    res.status(200).json({ success: true, categories });
+  }).catch(err => {
+    res.status(500).json({ success: false, message: 'Something went wrong' });
+  });
+});
+
 module.exports = router;
