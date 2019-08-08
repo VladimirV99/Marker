@@ -16,7 +16,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
         name: req.body.name
       };
       Category.create(newCategory).then(category => {
-        res.status(201).json({ success: true, message: 'Category Created' });
+        res.status(201).json({ success: true, message: 'Category Created', category });
       }).catch(err => {
         res.status(200).json({ success: false, message: err.errors[0].message });
       });
@@ -24,11 +24,11 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
   }
 });
 
-router.delete('/delete/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.user.is_moderator) {
     res.status(401).json({ success: false, message: 'Unauthorized' });
   } else {
-    Category.findOne({ where: { name: req.params.name } }).then(category => {
+    Category.findByPk(req.params.id).then(category => {
       if(!category) {
         res.status(200).json({ success: false, message: 'Category not found' });
       } else {

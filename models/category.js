@@ -8,7 +8,16 @@ const Category = (sequelize, types) => {
     name: {
       type: types.STRING,
       allowNull: false,
-      unique: true
+      unique: {
+        args: true,
+        msg: 'A category with this name already exists'
+      },
+      validate: {
+        len: {
+          args: [1, 20],
+          msg: 'Category name must between 1 and 20 characters long'
+        }
+      }
     }
   }, {
     timestamps: false,

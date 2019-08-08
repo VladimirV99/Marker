@@ -1,17 +1,17 @@
-const Thread = (sequelize, types) => {
-  return sequelize.define('thread', {
+const Forum = (sequelize, types) => {
+  return sequelize.define('forum', {
     id: {
       type: types.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    subject: {
+    name: {
       type: types.TEXT,
       allowNull: false,
       validate: {
         len: {
-          args: [1, 60],
-          msg: 'Thread name must between 1 and 60 characters long'
+          args: [1, 30],
+          msg: 'Forum name must between 1 and 30 characters long'
         }
       }
     }
@@ -20,4 +20,4 @@ const Thread = (sequelize, types) => {
   });
 }
 
-module.exports = Thread;
+module.exports = Forum;
