@@ -1,13 +1,111 @@
 body {
+  background-color: lightgrey;
+  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: Arial, sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.bg-color-blue {
+  background-color: #16528e;
+}
+
+.navbar {
+  display: flex;
+  width: 100%;
+  height: 4rem;
+  padding: 0rem 2rem;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.navbar .navbar-brand {
+  text-decoration: none;
+  color: white;
+  font-size: 150%;
+  font-family: sans-serif;
+  font-weight: 500;
+  margin-right: 2rem;
+}
+
+.navbar .navbar-nav {
+  display: flex;
+  align-items: stretch;
+  
+  /* height: 100%; */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-left: auto;
+}
+
+.navbar .navbar-nav .nav-item {
+  font-size: 120%;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.navbar .navbar-nav .nav-link {
+  padding: .5rem;
+  color: lightgrey;
+}
+
+.navbar .navbar-nav .nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar .navbar-nav .nav-item:hover .nav-link{
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.dropdown-toggle {
+  padding: .5rem 0;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: .5rem 0rem;
+}
+
+.dropdown-link {
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-link:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown-divider {
+  margin: .1rem 0;
+  border-color: f1f1f1;
 }
