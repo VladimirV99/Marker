@@ -7,13 +7,13 @@ const Op = Sequelize.Op;
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.body.subject) {
-    res.status(200).json({ success: false, message: 'You must provide a subject' });
+    res.status(400).json({ success: false, message: 'You must provide a subject' });
   } else if(!req.body.forum) {
-    res.status(200).json({ success: false, message: 'You must provide a forum' });
+    res.status(400).json({ success: false, message: 'You must provide a forum' });
   } else {
     Forum.findByPk(req.body.forum).then(forum => {
       if(!forum) {
-        res.status(200).json({ success: false, message: 'Forum not found' });
+        res.status(404).json({ success: false, message: 'Forum not found' });
       } else {
         User.findByPk(req.user.id).then(user => {
           let newThread = {
@@ -26,7 +26,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
               });
             });
           }).catch(err => {
-            res.status(200).json({ success: false, message: err.errors[0].message });
+            res.status(400).json({ success: false, message: err.errors[0].message });
           });
         }).catch(err => {
           res.status(500).json({ success: false, message: 'Something went wrong' });
@@ -40,11 +40,11 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
 
 router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.params.id) {
-    res.status(200).json({ success: false, message: 'You must provide the thread id' });
+    res.status(400).json({ success: false, message: 'You must provide the thread id' });
   } else {
     Thread.findByPk(req.params.id).then(thread => {
       if(!thread) {
-        res.status(200).json({ success: false, message: 'Thread not found' });
+        res.status(404).json({ success: false, message: 'Thread not found' });
       } else {
         if(thread.user_id == req.user.id || req.user.is_moderator) {
           thread.destroy().then(() => {
@@ -71,7 +71,7 @@ router.get('/forum/:forum/page/:page/:itemsPerPage', (req, res) => {
   } else {
     Forum.findByPk(req.params.forum).then(forum => {
       if(!forum) {
-        res.status(200).json({ success: false, message: 'Forum not found' });
+        res.status(404).json({ success: false, message: 'Forum not found' });
       } else {
         let page = req.params.page;
         if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<15)

@@ -22,7 +22,7 @@ export const loadUser = () => (dispatch, getState) => {
         payload: res.data
       });
     }).catch(err => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch(returnErrors(err.response.data.message, err.response.status));
       dispatch({
         type: AUTH_ERROR
       });
@@ -38,7 +38,7 @@ export const register = ({ username, first_name, last_name, email, password }) =
       payload: res.data
     });
   }).catch(err => {
-    dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'));
+    dispatch(returnErrors(err.response.data.message, err.response.status, 'REGISTER_FAIL'));
     dispatch({
       type: REGISTER_FAIL
     });
@@ -53,7 +53,7 @@ export const login = ({ username, password }) => dispatch => {
       payload: res.data
     })
   }).catch(err => {
-    dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
+    dispatch(returnErrors(err.response.data.message, err.response.status, 'LOGIN_FAIL'));
     dispatch({
       type: LOGIN_FAIL
     });

@@ -119,7 +119,7 @@ const User = (sequelize, types) => {
   model.encryptPassword = (password, callback) => {
     for(let i = 0; i < passwordValidators.length; i++){
       if(!passwordValidators[i].validator(password)){
-        callback({ status: 200, message: passwordValidators[i].message });
+        callback({ status: 400, message: passwordValidators[i].message });
         return;
       }
     }
@@ -140,9 +140,9 @@ const User = (sequelize, types) => {
 
   model.register = (newUser, callback) => {
     if(!newUser.email) {
-      callback({ status: 200, message: 'You must provide an email' });
+      callback({ status: 400, message: 'You must provide an email' });
     } else if(!newUser.password) {
-      callback({ status: 200, message: 'You must provide a password' });
+      callback({ status: 400, message: 'You must provide a password' });
     } else {
       model.encryptPassword(newUser.password, (err, password) => {
         if(err) {
@@ -152,7 +152,7 @@ const User = (sequelize, types) => {
           model.create(newUser).then(user => {
             callback(null, user);
           }).catch(err => {
-            callback({ status: 200, message: err.errors[0].message });
+            callback({ status: 400, message: err.errors[0].message });
           });
         }
       });
@@ -161,13 +161,13 @@ const User = (sequelize, types) => {
 
   model.login = (username, password, callback) => {
     if(!username) {
-      callback({ status: 200, message: 'You must provide a username' });
+      callback({ status: 400, message: 'You must provide a username' });
     } else if(!password) {
-      callback({ status: 200, message: 'You must provide a password' });
+      callback({ status: 400, message: 'You must provide a password' });
     } else {
       model.findOne({ where: { username: username } }).then((user) => {
         if(!user) {
-          callback({ status: 200, message: 'User not found' });
+          callback({ status: 404, message: 'User not found' });
         } else {
           model.comparePassword(password, user.password, (err, isMatch) => {
             if(err) {
@@ -190,7 +190,7 @@ const User = (sequelize, types) => {
                   }
                 });
               } else {
-                callback({ status: 200, message: 'Wrong password' });
+                callback({ status: 401, message: 'Wrong password' });
               }
             }
           });

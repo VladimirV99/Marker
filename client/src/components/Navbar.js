@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../actions/authActions';
@@ -28,7 +29,7 @@ class Navbar extends Component {
               { user ? this.props.auth.user.first_name + ' ' + this.props.auth.user.last_name : '' }
             </a>
           </div>
-
+          
           <div className='dropdown-content'>
             <ul className='dropdown-menu'>
               <li className='dropdown-item'><a className='dropdown-link' href='/#'>Profile</a></li>
@@ -54,17 +55,17 @@ class Navbar extends Component {
     const guestLinks = (
       <Fragment>
         <li className='nav-item'>
-          <a className='nav-link' href='/#' role='button'>Register</a>
+          <Link to='/register' className='nav-link'>Register</Link>
         </li>
         <li className='nav-item'>
-          <a className='nav-link' href='/#' role='button'>Log In</a>
+          <Link to='/login' className='nav-link'>Log In</Link>
         </li>
       </Fragment>
     );
 
     return (
       <nav className='navbar bg-color-blue'>
-        <a className='navbar-brand' href='/#'>Marker</a>
+        <Link to='/' className='navbar-brand'>Marker</Link>
 
         <ul className='navbar-nav'>
           { isAuthenticated ? authLinks : guestLinks }

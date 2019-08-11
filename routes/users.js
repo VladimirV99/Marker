@@ -11,7 +11,7 @@ router.get('/checkUsername/:username', (req, res) => {
   } else {
     User.findOne({ where: { username: req.params.username } }).then(user => {
       if (user) {
-        res.status(200).json({ success: false, message: 'Username is already taken' });
+        res.status(400).json({ success: false, message: 'Username is already taken' });
       } else {
         res.status(200).json({ success: true, message: 'Username is available' });
       }
@@ -27,7 +27,7 @@ router.get('/checkEmail/:email', (req, res) => {
   } else {
     User.findOne({ where: { email: req.params.email } }).then(user => {
       if (user) {
-        res.status(200).json({ success: false, message: 'E-mail is already taken' });
+        res.status(400).json({ success: false, message: 'E-mail is already taken' });
       } else {
         res.status(200).json({ success: true, message: 'E-mail is available' });
       }
@@ -96,7 +96,7 @@ router.put('/update', passport.authenticate('jwt', { session: false }), (req, re
       user.save().then(() => {
         res.status(200).json({ success: true, message: 'Profile Updated' });
       }).catch(err => {
-        res.status(200).json({ success: false, message: err.errors[0].message });
+        res.status(400).json({ success: false, message: err.errors[0].message });
       });
     }
   }).catch(err => {
@@ -127,7 +127,7 @@ router.put('/changePassword', passport.authenticate('jwt', { session: false }), 
               }
             });
           } else {
-            return res.status(200).json({success: false, message: 'Wrong password'});
+            return res.status(401).json({success: false, message: 'Wrong password'});
           }
         }
       });
@@ -177,11 +177,6 @@ router.post('/removeModerator/:username', passport.authenticate('jwt', { session
       res.status(500).json({ success: false, message: 'Something went wrong' });
     });
   }
-});
-
-router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
-  console.log(req.user);
-  res.json({ message: 'Access granted' });
 });
 
 module.exports = router;

@@ -10,7 +10,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
     res.status(401).json({ success: false, message: 'Unauthorized' });
   } else {
     if(!req.body.name) {
-      req.status(200).json({ success: false, message: 'You must provide a category name' });
+      req.status(400).json({ success: false, message: 'You must provide a category name' });
     } else {
       let newCategory = {
         name: req.body.name
@@ -18,7 +18,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       Category.create(newCategory).then(category => {
         res.status(201).json({ success: true, message: 'Category Created', category });
       }).catch(err => {
-        res.status(200).json({ success: false, message: err.errors[0].message });
+        res.status(400).json({ success: false, message: err.errors[0].message });
       });
     }
   }
@@ -30,7 +30,7 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   } else {
     Category.findByPk(req.params.id).then(category => {
       if(!category) {
-        res.status(200).json({ success: false, message: 'Category not found' });
+        res.status(404).json({ success: false, message: 'Category not found' });
       } else {
         category.destroy().then(() => {
           res.status(200).json({ success:true, message: 'Category deleted' });
