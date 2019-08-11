@@ -13,19 +13,21 @@ import {
 } from './types';
 
 export const loadUser = () => (dispatch, getState) => {
-  dispatch({ type: USER_LOADING });
+  if(getState().auth.token) {
+    dispatch({ type: USER_LOADING });
 
-  axios.get('/api/profile', createAuthHeaders(getState)).then(res => {
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data
+    axios.get('/api/users/profile', createAuthHeaders(getState)).then(res => {
+      dispatch({
+        type: USER_LOADED,
+        payload: res.data
+      });
+    }).catch(err => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({
+        type: AUTH_ERROR
+      });
     });
-  }).catch(err => {
-    dispatch(returnErrors(err.response.data, err.response.status));
-    dispatch({
-      type: AUTH_ERROR
-    });
-  });
+  }
 };
 
 export const register = ({ username, first_name, last_name, email, password }) => dispatch => {

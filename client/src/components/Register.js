@@ -43,25 +43,25 @@ class Register extends Component {
       <div className='container'>
         <form onSubmit={this.handleSubmit}>
           <div className='form-group'>
-            <label for='username'>Username</label>
+            <label htmlFor='username'>Username</label>
             <input type='text' className='form-control' name='username' onChange={this.handleChange}></input>
           </div>
           <div>
             <div className='form-group w-50 pr-1'>
-              <label for='username'>First Name</label>
+              <label htmlFor='username'>First Name</label>
               <input type='text' className='form-control' name='first_name' onChange={this.handleChange}></input>
             </div>
             <div className='form-group w-50 pl-1'>
-              <label for='username'>Last Name</label>
+              <label htmlFor='username'>Last Name</label>
               <input type='text' className='form-control' name='last_name' onChange={this.handleChange}></input>
             </div>
           </div>
           <div className='form-group'>
-            <label for='username'>Email</label>
+            <label htmlFor='username'>Email</label>
             <input type='text' className='form-control' name='email' onChange={this.handleChange}></input>
           </div>
           <div className='form-group'>
-            <label for='username'>Password</label>
+            <label htmlFor='username'>Password</label>
             <input type='password' className='form-control' name='password' onChange={this.handleChange}></input>
           </div>
           <input type='submit' className='btn btn-blue btn-block' value='Register'></input>

@@ -82,6 +82,10 @@ router.post('/login', (req, res) => {
   });
 });
 
+router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.status(200).json(req.user);
+});
+
 router.put('/update', passport.authenticate('jwt', { session: false }), (req, res) => {
   User.findOne({ where: { id: req.user.id } }).then(user => {
     if(!user) {

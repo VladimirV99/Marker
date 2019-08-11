@@ -16,3 +16,7 @@
 .alert-error {
   background-color: rgb(223, 43, 43)
 }
+
+.alert-hide {
+  display: none;
+}

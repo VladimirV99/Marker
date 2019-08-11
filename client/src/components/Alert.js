@@ -6,13 +6,9 @@ import './Alert.css';
 import { returnErrors } from '../actions/errorActions';
 
 class Alert extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
-      <div className={`alert alert-error${this.props.error.message?'':' display-none'}`}>
+      <div className={`alert alert-error${this.props.error.message?'':' alert-hide'}`}>
         { this.props.error.message }
       </div>
     );
