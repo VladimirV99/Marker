@@ -5,6 +5,10 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.display-none {
+  display: none;
+}
+
 .bg-color-blue {
   background-color: #16528e;
 }
@@ -31,7 +35,7 @@ body {
   display: flex;
   align-items: stretch;
   
-  /* height: 100%; */
+  height: 100%;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -40,12 +44,14 @@ body {
 
 .navbar .navbar-nav .nav-item {
   font-size: 120%;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   text-decoration: none;
 }
 
 .navbar .navbar-nav .nav-link {
-  padding: .5rem;
+  padding: 1.4rem .5rem;
+  width: 80px;
   color: lightgrey;
 }
 
@@ -59,6 +65,7 @@ body {
 
 a {
   text-decoration: none;
+  text-align: center;
   color: black;
 }
 
@@ -107,5 +114,70 @@ a {
 
 .dropdown-divider {
   margin: .1rem 0;
-  border-color: f1f1f1;
+  border-color: #f1f1f1;
+}
+
+.container {
+  width: 70%;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: .5rem;
+}
+
+.form-group {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: .25rem .5rem;
+  border: 1px solid grey;
+  border-radius: .25rem;
+  box-sizing: border-box;
+}
+
+.btn {
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: .4rem .75rem;
+  border: 1px solid black;
+  border-radius: .25rem;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-blue {
+  background-color: #1f76ce;
+}
+
+.btn-blue:hover {
+  background-color: #1761aa;
+}
+
+.w-50 {
+  display: inline-block;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.pr-1 {
+  padding-right: .25rem;
+}
+
+.pl-1 {
+  padding-left: .25rem;
 }

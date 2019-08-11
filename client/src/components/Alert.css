@@ -1,0 +1,18 @@
+.alert {
+  display: block;
+  width: 90%;
+  margin: 1rem auto;
+  padding: 1rem;
+}
+
+.alert-success {
+  background-color: rgb(43, 223, 43)
+}
+
+.alert-warning {
+  background-color: rgb(223, 223, 43)
+}
+
+.alert-error {
+  background-color: rgb(223, 43, 43)
+}
