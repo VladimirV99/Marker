@@ -2,8 +2,8 @@ import axios from 'axios';
 
 import { returnErrors } from './errorActions';
 import {
-  USER_LOADED,
   USER_LOADING,
+  USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,

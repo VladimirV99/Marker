@@ -9,3 +9,6 @@ export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+
+export const FORUMS_LOADING = 'FORUMS_LOADING';
+export const FORUMS_LOADED = 'FORUMS_LOADED';

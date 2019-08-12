@@ -76,4 +76,25 @@ router.get('/category/:id', (req, res) => {
   }
 });
 
+router.get('/all', (req, res) => {
+  Category.findAll().then(categories => {
+    let promises = [];
+    let result = [];
+    categories.forEach(category => {
+      promises.push(Forum.findAll({ where: { category_id: category.id } }));
+      result.push({ id: category.id, name: category.name });
+    });
+    Promise.all(promises).then(values => {
+      for(let i = 0; i < values.length; i++) {
+        result[i].forums = values[i];
+      }
+      res.status(200).json({ forums: result });
+    }).catch(err => {
+      res.status(500).json({ message: 'Something went wrong' });
+    })
+  }).catch(err => {
+    res.status(500).json({ message: 'Something went wrong' });
+  });
+});
+
 module.exports = router;

@@ -12,6 +12,7 @@ import Alert from './components/Alert';
 import Register from './components/Register';
 import Login from './components/Login';
 import Banner from './components/Banner';
+import Categories from './components/Categories';
 
 class App extends Component {
   componentDidMount() {
@@ -25,6 +26,7 @@ class App extends Component {
           <div className='App'>
             <Navbar></Navbar>
             <Route exact path='/' component={Banner} />
+            <Route exact path='/' component={Categories} />
             <Alert></Alert>
             <Route exact path='/register' component={Register} />
             <Route exact path='/login' component={Login} />
