@@ -1,0 +1,28 @@
+.pagination {
+  list-style-type: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.pagination-item {
+  padding: .5rem;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: .2rem;
+  display: inline;
+  margin: .1rem;
+  cursor: pointer;
+}
+
+.pagination-item.pagination-selected {
+  background-color: grey;
+}
+
+.pagination-item:not(.pagination-selected):hover {
+  background-color: lightgrey;
+}
+
+.pagination-hidden {
+  display:none;
+}

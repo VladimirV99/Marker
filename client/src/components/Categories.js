@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { loadForums } from '../actions/forumActions';
@@ -31,7 +32,7 @@ class Categories extends Component {
                   <div className='forum-title'>
                     <span><img src='file_icon.svg' className='icon' alt='File Icon' /></span>
                     <div>
-                      <p><strong>{forum.name}</strong></p>
+                      <p><Link to={`/forum/${forum.id}`}><strong>{forum.name}</strong></Link></p>
                       <p className='text-muted'>{forum.name}</p>
                     </div>
                   </div>

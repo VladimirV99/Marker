@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { Category, Forum } = require('../config/database');
+const { Category, Forum, Thread } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.user.is_moderator) {
@@ -71,6 +71,32 @@ router.get('/category/:id', (req, res) => {
     }).catch(err => {
       res.status(500).json({ message: 'Something went wrong' });
     });
+  }
+});
+
+router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
+  let itemsPerPage = 5;
+  if(!req.params.id) {
+    res.status(400).json({ message: 'You must provide a forum' });
+  } else if(!req.params.page) {
+    res.status(400).json({ message: 'You must provide a page number' });
+  } else {
+    Forum.findOne({ where: {id: req.params.id}, include: [{ model: Category }]}).then(forum => {
+      if(!forum) {
+        res.status(404).json({ message: 'Forum not found' });
+      } else {
+        let page = req.params.page;
+        if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<15)
+          itemsPerPage = parseInt(req.params.itemsPerPage);
+        Thread.findAndCountAll({ where: { forum_id: forum.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage }).then(result => {
+          res.status(200).json({ category: forum.category.name, forum: forum.name, threads: result.rows, total: result.count });
+        }).catch(err => {
+          res.status(500).json({ message: 'Something went wrong' });
+        });
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'Something went wrong' });
+    });;
   }
 });
 

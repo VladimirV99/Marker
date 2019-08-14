@@ -60,30 +60,4 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   }
 });
 
-router.get('/forum/:forum/page/:page/:itemsPerPage', (req, res) => {
-  let itemsPerPage = 5;
-  if(!req.params.forum) {
-    res.status(400).json({ message: 'You must provide a forum' });
-  } else if(!req.params.page) {
-    res.status(400).json({ message: 'You must provide a page number' });
-  } else {
-    Forum.findByPk(req.params.forum).then(forum => {
-      if(!forum) {
-        res.status(404).json({ message: 'Forum not found' });
-      } else {
-        let page = req.params.page;
-        if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<15)
-          itemsPerPage = parseInt(req.params.itemsPerPage);
-        Thread.findAll({ where: { forum_id: forum.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage }).then(threads => {
-          res.status(200).json({ posts: threads });
-        }).catch(err => {
-          res.status(500).json({ message: 'Something went wrong' });
-        });
-      }
-    }).catch(err => {
-      res.status(500).json({ message: 'Something went wrong' });
-    });;
-  }
-});
-
 module.exports = router;
