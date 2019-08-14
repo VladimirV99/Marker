@@ -21,7 +21,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           };
           Forum.create(newForum).then(forum => {
             forum.setCategory(category).then(() => {
-                res.status(201).json({ message: 'Forum Created', forum });
+              res.status(201).json({ message: 'Forum Created', forum });
             });
           }).catch(err => {
             res.status(400).json({ message: err.errors[0].message });

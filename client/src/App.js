@@ -14,6 +14,8 @@ import Login from './components/Login';
 import Banner from './components/Banner';
 import Categories from './components/Categories';
 import Forum from './components/Forum';
+import CreateThread from './components/CreateThread';
+import Thread from './components/Thread';
 
 class App extends Component {
   componentDidMount() {
@@ -32,7 +34,9 @@ class App extends Component {
             <Route exact path='/register' component={Register} />
             <Route exact path='/login' component={Login} />
 
-            <Route path='/forum/:id' component={Forum} />
+            <Route exact path='/forum/:id' component={Forum} />
+            <Route exact path='/forum/:id/add' component={CreateThread} />
+            <Route exact path='/thread/:id' component={Thread} />
           </div>
         </Router>
       </Provider>

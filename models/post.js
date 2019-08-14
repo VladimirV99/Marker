@@ -5,12 +5,9 @@ const Post = (sequelize, types) => {
       primaryKey: true,
       autoIncrement: true
     },
-    title: {
-      type: types.STRING,
-      allowNull: false
-    },
     content: {
-      type: types.TEXT
+      type: types.TEXT,
+      allowNull: false
     }
   }, {
     underscored: true

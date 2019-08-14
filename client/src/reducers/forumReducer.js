@@ -2,7 +2,9 @@ import {
   FORUMS_LOADING,
   FORUMS_LOADED,
   THREADS_LOADING,
-  THREADS_LOADED
+  THREADS_LOADED,
+  POSTS_LOADING,
+  POSTS_LOADED
 } from '../actions/types';
 
 const initialState = {
@@ -11,6 +13,9 @@ const initialState = {
   forum: '',
   threads: [],
   threadCount: 0,
+  thread: '',
+  postCount: 0,
+  posts: [],
   isLoading: false
 };
 
@@ -39,6 +44,20 @@ export default function(state = initialState, action) {
         forum: action.payload.forum,
         threads: action.payload.threads,
         threadCount: action.payload.total,
+        isLoading: false
+      };
+    case POSTS_LOADING:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case POSTS_LOADED:
+      return {
+        ...state,
+        forum: action.payload.forum,
+        thread: action.payload.thread,
+        posts: action.payload.posts,
+        postCount: action.payload.total,
         isLoading: false
       };
     default:

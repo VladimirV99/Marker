@@ -36,6 +36,8 @@ class Forum extends Component {
 
     return (
       <main className='container'>
+        {this.props.isAuthenticated?<Link to={`/forum/${this.props.match.params.id}/add`} className='btn'>Create Thread</Link>:''}
+
         <div className='category'>
 
           <h3 className='category-name'>{category} > {forum}</h3>
@@ -80,6 +82,7 @@ class Forum extends Component {
 }
 
 const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
   forum: state.forum
 });
 
