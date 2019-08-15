@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { loadPosts } from '../actions/forumActions';
 import Post from './Post';
+import Reply from './Reply';
+import Pagination from './Pagination';
 
 import './Thread.css';
 
@@ -21,11 +23,15 @@ class Thread extends Component {
   }
 
   onPageChange(page) {
+    this.setState({
+      page
+    });
     this.props.loadPosts(this.props.match.params.id, page);
   }
 
   render() {
-    const { posts, thread, isLoading } = this.props.forum;
+    const { posts, thread, isLoading, postCount } = this.props.forum;
+    const totalPages = Math.ceil(postCount/5);
 
     if(isLoading) {
       return (
@@ -44,6 +50,8 @@ class Thread extends Component {
             <Post key={post.id} post={post}></Post>
           ))
         }
+        {postCount>0?<Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>:''}
+        <Reply thread={this.props.match.params.id}></Reply>
       </main>
     );
   }

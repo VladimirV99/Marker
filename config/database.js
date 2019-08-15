@@ -31,7 +31,7 @@ Forum.belongsTo(Category);
 Thread.belongsTo(Forum);
 Thread.belongsTo(User);
 
-Post.belongsTo(Thread);
+Thread.hasMany(Post)
 Post.belongsTo(User);
 
 // TODO Migrations

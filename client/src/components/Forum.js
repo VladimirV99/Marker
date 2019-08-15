@@ -27,6 +27,7 @@ class Forum extends Component {
 
   render() {
     const { category, forum, threads, threadCount, isLoading } = this.props.forum;
+    const totalPages = Math.ceil(threadCount/5);
 
     if(isLoading) {
       return (
@@ -75,7 +76,7 @@ class Forum extends Component {
 
           </div>
 
-        {threadCount>0?<Pagination currentPage={this.state.page} totalPages={threadCount} displayPages={5} onPageChange={this.onPageChange}></Pagination>:''}
+        {threadCount>0?<Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>:''}
       </main>
     );
   }

@@ -26,8 +26,8 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
                   content: req.body.content
                 };
                 Post.create(newPost).then(post => {
-                  post.setThread(thread).then(() => {
-                    post.setUser(user).then(() => {
+                  post.setUser(user).then(() => {
+                    thread.addPost(post).then(() => {
                       Post.findByPk(post.id).then(post => {
                         res.status(201).json({ message: 'Thread Created', thread, posts:[post] });
                       }).catch(err => {

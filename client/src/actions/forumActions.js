@@ -8,7 +8,9 @@ import {
   THREADS_LOADING,
   THREADS_LOADED,
   POSTS_LOADING,
-  POSTS_LOADED
+  POSTS_LOADED,
+  POST_ADD,
+  POST_DELETE
 } from './types';
 
 export const loadForums = () => dispatch => {
@@ -55,3 +57,25 @@ export const loadPosts = (thread_id, page) => dispatch => {
     dispatch(returnErrors(err.response.data.message, err.response.status));
   });
 };
+
+export const createPost = (newPost) => (dispatch, getState) => {
+  axios.post('/api/posts/create', newPost, createAuthHeaders(getState)).then(res => {
+    dispatch({
+      type: POST_ADD,
+      payload: res.data
+    });
+  }).catch(err => {
+    dispatch(returnErrors(err.response.data.message, err.response.status));
+  });
+};
+
+export const deletePost = (id) => (dispatch, getState) => {
+  axios.delete(`/api/posts/delete/${id}`, createAuthHeaders(getState)).then(res => {
+    dispatch({
+      type: POST_DELETE,
+      payload: id
+    })
+  }).catch(err => {
+    dispatch(returnErrors(err.response.data.message, err.response.status));
+  });
+}

@@ -4,7 +4,9 @@ import {
   THREADS_LOADING,
   THREADS_LOADED,
   POSTS_LOADING,
-  POSTS_LOADED
+  POSTS_LOADED,
+  POST_ADD,
+  POST_DELETE
 } from '../actions/types';
 
 const initialState = {
@@ -59,6 +61,18 @@ export default function(state = initialState, action) {
         posts: action.payload.posts,
         postCount: action.payload.total,
         isLoading: false
+      };
+    case POST_ADD:
+      return {
+        ...state,
+        posts: [...state.posts, action.payload.post],
+        postCount: state.postCount+1
+      };
+    case POST_DELETE:
+      return {
+        ...state,
+        posts: state.posts.filter(post => post.id!==action.payload),
+        postCount: state.postCount-1
       };
     default:
       return state;

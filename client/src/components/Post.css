@@ -3,6 +3,7 @@
   background-color:white;
   margin-bottom: 1rem;
   display: flex;
+  position: relative;
 }
 
 .post-creator {
@@ -24,6 +25,15 @@
   width: 100%;
   max-width: 140px;
   margin-bottom: .5rem;
+}
+
+.post-delete {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: .1rem;
+  cursor: pointer;
+  font-size: 1.5rem;
 }
 
 @media screen and (max-width: 768px) {

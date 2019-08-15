@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { Category, Forum, Thread } = require('../config/database');
+const { Category, Forum, Thread, Post, User } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.user.is_moderator) {
@@ -88,7 +88,18 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
         let page = req.params.page;
         if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<15)
           itemsPerPage = parseInt(req.params.itemsPerPage);
-        Thread.findAndCountAll({ where: { forum_id: forum.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage }).then(result => {
+        // TODO Add post count to thread model
+        Thread.findAndCountAll({
+          where: { forum_id: forum.id },
+          offset: (page-1)*itemsPerPage, 
+          limit: itemsPerPage,
+          include: [
+            {
+              model: Post, limit: 1, order: [['id', 'DESC']],
+              include: [{ model: User, attributes: ['username', 'id'] }]
+            }
+          ]
+        }).then(result => {
           res.status(200).json({ category: forum.category.name, forum: forum.name, threads: result.rows, total: result.count });
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });

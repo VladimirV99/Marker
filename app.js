@@ -5,6 +5,7 @@ const users = require('./routes/users');
 const categories = require('./routes/categories');
 const forums = require('./routes/forums');
 const threads = require('./routes/threads');
+const posts = require('./routes/posts');
 
 const { db } = require('./config/database');
 db.authenticate().then(() => {
@@ -37,6 +38,7 @@ app.use('/api/users', users);
 app.use('/api/categories', categories);
 app.use('/api/forums', forums);
 app.use('/api/threads', threads);
+app.use('/api/posts', posts);
 
 app.get('/', (req, res) => {
   res.send('Invalid Endpoint');

@@ -16,3 +16,5 @@ export const THREADS_LOADING = 'THREADS_LOADING';
 export const THREADS_LOADED = 'THREADS_LOADED';
 export const POSTS_LOADING = 'POSTS_LOADING';
 export const POSTS_LOADED = 'POSTS_LOADED';
+export const POST_ADD = 'POST_ADD';
+export const POST_DELETE = 'POST_DELETE';
