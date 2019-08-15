@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { User, Forum, Thread, Post } = require('../config/database');
+const { User, Category, Forum, Thread, Post } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.body.subject) {
@@ -82,7 +82,14 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
   } else if(!req.params.page) {
     res.status(400).json({ message: 'You must provide a page number' });
   } else {
-    Thread.findOne({ where: {id: req.params.id}, include: [{ model: Forum }]}).then(thread => {
+    Thread.findOne({ 
+      attributes: ['id', 'subject', 'createdAt'],
+      where: {id: req.params.id},
+      include: [
+        { model: Forum, attributes: ['id', 'name'], include: [Category] },
+        { model: User, attributes: ['id', 'username', 'first_name', 'last_name'] }
+      ]
+    }).then(thread => {
       if(!thread) {
         res.status(404).json({ message: 'Thread not found' });
       } else {
@@ -90,7 +97,13 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
         if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30)
           itemsPerPage = parseInt(req.params.itemsPerPage);
         Post.findAndCountAll({ where: { thread_id: thread.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage, include: [{ model: User }]}).then(result => {
-          res.status(200).json({ forum: thread.forum.name, thread: thread.subject, posts: result.rows, total: result.count });
+          res.status(200).json({
+            category: thread.forum.category,
+            forum: { id: thread.forum.id, name: thread.forum.name },
+            thread: { id: thread.id, subject: thread.subject, user: thread.user, createdAt: thread.createdAt }, //Rename user to author
+            posts: result.rows,
+            total: result.count
+          });
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });
         });

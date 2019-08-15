@@ -39,6 +39,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
   }
 });
 
+// Add isMain to model. Cant delete starting post
 router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide the post id' });

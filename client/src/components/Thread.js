@@ -30,10 +30,11 @@ class Thread extends Component {
   }
 
   render() {
-    const { posts, thread, isLoading, postCount } = this.props.forum;
+    // Add category and forum to navigation when actions and reducers are split
+    const { posts, category, forum, thread, isLoading, postCount } = this.props.forum;
     const totalPages = Math.ceil(postCount/5);
 
-    if(isLoading) {
+    if(isLoading || !thread) {
       return (
         <h3>Loading</h3>
       );
@@ -42,8 +43,8 @@ class Thread extends Component {
     return (
       <main className='container'>
         <div className='thread-header'>
-          <h1>{thread}</h1>
-          Started by name on Dec 21 2008.
+          <h1>{thread.subject}</h1>
+          Started by {thread.user.first_name} {thread.user.last_name} on {thread.createdAt}.
         </div>
         {
           posts.map(post => (
