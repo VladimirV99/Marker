@@ -60,13 +60,13 @@ class Forum extends Component {
                 </div>
 
                 <div className='thread-posts'>
-                  <p>{thread.posts || 0}</p>
+                  <p>{thread.postCount || 0}</p>
                 </div>
 
                 <div className="thread-last">
                   <div>
-                    {/* <p>by {thread.last_post.author}</p>
-                    <p className="text-muted"><small>{thread.last_post.created_at}</small></p> */}
+                    <p>by {thread.posts[0].user.username}</p>
+                    <p className="text-muted"><small>{thread.posts[0].createdAt}</small></p>
                   </div>
                 </div>
               </div>
