@@ -12,11 +12,11 @@ class Categories extends Component {
   }
 
   render() {
-    const { isLoading, forums:groups } = this.props.forum;
+    const { isLoading, categories } = this.props.forum;
     if(!isLoading) {
       return (
         <main className='container'>
-          { groups.map(category => (
+          { categories.map(category => (
             <div key={category.id} className='category'>
 
               <h3 className='category-name'>{category.name}</h3>

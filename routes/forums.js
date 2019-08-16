@@ -87,17 +87,19 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
         if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<15)
           itemsPerPage = parseInt(req.params.itemsPerPage);
         Thread.findAndCountAll({
+          attributes: ['id', 'subject', 'post_count'],
           where: { forum_id: forum.id },
           offset: (page-1)*itemsPerPage, 
           limit: itemsPerPage,
           include: [
             {
-              model: Post, limit: 1, order: [['id', 'DESC']],
-              include: [{ model: User, as: 'author', attributes: ['username', 'id'] }]
-            }
+              model: Post, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'content'],
+              include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
+            },
+            { model: User, as: 'author', attributes: ['id', 'username'] }
           ]
         }).then(result => {
-          res.status(200).json({ category: forum.category.name, forum: forum.name, threads: result.rows, total: result.count });
+          res.status(200).json({ category: forum.category, forum: {id: forum.id, name: forum.name}, threads: result.rows, total: result.count });
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });
         });
@@ -109,21 +111,17 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
 });
 
 router.get('/all', (req, res) => {
-  Category.findAll().then(categories => {
-    let promises = [];
-    let result = [];
-    categories.forEach(category => {
-      promises.push(Forum.findAll({ where: { category_id: category.id } }));
-      result.push({ id: category.id, name: category.name });
-    });
-    Promise.all(promises).then(values => {
-      for(let i = 0; i < values.length; i++) {
-        result[i].forums = values[i];
+  Forum.findAll({ attributes: ['id', 'name'], include: [Category], order: [[Category, 'id', 'ASC']] }).then(forums => {
+    let categories = [];
+    let counter = 0;
+    forums.forEach(forum => {
+      if(counter==0 || categories[counter-1].id!=forum.category.id) {
+        categories.push({ id: forum.category.id, name: forum.category.name, forums: [] });
+        counter++;
       }
-      res.status(200).json({ forums: result });
-    }).catch(err => {
-      res.status(500).json({ message: 'Something went wrong' });
-    })
+      categories[counter-1].forums.push({ id: forum.id, name: forum.name });
+    });
+    res.status(200).json({ categories });
   }).catch(err => {
     res.status(500).json({ message: 'Something went wrong' });
   });

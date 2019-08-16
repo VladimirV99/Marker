@@ -41,7 +41,7 @@ class Forum extends Component {
 
         <div className='category'>
 
-          <h3 className='category-name'>{category} > {forum}</h3>
+          <h3 className='category-name'>{category.name} > {forum.name}</h3>
 
           <div className='category-header'>
             <div className='thread-title'>Thread</div>

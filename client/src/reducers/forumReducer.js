@@ -10,6 +10,7 @@ import {
 } from '../actions/types';
 
 const initialState = {
+  categories: [],
   forums: [],
   category: '',
   forum: '',
@@ -31,7 +32,7 @@ export default function(state = initialState, action) {
     case FORUMS_LOADED:
       return {
         ...state,
-        forums: action.payload.forums,
+        categories: action.payload.categories,
         isLoading: false
       };
     case THREADS_LOADING:
