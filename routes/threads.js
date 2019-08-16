@@ -43,7 +43,7 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
       if(!thread) {
         res.status(404).json({ message: 'Thread not found' });
       } else {
-        if(thread.user_id == req.user.id || req.user.is_moderator) {
+        if(thread.author_id == req.user.id || req.user.is_moderator) {
           thread.destroy().then(() => {
             res.status(200).json({ message: 'Thread deleted' });
           }).catch(err => {
@@ -71,7 +71,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
       where: {id: req.params.id},
       include: [
         { model: Forum, attributes: ['id', 'name'], include: [Category] },
-        { model: User, attributes: ['id', 'username', 'first_name', 'last_name'] }
+        { model: User, as: 'author', attributes: ['id', 'username', 'first_name', 'last_name'] }
       ]
     }).then(thread => {
       if(!thread) {
@@ -80,11 +80,11 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
         let page = req.params.page;
         if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30)
           itemsPerPage = parseInt(req.params.itemsPerPage);
-        Post.findAndCountAll({ where: { thread_id: thread.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage, include: [{ model: User }]}).then(result => {
+        Post.findAndCountAll({ where: { thread_id: thread.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage, include: [{ model: User, as: 'author' }]}).then(result => {
           res.status(200).json({
             category: thread.forum.category,
             forum: { id: thread.forum.id, name: thread.forum.name },
-            thread: { id: thread.id, subject: thread.subject, user: thread.user, createdAt: thread.createdAt }, //Rename user to author
+            thread: { id: thread.id, subject: thread.subject, author: thread.author, createdAt: thread.createdAt },
             posts: result.rows,
             total: result.count
           });

@@ -40,10 +40,23 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
       if(!post) {
         res.status(404).json({ message: 'Post not found' });
       } else {
-        if(post.user_id == req.user.id || req.user.is_moderator) {
+        if(post.author_id == req.user.id || req.user.is_moderator) {
           if(!post.is_main) {
-            post.destroy().then(() => {
-              res.status(200).json({ message: 'Post deleted' });
+            Thread.findByPk(post.thread_id).then(thread => {
+              if(!thread) {
+                res.status(404).json({ message: 'Thread not found' });
+              } else {
+                thread.post_count = thread.post_count-1;
+                thread.save().then(() => {
+                  post.destroy().then(() => {
+                    res.status(200).json({ message: 'Post deleted' });
+                  }).catch(err => {
+                    res.status(500).json({ message: 'Something went wrong' });
+                  });
+                }).catch(err => {
+                  res.status(500).json({ message: 'Something went wrong' });
+                });
+              }
             }).catch(err => {
               res.status(500).json({ message: 'Something went wrong' });
             });

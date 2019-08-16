@@ -42,6 +42,9 @@ const UserModel = (sequelize, DataTypes) => {
         msg: 'This username is already taken'
       },
       validate: {
+        notNull: {
+          msg: 'Username can\'t be empty'
+        },
         len: {
           args: [3, 15],
           msg: 'First name must between 3 and 15 characters long'
@@ -55,6 +58,9 @@ const UserModel = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
+        notNull: {
+          msg: 'First name can\'t be empty'
+        },
         len: {
           args: [1, 30],
           msg: 'First name must between 1 and 30 characters long'
@@ -68,6 +74,9 @@ const UserModel = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
+        notNull: {
+          msg: 'Last name can\'t be empty'
+        },
         len: {
           args: [1, 30],
           msg: 'Last name must between 1 and 30 characters long'
@@ -85,6 +94,9 @@ const UserModel = (sequelize, DataTypes) => {
         msg: 'User with this email already exists'
       },
       validate: {
+        notNull: {
+          msg: 'Email can\'t be empty'
+        },
         isEmail: {
           msg: 'Invalid email'
         }
@@ -96,7 +108,12 @@ const UserModel = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Password can\'t be empty'
+        },
+      }
     },
     is_moderator: {
       type: DataTypes.BOOLEAN,

@@ -44,7 +44,7 @@ class Thread extends Component {
       <main className='container'>
         <div className='thread-header'>
           <h1>{thread.subject}</h1>
-          Started by {thread.user.first_name} {thread.user.last_name} on {thread.createdAt}.
+          Started by {thread.author.first_name} {thread.author.last_name} on {thread.createdAt}.
         </div>
         {
           posts.map(post => (

@@ -60,13 +60,13 @@ class Forum extends Component {
                 </div>
 
                 <div className='thread-posts'>
-                  <p>{thread.postCount || 0}</p>
+                  <p>{thread.post_count || 0}</p>
                 </div>
 
                 <div className="thread-last">
                   { thread.posts && thread.posts[0] ? (
                     <div>
-                      <p>by {thread.posts[0].user.username}</p>
+                      <p>by {thread.posts[0].author.username}</p>
                       <p className="text-muted"><small>{thread.posts[0].createdAt}</small></p>
                     </div>
                   ) : null }

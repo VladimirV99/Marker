@@ -7,7 +7,16 @@ const PostModel = (sequelize, DataTypes) => {
     },
     content: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Post content can\'t be empty'
+        },
+        len: {
+          args: [1, 300],
+          msg: 'Post content must be between 1 and 300 characters long'
+        }
+      }
     },
     is_main: {
       type: DataTypes.BOOLEAN,
@@ -18,7 +27,7 @@ const PostModel = (sequelize, DataTypes) => {
   });
 
   Post.associate = (models) => {
-    Post.belongsTo(models.user);
+    Post.belongsTo(models.user, { as: 'author' });
   };
 
   Post.createPost = (newPost, thread, user) => {
@@ -35,10 +44,13 @@ const PostModel = (sequelize, DataTypes) => {
         const { user:User } = sequelize.models;
   
         Post.create(newPost).then(post => {
-          post.setUser(user).then(() => {
+          post.setAuthor(user).then(() => {
             thread.addPost(post).then(() => {
-              Post.findOne({ where: { id: post.id }, include: [{ model: User }] }).then(post => {
-                resolve(post);
+              thread.post_count = thread.post_count+1;
+              thread.save().then(() => {
+                Post.findOne({ where: { id: post.id }, include: [{ model: User, as: 'author' }] }).then(post => {
+                  resolve(post);
+                });
               });
             });
           }).catch(err => {

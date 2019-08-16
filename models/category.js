@@ -13,9 +13,12 @@ const CategoryModel = (sequelize, DataTypes) => {
         msg: 'A category with this name already exists'
       },
       validate: {
+        notNull: {
+          msg: 'Category name can\'t be empty'
+        },
         len: {
           args: [1, 20],
-          msg: 'Category name must between 1 and 20 characters long'
+          msg: 'Category name must be between 1 and 20 characters long'
         }
       }
     }

@@ -9,9 +9,12 @@ const ForumModel = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
+        notNull: {
+          msg: 'Forum name can\'t be empty'
+        },
         len: {
           args: [1, 30],
-          msg: 'Forum name must between 1 and 30 characters long'
+          msg: 'Forum name must be between 1 and 30 characters long'
         }
       }
     }
@@ -21,7 +24,7 @@ const ForumModel = (sequelize, DataTypes) => {
   });
 
   Forum.associate = (models) => {
-    Forum.belongsTo(models.category);
+    Forum.belongsTo(models.category, { onDelete: 'CASCADE' });
   };
 
   Forum.createForum = (newForum, category) => {

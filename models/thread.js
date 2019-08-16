@@ -9,19 +9,26 @@ const ThreadModel = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
+        notNull: {
+          msg: 'Thread subject can\'t be empty'
+        },
         len: {
           args: [1, 60],
           msg: 'Thread name must between 1 and 60 characters long'
         }
       }
+    },
+    post_count: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     }
   }, {
     underscored: true
   });
 
   Thread.associate = (models) => {
-    Thread.belongsTo(models.forum);
-    Thread.belongsTo(models.user);
+    Thread.belongsTo(models.forum, { onDelete: 'CASCADE' });
+    Thread.belongsTo(models.user, { as: 'author' });
     Thread.hasMany(models.post, { onDelete: 'CASCADE' });
   };
 
@@ -39,7 +46,7 @@ const ThreadModel = (sequelize, DataTypes) => {
         const { post:Post } = sequelize.models;
 
         Thread.create(newThread).then(thread => {
-          thread.setUser(user).then(() => {
+          thread.setAuthor(user).then(() => {
             thread.setForum(forum).then(() => {
               let newPost = {
                 content: newThread.content,
@@ -51,6 +58,8 @@ const ThreadModel = (sequelize, DataTypes) => {
                 reject(err);
               });
             });
+          }).catch(err => {
+            reject({ status: 500, message: 'Something went wrong' });
           });
         }).catch(err => {
           reject({ status: 400, message: err.errors[0].message });

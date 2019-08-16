@@ -86,7 +86,6 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
         let page = req.params.page;
         if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<15)
           itemsPerPage = parseInt(req.params.itemsPerPage);
-        // TODO Add post count to thread model
         Thread.findAndCountAll({
           where: { forum_id: forum.id },
           offset: (page-1)*itemsPerPage, 
@@ -94,7 +93,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
           include: [
             {
               model: Post, limit: 1, order: [['id', 'DESC']],
-              include: [{ model: User, attributes: ['username', 'id'] }]
+              include: [{ model: User, as: 'author', attributes: ['username', 'id'] }]
             }
           ]
         }).then(result => {
