@@ -24,6 +24,8 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.use(express.static('public'));
+
 app.use(express.json());
 
 require('./config/passport')(passport);

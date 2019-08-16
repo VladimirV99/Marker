@@ -1,7 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const path = require('path');
+const multer = require('multer');
 const { User } = require('../config/database');
+
+const public_path = './public/';
+const photo_path = 'photos/';
+const storage = multer.diskStorage({
+  destination: public_path + photo_path,
+  filename: function(req, file, callback) {
+    callback(null, req.user.username + path.extname(file.originalname));
+  }
+});
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1024*1024 },
+  fileFilter: function(req, file, callback) {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+    if(extname && mimetype) {
+      callback(null, true);
+    } else {
+      callback('Images Only');
+    }
+  }
+}).single('user_photo');
 
 router.get('/checkUsername/:username', (req, res) => {
   if (!req.params.username) {
@@ -173,6 +198,33 @@ router.post('/removeModerator/:username', passport.authenticate('jwt', { session
       res.status(500).json({ message: 'Something went wrong' });
     });
   }
+});
+
+router.post('/uploadPhoto', passport.authenticate('jwt', { session: false }), (req, res) => {
+  User.findByPk(req.user.id).then(user => {
+    if(!user) {
+      res.status(404).json({ message: 'User not found' });
+    } else {
+      upload(req, res, (err) => {
+        if(err) {
+          res.status(500).json({ message: err });
+        } else {
+          if(req.file == undefined){
+            res.status(400).json({ message: 'No file selected' });
+          } else {
+            user.photo = photo_path + req.file.filename;
+            user.save().then(() => {
+              res.status(200).json({ success: true, message: 'Photo uploaded' });
+            }).catch(err => {
+              res.status(500).json({ message: 'Something went wrong' });
+            });
+          }
+        }
+      });
+    }
+  }).catch(err => {
+    res.status(500).json({ message: 'Something went wrong' });
+  });
 });
 
 module.exports = router;
