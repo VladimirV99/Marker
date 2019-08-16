@@ -17,29 +17,13 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       } else {
         User.findByPk(req.user.id).then(user => {
           let newThread = {
-            subject: req.body.subject
+            subject: req.body.subject,
+            content: req.body.content
           };
-          Thread.create(newThread).then(thread => {
-            thread.setUser(user).then(() => {
-              thread.setForum(forum).then(() => {
-                let newPost = {
-                  content: req.body.content
-                };
-                Post.create(newPost).then(post => {
-                  post.setUser(user).then(() => {
-                    thread.addPost(post).then(() => {
-                      Post.findByPk(post.id).then(post => {
-                        res.status(201).json({ message: 'Thread Created', thread, posts:[post] });
-                      }).catch(err => {
-                        res.status(500).json({ message: 'Something went wrong' });
-                      });
-                    });
-                  });
-                });
-              });
-            });
+          Thread.createThread(newThread, forum, user).then(result => {
+            res.status(201).json({ message: 'Thread Created', thread: result.thread, posts: result.posts });
           }).catch(err => {
-            res.status(400).json({ message: err.errors[0].message });
+            res.status(err.status).json({ message: err.message });
           });
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });

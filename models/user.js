@@ -27,15 +27,15 @@ const passwordValidators = [
   }
 ];
 
-const User = (sequelize, types) => {
-  let model = sequelize.define('user', {
+const UserModel = (sequelize, DataTypes) => {
+  let User = sequelize.define('user', {
     id: {
-      type: types.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
     username: {
-      type: types.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: {
         args: true,
@@ -52,7 +52,7 @@ const User = (sequelize, types) => {
       }
     },
     first_name: {
-      type: types.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         len: {
@@ -65,7 +65,7 @@ const User = (sequelize, types) => {
       }
     },
     last_name: {
-      type: types.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         len: {
@@ -78,7 +78,7 @@ const User = (sequelize, types) => {
       }
     },
     email: {
-      type: types.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: {
         args: true,
@@ -91,22 +91,22 @@ const User = (sequelize, types) => {
       }
     },
     photo: {
-      type: types.STRING,
+      type: DataTypes.STRING,
       defaultValue: 'photos/no_photo.png'
     },
     password: {
-      type: types.STRING,
+      type: DataTypes.STRING,
       allowNull: false
     },
     is_moderator: {
-      type: types.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       defaultValue: false
     }
   }, {
     underscored: true
   });
 
-  model.comparePassword = (candidatePassword, currentHash, callback) => {
+  User.comparePassword = (candidatePassword, currentHash, callback) => {
     bcrypt.compare(candidatePassword, currentHash, (err, isMatch) => {
       if(err) {
         callback({ status: 500, message: 'Something went wrong' });
@@ -116,7 +116,7 @@ const User = (sequelize, types) => {
     });
   };
 
-  model.encryptPassword = (password, callback) => {
+  User.encryptPassword = (password, callback) => {
     for(let i = 0; i < passwordValidators.length; i++){
       if(!passwordValidators[i].validator(password)){
         callback({ status: 400, message: passwordValidators[i].message });
@@ -138,18 +138,18 @@ const User = (sequelize, types) => {
     });
   }
 
-  model.register = (newUser, callback) => {
+  User.register = (newUser, callback) => {
     if(!newUser.email) {
       callback({ status: 400, message: 'You must provide an email' });
     } else if(!newUser.password) {
       callback({ status: 400, message: 'You must provide a password' });
     } else {
-      model.encryptPassword(newUser.password, (err, password) => {
+      User.encryptPassword(newUser.password, (err, password) => {
         if(err) {
           callback(err);
         } else {
           newUser.password = password;
-          model.create(newUser).then(user => {
+          User.create(newUser).then(user => {
             callback(null, user);
           }).catch(err => {
             callback({ status: 400, message: err.errors[0].message });
@@ -159,17 +159,17 @@ const User = (sequelize, types) => {
     }
   };
 
-  model.login = (username, password, callback) => {
+  User.login = (username, password, callback) => {
     if(!username) {
       callback({ status: 400, message: 'You must provide a username' });
     } else if(!password) {
       callback({ status: 400, message: 'You must provide a password' });
     } else {
-      model.findOne({ where: { username: username } }).then((user) => {
+      User.findOne({ where: { username: username } }).then((user) => {
         if(!user) {
           callback({ status: 404, message: 'User not found' });
         } else {
-          model.comparePassword(password, user.password, (err, isMatch) => {
+          User.comparePassword(password, user.password, (err, isMatch) => {
             if(err) {
               callback(err);
             } else {
@@ -201,7 +201,7 @@ const User = (sequelize, types) => {
     }
   };
 
-  return model;
+  return User;
 }
 
-module.exports = User;
+module.exports = UserModel;

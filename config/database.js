@@ -20,19 +20,16 @@ const sequelize = new Sequelize(credentials.db_name, credentials.db_user, creden
 });
 
 const User = UserModel(sequelize, Sequelize);
-const Forum = ForumModel(sequelize, Sequelize);
 const Category = CategoryModel(sequelize, Sequelize);
+const Forum = ForumModel(sequelize, Sequelize);
 const Thread = ThreadModel(sequelize, Sequelize);
 const Post = PostModel(sequelize, Sequelize);
 
-// TODO Move to models associate(models) class method. If exists call it
-Forum.belongsTo(Category);
-
-Thread.belongsTo(Forum);
-Thread.belongsTo(User);
-
-Thread.hasMany(Post)
-Post.belongsTo(User);
+let models = [ User, Category, Forum, Thread, Post ];
+models.forEach(model => {
+  if(model.associate)
+    model.associate(sequelize.models);
+});
 
 // TODO Migrations
 sequelize.sync().then(() => { 

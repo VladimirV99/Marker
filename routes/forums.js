@@ -19,12 +19,10 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           let newForum = {
             name: req.body.name
           };
-          Forum.create(newForum).then(forum => {
-            forum.setCategory(category).then(() => {
-              res.status(201).json({ message: 'Forum Created', forum });
-            });
+          Forum.createForum(newForum, category).then(forum => {
+            res.status(201).json({ message: 'Forum Created', forum });
           }).catch(err => {
-            res.status(400).json({ message: err.errors[0].message });
+            res.status(err.status).json({ message: err.message });
           });
         }
       }).catch(err => {
@@ -81,7 +79,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
   } else if(!req.params.page) {
     res.status(400).json({ message: 'You must provide a page number' });
   } else {
-    Forum.findOne({ where: {id: req.params.id}, include: [{ model: Category }]}).then(forum => {
+    Forum.findOne({ where: { id: req.params.id }, include: [{ model: Category }]}).then(forum => {
       if(!forum) {
         res.status(404).json({ message: 'Forum not found' });
       } else {

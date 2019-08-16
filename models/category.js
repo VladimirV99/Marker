@@ -1,12 +1,12 @@
-const Category = (sequelize, types) => {
-  return sequelize.define('category', {
+const CategoryModel = (sequelize, DataTypes) => {
+  let Category = sequelize.define('category', {
     id: {
-      type: types.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
     name: {
-      type: types.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: {
         args: true,
@@ -23,6 +23,8 @@ const Category = (sequelize, types) => {
     timestamps: false,
     underscored: true
   });
+
+  return Category;
 }
 
-module.exports = Category;
+module.exports = CategoryModel;

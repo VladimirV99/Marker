@@ -17,17 +17,10 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           let newPost = {
             content: req.body.content
           };
-          Post.create(newPost).then(post => {
-            post.setThread(thread).then(() => {
-              post.setUser(user).then(() => {
-                // console.log(post); //do i need do query again?
-                Post.findOne({ where: { id: post.id }, include: [{ model: User }] }).then(post => {
-                  res.status(201).json({ message: 'Post Created', post });
-                }).catch(err => {
-                  res.status(500).json({ message: 'Something went wrong' });
-                });
-              });
-            });
+          Post.createPost(newPost, thread, user).then(post => {
+            res.status(201).json({ message: 'Post Created', post });
+          }).catch(err => {
+            res.status(err.status).json({ message: err.message });
           });
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });
@@ -39,7 +32,6 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
   }
 });
 
-// Add isMain to model. Cant delete starting post
 router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide the post id' });
@@ -49,11 +41,15 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
         res.status(404).json({ message: 'Post not found' });
       } else {
         if(post.user_id == req.user.id || req.user.is_moderator) {
-          post.destroy().then(() => {
-            res.status(200).json({ message: 'Post deleted' });
-          }).catch(err => {
-            res.status(500).json({ message: 'Something went wrong' });
-          });
+          if(!post.is_main) {
+            post.destroy().then(() => {
+              res.status(200).json({ message: 'Post deleted' });
+            }).catch(err => {
+              res.status(500).json({ message: 'Something went wrong' });
+            });
+          } else {
+            res.status(400).json({ message: 'Can\'t delete main post' });
+          }
         } else {
           res.status(401).json({ message: 'Unauthorized' });
         }

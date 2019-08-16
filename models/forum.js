@@ -1,12 +1,12 @@
-const Forum = (sequelize, types) => {
-  return sequelize.define('forum', {
+const ForumModel = (sequelize, DataTypes) => {
+  let Forum = sequelize.define('forum', {
     id: {
-      type: types.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
     name: {
-      type: types.TEXT,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: {
         len: {
@@ -16,8 +16,35 @@ const Forum = (sequelize, types) => {
       }
     }
   }, {
+    timestamps: false,
     underscored: true
   });
+
+  Forum.associate = (models) => {
+    Forum.belongsTo(models.category);
+  };
+
+  Forum.createForum = (newForum, category) => {
+    return new Promise((resolve, reject) => {
+      if(!newForum) {
+        reject({ status: 400, message: 'You must provide a forum' });
+      } else if(!newForum.name) {
+        reject({ status: 400, message: 'You must provide a name' });
+      } else if(!category) {
+        reject({ status: 400, message: 'You must provide a category' });
+      } else {
+        Forum.create(newForum).then(forum => {
+          Forum.setCategory(category).then(() => {
+            resolve(forum);
+          });
+        }).catch(err => {
+          reject({ status: 400, message: err.errors[0].message });
+        });
+      }
+    });
+  };
+
+  return Forum;
 }
 
-module.exports = Forum;
+module.exports = ForumModel;
