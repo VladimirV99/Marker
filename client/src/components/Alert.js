@@ -6,7 +6,7 @@ import './Alert.css';
 class Alert extends Component {
   render() {
     return (
-      <div className={`alert alert-error${this.props.alert.message?'':' alert-hide'}`}>
+      <div className={`alert alert-${this.props.alert.type} ${this.props.alert.message?'':'alert-hide'}`}>
         { this.props.alert.message }
       </div>
     );
