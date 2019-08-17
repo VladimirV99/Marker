@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { deletePost } from '../actions/forumActions';
+import { deletePost } from '../actions/postActions';
 
 import './Post.css';
 

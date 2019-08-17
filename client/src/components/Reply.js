@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { createPost } from '../actions/forumActions';
+import { createPost } from '../actions/postActions';
 
 import './Reply.css';
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { loadPosts } from '../actions/forumActions';
+import { loadPosts } from '../actions/postActions';
 import Post from './Post';
 import Reply from './Reply';
 import Pagination from './Pagination';
@@ -31,7 +31,7 @@ class Thread extends Component {
 
   render() {
     // Add category and forum to navigation when actions and reducers are split
-    const { posts, category, forum, thread, isLoading, postCount } = this.props.forum;
+    const { category, forum, thread, posts, postCount, isLoading } = this.props.post;
     const totalPages = Math.ceil(postCount/5);
 
     if(isLoading || !thread) {
@@ -59,7 +59,7 @@ class Thread extends Component {
 }
 
 const mapStateToProps = state => ({
-  forum: state.forum
+  post: state.post
 });
 
 const mapDispatchToProps = {

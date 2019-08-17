@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { loadForums } from '../actions/forumActions';
+import { loadCategories } from '../actions/categoryActions';
 
 import './Categories.css';
 
 class Categories extends Component {
   componentDidMount() {
-    this.props.loadForums();
+    this.props.loadCategories();
   }
 
   render() {
-    const { isLoading, categories } = this.props.forum;
+    const { categories, isLoading } = this.props.category;
     if(!isLoading) {
       return (
         <main className='container'>
@@ -71,11 +71,11 @@ class Categories extends Component {
 }
 
 const mapStateToProps = state => ({
-  forum: state.forum
+  category: state.category
 });
 
 const mapDispatchToProps = {
-  loadForums
+  loadCategories
 };
 
 export default connect(

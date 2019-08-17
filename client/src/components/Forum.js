@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { loadThreads } from '../actions/forumActions';
+import { loadThreads } from '../actions/threadActions';
 import Pagination from './Pagination';
 
 import './Forum.css';
@@ -26,10 +26,10 @@ class Forum extends Component {
   }
 
   render() {
-    const { category, forum, threads, threadCount, isLoading } = this.props.forum;
+    const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.forum;
     const totalPages = Math.ceil(threadCount/5);
 
-    if(isLoading) {
+    if(!isLoaded || pageLoading) {
       return (
         <h3>Loading</h3>
       );
@@ -86,7 +86,7 @@ class Forum extends Component {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
-  forum: state.forum
+  forum: state.thread
 });
 
 const mapDispatchToProps = {

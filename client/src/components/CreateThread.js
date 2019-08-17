@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { createThread } from '../actions/forumActions';
+import { createThread } from '../actions/threadActions';
 
 class CreateThread extends Component {
   constructor(props) {

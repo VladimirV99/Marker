@@ -10,11 +10,20 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
+export const CATEGORIES_LOADING = 'CATEGORIES_LOADING';
+export const CATEGORIES_LOADED = 'CATEGORIES_LOADED';
+export const CATEGORIES_RESET = 'CATEGORIES_RESET';
+
 export const FORUMS_LOADING = 'FORUMS_LOADING';
 export const FORUMS_LOADED = 'FORUMS_LOADED';
+export const FORUMS_RESET = 'FORUMS_RESET';
+
 export const THREADS_LOADING = 'THREADS_LOADING';
 export const THREADS_LOADED = 'THREADS_LOADED';
+export const THREADS_RESET = 'THREADS_RESET';
+
 export const POSTS_LOADING = 'POSTS_LOADING';
 export const POSTS_LOADED = 'POSTS_LOADED';
-export const POST_ADD = 'POST_ADD';
-export const POST_DELETE = 'POST_DELETE';
+export const POSTS_RESET = 'POSTS_RESET';
+export const ADD_POST = 'POST_ADD';
+export const DELETE_POST = 'POST_DELETE';
