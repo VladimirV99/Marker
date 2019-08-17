@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { returnErrors } from './errorActions';
+import { createAlert } from './alertActions';
 import { createAuthHeaders } from './authActions';
 import {
   POSTS_LOADING,
@@ -18,7 +18,7 @@ export const loadPosts = (thread_id, page) => dispatch => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(returnErrors(err.response.data.message, err.response.status));
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
     dispatch({ type: POSTS_RESET });
   });
 };
@@ -30,7 +30,7 @@ export const createPost = (newPost) => (dispatch, getState) => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(returnErrors(err.response.data.message, err.response.status));
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
   });
 };
 
@@ -41,6 +41,6 @@ export const deletePost = (id) => (dispatch, getState) => {
       payload: id
     })
   }).catch(err => {
-    dispatch(returnErrors(err.response.data.message, err.response.status));
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
   });
 };

@@ -3,27 +3,21 @@ import { connect } from 'react-redux';
 
 import './Alert.css';
 
-import { returnErrors } from '../actions/errorActions';
-
 class Alert extends Component {
   render() {
     return (
-      <div className={`alert alert-error${this.props.error.message?'':' alert-hide'}`}>
-        { this.props.error.message }
+      <div className={`alert alert-error${this.props.alert.message?'':' alert-hide'}`}>
+        { this.props.alert.message }
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  error: state.error
+  alert: state.alert
 });
-
-const mapDispatchToProps = {
-  returnErrors
-};
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(Alert);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { returnErrors } from './errorActions';
+import { createAlert } from './alertActions';
 import {
   USER_LOADING,
   USER_LOADED,
@@ -22,7 +22,7 @@ export const loadUser = () => (dispatch, getState) => {
         payload: res.data
       });
     }).catch(err => {
-      dispatch(returnErrors(err.response.data.message, err.response.status));
+      dispatch(createAlert(err.response.data.message, 'error', err.response.status));
       dispatch({
         type: AUTH_ERROR
       });
@@ -38,7 +38,7 @@ export const register = ({ username, first_name, last_name, email, password }) =
       payload: res.data
     });
   }).catch(err => {
-    dispatch(returnErrors(err.response.data.message, err.response.status, 'REGISTER_FAIL'));
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
     dispatch({
       type: REGISTER_FAIL
     });
@@ -53,7 +53,7 @@ export const login = ({ username, password }) => dispatch => {
       payload: res.data
     })
   }).catch(err => {
-    dispatch(returnErrors(err.response.data.message, err.response.status, 'LOGIN_FAIL'));
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
     dispatch({
       type: LOGIN_FAIL
     });

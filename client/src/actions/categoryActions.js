@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { returnErrors } from './errorActions';
+import { createAlert } from './alertActions';
 import {
   CATEGORIES_LOADING,
   CATEGORIES_LOADED,
@@ -15,7 +15,7 @@ export const loadCategories = () => dispatch => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(returnErrors(err.response.data.message, err.response.status));
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
     dispatch({ type: CATEGORIES_RESET });
   });
 };

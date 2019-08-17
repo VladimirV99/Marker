@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { returnErrors } from './errorActions';
+import { createAlert } from './alertActions';
 import { createAuthHeaders } from './authActions';
 import {
 } from './types';
