@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { clearAlert } from '../actions/alertActions';
 import { loadThreads } from '../actions/threadActions';
 import Pagination from './Pagination';
 
@@ -21,12 +22,16 @@ class Forum extends Component {
     this.onPageChange(1);
   }
 
+  componentWillUnmount() {
+    this.props.clearAlert();
+  }
+
   onPageChange(page) {
     this.props.loadThreads(this.props.match.params.id, page);
   }
 
   render() {
-    const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.forum;
+    const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.thread;
     const totalPages = Math.ceil(threadCount/5);
 
     if(!isLoaded || pageLoading) {
@@ -86,11 +91,11 @@ class Forum extends Component {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
-  forum: state.thread
+  thread: state.thread
 });
 
 const mapDispatchToProps = {
-  loadThreads
+  clearAlert, loadThreads
 };
 
 export default connect(

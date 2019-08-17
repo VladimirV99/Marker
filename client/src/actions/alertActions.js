@@ -7,7 +7,7 @@ export const createAlert = (message, type, status) => {
   };
 };
 
-export const clearErrors = () => {
+export const clearAlert = () => {
   return {
     type: CLEAR_ALERT
   };

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { clearAlert } from '../actions/alertActions';
 import { createThread } from '../actions/threadActions';
 
 class CreateThread extends Component {
@@ -14,6 +15,10 @@ class CreateThread extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.clearAlert();
   }
 
   handleChange(event) {
@@ -54,7 +59,7 @@ class CreateThread extends Component {
 }
 
 const mapDispatchToProps = {
-  createThread
+  clearAlert, createThread
 };
 
 export default connect(

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { clearAlert } from '../actions/alertActions';
 import { loadCategories } from '../actions/categoryActions';
 
 import './Categories.css';
@@ -9,6 +10,10 @@ import './Categories.css';
 class Categories extends Component {
   componentDidMount() {
     this.props.loadCategories();
+  }
+
+  componentWillUnmount() {
+    this.props.clearAlert();
   }
 
   render() {
@@ -75,7 +80,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  loadCategories
+  clearAlert, loadCategories
 };
 
 export default connect(

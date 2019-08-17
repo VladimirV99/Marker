@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { clearAlert } from '../actions/alertActions';
 import { loadPosts } from '../actions/postActions';
 import Post from './Post';
 import Reply from './Reply';
@@ -20,6 +21,10 @@ class Thread extends Component {
 
   componentDidMount() {
     this.onPageChange(1);    
+  }
+
+  componentWillUnmount() {
+    this.props.clearAlert();
   }
 
   onPageChange(page) {
@@ -63,7 +68,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  loadPosts
+  clearAlert, loadPosts
 };
 
 export default connect(

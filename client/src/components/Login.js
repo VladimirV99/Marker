@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { clearAlert } from '../actions/alertActions';
 import { login } from '../actions/authActions';
 
 class Login extends Component {
@@ -13,6 +14,10 @@ class Login extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.clearAlert();
   }
 
   handleChange(event) {
@@ -57,7 +62,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  login
+  clearAlert, login
 };
 
 export default connect(

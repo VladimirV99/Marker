@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { clearAlert } from '../actions/alertActions';
 import { register } from '../actions/authActions';
 
 class Register extends Component {
@@ -16,6 +17,10 @@ class Register extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.clearAlert();
   }
 
   handleChange(event) {
@@ -77,7 +82,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  register
+  clearAlert, register
 };
 
 export default connect(
