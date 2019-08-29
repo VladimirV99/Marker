@@ -43,7 +43,9 @@ class Forum extends Component {
 
     return (
       <main className='container'>
-        {isAuthenticated && user.is_moderator?<Link to={`/forum/${this.props.match.params.id}/add`} className='btn btn-blue'>Create Thread</Link>:''}
+        <p>
+          {isAuthenticated && user.is_moderator?<Link to={`/forum/${this.props.match.params.id}/add`} className='btn btn-blue'>Create Thread</Link>:''}
+        </p>
 
         <div className='category'>
 

@@ -26,6 +26,11 @@
   flex-direction: row;
   align-items: stretch;
   background-color: white;
+  border-bottom: 1px solid grey;
+}
+
+.thread:last-child {
+  border-bottom: none;
 }
 
 .thread-title {
@@ -35,7 +40,6 @@
   display: flex;
   align-items: center;
   border-right: 1px solid grey;
-  border-bottom: 1px solid grey;
   word-break: break-all;
 }
 
@@ -51,7 +55,6 @@
   display: flex;
   align-items: center;
   border-right: 1px solid grey;
-  border-bottom: 1px solid grey;
   min-width: 65px;
   text-align: center;
 }
@@ -66,7 +69,6 @@
   flex-grow: 10;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid grey;
 }
 
 .thread-last p {

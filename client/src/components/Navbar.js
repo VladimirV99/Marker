@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../actions/authActions';
+import UserMenu from './UserMenu';
 
 class Navbar extends Component {
   constructor(props) {
@@ -19,37 +20,9 @@ class Navbar extends Component {
     const { isAuthenticated, user } = this.props.auth;
 
     const authLinks = (
-      <Fragment>
-        <li className='nav-item'>
-
-        <div className='dropdown'>
-
-          <div className="dropdown-toggle">
-            <a className='nav-link' href='/#' role='button'>
-              { user ? this.props.auth.user.first_name + ' ' + this.props.auth.user.last_name : '' }
-            </a>
-          </div>
-          
-          <div className='dropdown-content'>
-            <ul className='dropdown-menu'>
-              <li className='dropdown-item'><a className='dropdown-link' href='/#'>Profile</a></li>
-              <li className='dropdown-item'>
-                Dark mode
-                <label className='switch'>
-                  <input type='checkbox'></input>
-                </label>
-              </li>
-              <hr className='dropdown-divider'/>
-              <li className='dropdown-item'>
-                <a className='dropdown-link' href='/#' onClick={this.onLogoutClick}>Log Out</a>
-              </li>
-            </ul>
-
-          </div>
-        </div>
-
-        </li>
-      </Fragment>
+      <li className='nav-item'>
+        <UserMenu user={user} onLogoutClick={this.onLogoutClick}></UserMenu>
+      </li>
     );
 
     const guestLinks = (

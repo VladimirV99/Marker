@@ -22,6 +22,11 @@
   flex-direction: row;
   align-items: stretch;
   background-color: white;
+  border-bottom: 1px solid grey;
+}
+
+.forum:last-child {
+  border-bottom: none;
 }
 
 .forum-title {

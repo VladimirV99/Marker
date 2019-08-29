@@ -45,14 +45,18 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
       } else {
         if(thread.author_id == req.user.id || req.user.is_moderator) {
           Forum.findByPk(thread.forum_id).then(forum => {
-            forum.thread_count = forum.thread_count - 1;
-            forum.save().then(() => {
-              thread.destroy().then(() => {
-                res.status(200).json({ message: 'Thread deleted' });
-              }).catch(err => {
-                res.status(500).json({ message: 'Something went wrong' });
+            if(!forum) {
+              res.status(404).json({ message: 'Thread not found' });
+            } else {
+              forum.thread_count = forum.thread_count - 1;
+              forum.save().then(() => {
+                thread.destroy().then(() => {
+                  res.status(200).json({ message: 'Thread deleted' });
+                }).catch(err => {
+                  res.status(500).json({ message: 'Something went wrong' });
+                });
               });
-            });
+            }
           }).catch(err => {
             res.status(500).json({ message: 'Something went wrong' });
           });

@@ -25,8 +25,6 @@ class Post extends Component {
 
         </div>
 
-        <hr className='post-divider' />
-
         <div className='post-content'>
           {this.props.post.content}
         </div>
