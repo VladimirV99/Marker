@@ -29,6 +29,7 @@ const ForumModel = (sequelize, DataTypes) => {
 
   Forum.associate = (models) => {
     Forum.belongsTo(models.category, { onDelete: 'CASCADE' });
+    Forum.hasMany(models.thread, { onDelete: 'CASCADE' });
   };
 
   Forum.createForum = (newForum, category) => {

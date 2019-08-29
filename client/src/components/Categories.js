@@ -53,11 +53,11 @@ class Categories extends Component {
                         </div>
 
                         <div className="forum-last">
-                          { forum.last_thread ? (
+                          { forum.threads[0] ? (
                             <div>
-                            <p>{forum.last_thread.subject}</p>
-                            <p><small className="text-muted">by {forum.last_thread.author}</small></p>
-                            <p className="text-muted"><small>{forum.last_thread.updatedAt}</small></p>
+                            <p><Link to={`/threads/${forum.threads[0].id}`}>{forum.threads[0].subject}</Link></p>
+                            <p><small className="text-muted">by <Link to={`/users/${forum.threads[0].author.id}`}>{forum.threads[0].author.username}</Link></small></p>
+                            <p className="text-muted"><small>{forum.threads[0].updated_at}</small></p>
                           </div>
                           ) : (
                             <p>No Threads</p>

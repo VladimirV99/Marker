@@ -20,7 +20,7 @@ class Post extends Component {
           {/* <img class='profile-photo' src='' alt='' /> */}
           <div>
             <strong>{this.props.post.author.first_name} {this.props.post.author.last_name}</strong>
-            <footer><small>Posted on: {this.props.post.createdAt}</small></footer>
+            <footer><small>Posted on: {this.props.post.created_at}</small></footer>
           </div>
 
         </div>

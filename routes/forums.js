@@ -93,7 +93,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
           limit: itemsPerPage,
           include: [
             {
-              model: Post, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'content'],
+              model: Post, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'content', 'created_at'],
               include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
             },
             { model: User, as: 'author', attributes: ['id', 'username'] }
@@ -111,7 +111,14 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
 });
 
 router.get('/all', (req, res) => {
-  Category.findAll({ include: [Forum], order: [['id', 'ASC']] }).then(categories => {
+  Category.findAll({ include: [
+    { model: Forum, include: [
+      {
+        model: Thread, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'subject', 'updated_at'],
+        include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
+      }
+    ]}
+  ], order: [['id', 'ASC']] }).then(categories => {
     res.status(200).json({ categories });
   }).catch(err => {
     res.status(500).json({ message: 'Something went wrong' });

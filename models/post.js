@@ -27,6 +27,7 @@ const PostModel = (sequelize, DataTypes) => {
   });
 
   Post.associate = (models) => {
+    Post.belongsTo(models.thread, { onDelete: 'CASCADE' });
     Post.belongsTo(models.user, { as: 'author' });
   };
 

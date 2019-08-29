@@ -78,7 +78,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
     res.status(400).json({ message: 'You must provide a page number' });
   } else {
     Thread.findOne({ 
-      attributes: ['id', 'subject', 'createdAt'],
+      attributes: ['id', 'subject', 'created_at'],
       where: {id: req.params.id},
       include: [
         { model: Forum, attributes: ['id', 'name'], include: [Category] },
@@ -91,11 +91,11 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
         let page = req.params.page;
         if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30)
           itemsPerPage = parseInt(req.params.itemsPerPage);
-        Post.findAndCountAll({ where: { thread_id: thread.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage, include: [{ model: User, as: 'author' }]}).then(result => {
+        Post.findAndCountAll({ attributes: ['id', 'content', 'is_main', 'created_at'], where: { thread_id: thread.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage, include: [{ model: User, attributes: ['id', 'username', 'first_name', 'last_name'], as: 'author' }]}).then(result => {
           res.status(200).json({
             category: thread.forum.category,
             forum: { id: thread.forum.id, name: thread.forum.name },
-            thread: { id: thread.id, subject: thread.subject, author: thread.author, createdAt: thread.createdAt },
+            thread: { id: thread.id, subject: thread.subject, author: thread.author, created_at: thread.dataValues.created_at },
             posts: result.rows,
             total: result.count
           });
