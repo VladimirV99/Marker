@@ -46,7 +46,7 @@ const PostModel = (sequelize, DataTypes) => {
         Post.create(newPost).then(post => {
           post.setAuthor(user).then(() => {
             thread.addPost(post).then(() => {
-              thread.post_count = thread.post_count+1;
+              thread.post_count = thread.post_count + 1;
               thread.save().then(() => {
                 Post.findOne({ where: { id: post.id }, include: [{ model: User, as: 'author' }] }).then(post => {
                   resolve(post);

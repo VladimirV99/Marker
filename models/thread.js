@@ -48,14 +48,17 @@ const ThreadModel = (sequelize, DataTypes) => {
         Thread.create(newThread).then(thread => {
           thread.setAuthor(user).then(() => {
             thread.setForum(forum).then(() => {
-              let newPost = {
-                content: newThread.content,
-                is_main: true
-              };
-              Post.createPost(newPost, thread, user).then(post => {
-                resolve({ thread, posts:[post] });
-              }).catch(err => {
-                reject(err);
+              forum.thread_count = forum.thread_count + 1;
+              forum.save().then(() => {
+                let newPost = {
+                  content: newThread.content,
+                  is_main: true
+                };
+                Post.createPost(newPost, thread, user).then(post => {
+                  resolve({ thread, posts: [post] });
+                }).catch(err => {
+                  reject(err);
+                });
               });
             });
           }).catch(err => {

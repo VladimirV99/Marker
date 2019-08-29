@@ -2,12 +2,16 @@
   margin-bottom: 1rem;
 }
 
-.category-name {
+.category-navigation {
   background-color: #16528e;
   color: white;
   padding: .75rem;
   font-weight: 500;
   margin: 0;
+}
+
+.category-navigation a {
+  color: white;
 }
 
 .category-header {

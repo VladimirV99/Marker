@@ -143,6 +143,12 @@ label {
   box-sizing: border-box;
 }
 
+.form-control-inline {
+  display: inline-block;
+  width: 74%;
+  margin-right: 1%;
+}
+
 .btn {
   font-size: 1rem;
   line-height: 1.5;
@@ -157,6 +163,10 @@ label {
 
 .btn-block {
   width: 100%;
+}
+
+.btn-inline {
+  width: 25%;
 }
 
 .btn-blue {

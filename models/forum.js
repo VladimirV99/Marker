@@ -17,6 +17,10 @@ const ForumModel = (sequelize, DataTypes) => {
           msg: 'Forum name must be between 1 and 30 characters long'
         }
       }
+    },
+    thread_count: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     }
   }, {
     timestamps: false,
@@ -37,8 +41,10 @@ const ForumModel = (sequelize, DataTypes) => {
         reject({ status: 400, message: 'You must provide a category' });
       } else {
         Forum.create(newForum).then(forum => {
-          Forum.setCategory(category).then(() => {
+          category.addForum(forum).then(() => {
             resolve(forum);
+          }).catch(err => {
+            reject({ status: 500, message: 'Something went wrong' });
           });
         }).catch(err => {
           reject({ status: 400, message: err.errors[0].message });

@@ -31,6 +31,7 @@ class Forum extends Component {
   }
 
   render() {
+    const { isAuthenticated, user } = this.props.auth;
     const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.thread;
     const totalPages = Math.ceil(threadCount/5);
 
@@ -42,11 +43,13 @@ class Forum extends Component {
 
     return (
       <main className='container'>
-        {this.props.isAuthenticated?<Link to={`/forum/${this.props.match.params.id}/add`} className='btn'>Create Thread</Link>:''}
+        {isAuthenticated && user.is_moderator?<Link to={`/forum/${this.props.match.params.id}/add`} className='btn btn-blue'>Create Thread</Link>:''}
 
         <div className='category'>
 
-          <h3 className='category-name'>{category.name} > {forum.name}</h3>
+          <h3 className='category-navigation'>
+            <Link to='/'>Home</Link> > <Link to={`/category/${category.id}`}>{category.name}</Link> > {forum.name}
+          </h3>
 
           <div className='category-header'>
             <div className='thread-title'>Thread</div>
@@ -90,7 +93,7 @@ class Forum extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
+  auth: state.auth,
   thread: state.thread
 });
 

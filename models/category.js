@@ -27,6 +27,10 @@ const CategoryModel = (sequelize, DataTypes) => {
     underscored: true
   });
 
+  Category.associate = (models) => {
+    Category.hasMany(models.forum, { onDelete: 'CASCADE' });
+  };
+
   return Category;
 }
 

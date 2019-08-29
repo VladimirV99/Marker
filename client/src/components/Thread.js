@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { clearAlert } from '../actions/alertActions';
@@ -35,7 +36,6 @@ class Thread extends Component {
   }
 
   render() {
-    // Add category and forum to navigation when actions and reducers are split
     const { category, forum, thread, posts, postCount, isLoading } = this.props.post;
     const totalPages = Math.ceil(postCount/5);
 
@@ -48,6 +48,9 @@ class Thread extends Component {
     return (
       <main className='container'>
         <div className='thread-header'>
+          <p>
+            <Link to='/'>Home</Link> > <Link to={`/category/${category.id}`}>{category.name}</Link> > <Link to={`/forum/${forum.id}`}>{forum.name}</Link>
+          </p>
           <h1>{thread.subject}</h1>
           Started by {thread.author.first_name} {thread.author.last_name} on {thread.createdAt}.
         </div>

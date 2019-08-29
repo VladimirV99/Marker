@@ -1,7 +1,9 @@
 import {
   CATEGORIES_LOADING,
   CATEGORIES_LOADED,
-  CATEGORIES_RESET
+  CATEGORIES_RESET,
+  CATEGORY_ADD,
+  CATEGORIES_ADD_FORUM
 } from '../actions/types';
 
 const initialState = {
@@ -28,6 +30,24 @@ export default function(state = initialState, action) {
         categories: [],
         isLoading: false
       }
+    case CATEGORY_ADD:
+      return {
+        ...state,
+        categories: [
+          ...state.categories,
+          action.payload
+        ]
+      };
+    case CATEGORIES_ADD_FORUM:
+      return {
+        ...state,
+        categories: state.categories.map(category => {
+          if(category.id === action.payload.category_id) {
+            category.forums.push(action.payload.forum);
+          }
+          return category;
+        })
+      };
     default:
       return state;
   }

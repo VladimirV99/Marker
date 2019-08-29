@@ -111,16 +111,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
 });
 
 router.get('/all', (req, res) => {
-  Forum.findAll({ attributes: ['id', 'name'], include: [Category], order: [[Category, 'id', 'ASC']] }).then(forums => {
-    let categories = [];
-    let counter = 0;
-    forums.forEach(forum => {
-      if(counter==0 || categories[counter-1].id!=forum.category.id) {
-        categories.push({ id: forum.category.id, name: forum.category.name, forums: [] });
-        counter++;
-      }
-      categories[counter-1].forums.push({ id: forum.id, name: forum.name });
-    });
+  Category.findAll({ include: [Forum], order: [['id', 'ASC']] }).then(categories => {
     res.status(200).json({ categories });
   }).catch(err => {
     res.status(500).json({ message: 'Something went wrong' });
