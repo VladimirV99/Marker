@@ -17,16 +17,16 @@ class Post extends Component {
         {deleteButton}
 
         <div className='post-creator'>
-          {/* <img class='profile-photo' src='' alt='' /> */}
+          <img className='profile-photo' src={'http://localhost:5000/'+post.author.photo} alt={post.author.username} />
           <div>
-            <strong>{this.props.post.author.first_name} {this.props.post.author.last_name}</strong>
-            <footer><small>Posted on: {this.props.post.created_at}</small></footer>
+            <strong>{post.author.first_name} {post.author.last_name}</strong>
+            <footer><small>Posted on: {post.created_at}</small></footer>
           </div>
 
         </div>
 
         <div className='post-content'>
-          {this.props.post.content}
+          {post.content}
         </div>
       </article>
     );

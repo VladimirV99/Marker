@@ -91,7 +91,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
         let page = req.params.page;
         if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30)
           itemsPerPage = parseInt(req.params.itemsPerPage);
-        Post.findAndCountAll({ attributes: ['id', 'content', 'is_main', 'created_at'], where: { thread_id: thread.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage, include: [{ model: User, attributes: ['id', 'username', 'first_name', 'last_name'], as: 'author' }]}).then(result => {
+        Post.findAndCountAll({ attributes: ['id', 'content', 'is_main', 'created_at'], where: { thread_id: thread.id }, offset: (page-1)*itemsPerPage, limit: itemsPerPage, include: [{ model: User, attributes: ['id', 'username', 'first_name', 'last_name', 'photo'], as: 'author' }]}).then(result => {
           res.status(200).json({
             category: thread.forum.category,
             forum: { id: thread.forum.id, name: thread.forum.name },

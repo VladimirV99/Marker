@@ -16,6 +16,7 @@ body {
   padding: 0rem 2rem;
   box-sizing: border-box;
   align-items: center;
+  border-bottom: 1px solid black;
 }
 
 .navbar .navbar-brand {
@@ -86,7 +87,9 @@ a {
   position: absolute;
   left: 0;
   right: 0;
-  background-color: white;
+  margin-top: 1px;
+  background-color: #16528e;
+  color: white;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -103,13 +106,13 @@ a {
 
 .dropdown-link {
   padding: .5rem 0rem;
-  color: black;
+  color: white;
   text-decoration: none;
   display: block;
 }
 
 .dropdown-link:hover {
-  background-color: #f1f1f1;
+  background-color: rgba(255, 255, 255, .1);
 }
 
 .dropdown-divider {
@@ -202,4 +205,24 @@ label {
   .container {
     width: 90%;
   }
+
+  .dropdown {
+    position: inherit;
+  }
+}
+
+#user-menu {
+  display: flex;
+  align-items: center;
+  padding: 0 .5rem;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.profile-icon {
+  float: right;
+  margin-left: .3rem;
+  width: 34px;
+  border-radius: 50%;
 }
