@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { createAlert } from './alertActions';
+import { addAlert } from './alertActions';
 import { createAuthHeaders } from './authActions';
 import {
   THREADS_LOADING,
@@ -16,7 +16,7 @@ export const loadThreads = (forum_id, page) => dispatch => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({ type: THREADS_RESET });
   });
 };
@@ -25,6 +25,6 @@ export const createThread = (newThread, history) => (dispatch, getState) => {
   axios.post('/api/threads/create', newThread, createAuthHeaders(getState())).then(res => {
     history.push(`/thread/${res.data.thread.id}`);
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };

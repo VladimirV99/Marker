@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { clearAlert } from '../actions/alertActions';
+import { clearAlerts } from '../actions/alertActions';
 import { loadPosts } from '../actions/postActions';
 import Post from './Post';
 import Reply from './Reply';
@@ -25,10 +25,11 @@ class Thread extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearAlert();
+    this.props.clearAlerts();
   }
 
   onPageChange(page) {
+    this.props.clearAlerts();
     this.setState({
       page
     });
@@ -71,7 +72,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  clearAlert, loadPosts
+  clearAlerts, loadPosts
 };
 
 export default connect(

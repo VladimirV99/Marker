@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { createAlert } from './alertActions';
+import { addAlert } from './alertActions';
 import {
   USER_LOADING,
   USER_LOADED,
@@ -22,7 +22,7 @@ export const loadUser = () => (dispatch, getState) => {
         payload: res.data
       });
     }).catch(err => {
-      dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+      dispatch(addAlert(err.response.data.message, 'error', err.response.status));
       dispatch({
         type: AUTH_ERROR
       });
@@ -38,7 +38,7 @@ export const register = ({ username, first_name, last_name, email, password }) =
       payload: res.data
     });
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({
       type: REGISTER_FAIL
     });
@@ -53,7 +53,7 @@ export const login = ({ username, password }) => dispatch => {
       payload: res.data
     })
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({
       type: LOGIN_FAIL
     });
@@ -68,17 +68,17 @@ export const logout = () => {
 
 export const updateProfile = newProfile => (dispatch, getState) => {
   axios.put('/api/users/update', newProfile, createAuthHeaders(getState())).then(res => {
-    dispatch(createAlert(res.data.message, 'success', res.status));
+    dispatch(addAlert(res.data.message, 'success', res.status));
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };
 
 export const updatePassword = newPassword => (dispatch, getState) => {
   axios.put('/api/users/changePassword', newPassword, createAuthHeaders(getState())).then(res => {
-    dispatch(createAlert(res.data.message, 'success', res.status));
+    dispatch(addAlert(res.data.message, 'success', res.status));
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };
 
@@ -90,9 +90,9 @@ export const updatePhoto = photo => (dispatch, getState) => {
   config.headers['Content-Type'] = 'multipart/form-data';
 
   axios.post('/api/users/uploadPhoto', formData, createAuthHeaders(getState())).then(res => {
-    dispatch(createAlert(res.data.message, 'success', res.status));
+    dispatch(addAlert(res.data.message, 'success', res.status));
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };
 

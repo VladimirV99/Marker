@@ -8,7 +8,7 @@ import { loadUser } from './actions/authActions';
 import './App.css';
 
 import Navbar from './components/Navbar';
-import Alert from './components/Alert';
+import Alerts from './components/alerts/Alerts';
 import Register from './components/Register';
 import Login from './components/Login';
 import Banner from './components/Banner';
@@ -31,7 +31,7 @@ class App extends Component {
           <div className='App'>
             <Navbar></Navbar>
             <Route exact path='/' component={Banner} />
-            <Alert></Alert>
+            <Alerts></Alerts>
             <Route exact path='/' component={Categories} />
             <Route exact path='/register' component={Register} />
             <Route exact path='/login' component={Login} />

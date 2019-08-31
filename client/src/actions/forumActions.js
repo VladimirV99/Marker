@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { createAlert } from './alertActions';
+import { addAlert } from './alertActions';
 import { createAuthHeaders } from './authActions';
 import {
   CATEGORIES_ADD_FORUM
@@ -16,6 +16,6 @@ export const createForum = (newForum) => (dispatch, getState) => {
       }
     });
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };

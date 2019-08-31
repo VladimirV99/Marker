@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import { createAlert, clearAlert } from '../actions/alertActions';
+import { addAlert, clearAlerts } from '../actions/alertActions';
 import UserPost from './UserPost';
 import Pagination from './pagination/Pagination';
 
@@ -30,15 +30,16 @@ class User extends Component {
       });
       this.onPageChange(this.state.page);
     }).catch(err => {
-      this.props.createAlert(err.response.data.message, 'error', err.response.status);
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
     });
   }
 
   componentWillUnmount() {
-    this.props.clearAlert();
+    this.props.clearAlerts();
   }
 
   onPageChange(page) {
+    this.props.clearAlerts();
     this.setState({
       page
     });
@@ -48,7 +49,7 @@ class User extends Component {
         totalPosts: res.data.total
       });
     }).catch(err => {
-      this.props.createAlert(err.response.data.message, 'error', err.response.status);
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
     });
   }
 
@@ -100,7 +101,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  createAlert, clearAlert
+  addAlert, clearAlerts
 };
 
 export default connect(

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { clearAlert } from '../actions/alertActions';
+import { clearAlerts } from '../actions/alertActions';
 import { loadThreads } from '../actions/threadActions';
 import Pagination from './pagination/Pagination';
 
@@ -23,7 +23,7 @@ class Forum extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearAlert();
+    this.props.clearAlerts();
   }
 
   onPageChange(page) {
@@ -100,7 +100,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  clearAlert, loadThreads
+  clearAlerts, loadThreads
 };
 
 export default connect(

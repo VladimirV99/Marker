@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { clearAlerts } from '../actions/alertActions';
 import { createPost } from '../actions/postActions';
 
 import './Reply.css';
@@ -22,6 +23,7 @@ class Reply extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.props.clearAlerts();
 
     const { content } = this.state;
 
@@ -49,7 +51,7 @@ class Reply extends Component {
 }
 
 const mapDispatchToProps = {
-  createPost
+  clearAlerts, createPost
 };
 
 export default connect(

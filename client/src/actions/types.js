@@ -1,5 +1,6 @@
-export const SET_ALERT = 'SET_ALERT';
-export const CLEAR_ALERT = 'CLEAR_ALERT';
+export const ALERT_ADD = 'ALERT_ADD';
+export const ALERT_DISMISS = 'ALERT_DISMISS';
+export const ALERTS_CLEAR = 'ALERTS_CLEAR';
 
 export const USER_LOADING = 'USER_LOADING';
 export const USER_LOADED = 'USER_LOADED';

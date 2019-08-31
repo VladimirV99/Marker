@@ -1,24 +1,33 @@
-import { SET_ALERT, CLEAR_ALERT } from '../actions/types';
+import { ALERT_ADD, ALERT_DISMISS, ALERTS_CLEAR } from '../actions/types';
 
 const initialState = {
-  message: '',
-  type: 'error',
-  status: null
+  list: []
 };
 
 export default function(state = initialState, action) {
   switch(action.type) {
-    case SET_ALERT:
+    case ALERT_ADD:
       return {
-        message: action.payload.message,
-        type: action.payload.type || 'error',
-        status: action.payload.status
+        ...state,
+        list: [
+          ...state.list,
+          { 
+            id: state.list.length+1,
+            message: action.payload.message || 'Something went wrong',
+            type: action.payload.type || 'error',
+            status: action.payload.status || 500
+          }
+        ]
       };
-    case CLEAR_ALERT:
+    case ALERT_DISMISS:
       return {
-        message: '',
-        type: '',
-        status: null
+        ...state.list,
+        list: state.list.filter(alert => alert.id!==action.payload),
+      }
+    case ALERTS_CLEAR:
+      return {
+        ...state,
+        list: []
       };
     default:
       return state;

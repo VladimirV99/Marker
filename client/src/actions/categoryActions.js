@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { createAlert } from './alertActions';
+import { addAlert } from './alertActions';
 import { createAuthHeaders } from './authActions';
 import {
   CATEGORIES_LOADING,
@@ -17,7 +17,7 @@ export const loadCategories = () => dispatch => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({ type: CATEGORIES_RESET });
   });
 };
@@ -30,6 +30,6 @@ export const createCategory = (newCategory) => (dispatch, getState) => {
       payload: res.data.category
     });
   }).catch(err => {
-    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };

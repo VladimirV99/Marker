@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { clearAlert } from '../actions/alertActions';
+import { clearAlerts } from '../actions/alertActions';
 import { updateProfile, updatePassword, updatePhoto } from '../actions/authActions';
 
 class Profile extends Component {
@@ -38,11 +38,12 @@ class Profile extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearAlert();
+    this.props.clearAlerts();
   }
 
   handleProfileSubmit(event) {
     event.preventDefault();
+    this.props.clearAlerts();
 
     const { first_name, last_name, email } = this.state;
 
@@ -57,6 +58,7 @@ class Profile extends Component {
 
   handlePasswordSubmit(event) {
     event.preventDefault();
+    this.props.clearAlerts();
 
     const { current_password, new_password } = this.state;
 
@@ -78,6 +80,7 @@ class Profile extends Component {
 
   handlePhotoSubmit(event) {
     event.preventDefault();
+    this.props.clearAlerts();
 
     this.props.updatePhoto(this.state.photo_file);
   }
@@ -147,7 +150,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  clearAlert, updateProfile, updatePassword, updatePhoto
+  clearAlerts, updateProfile, updatePassword, updatePhoto
 };
 
 export default connect(

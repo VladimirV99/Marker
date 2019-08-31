@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { clearAlerts } from '../actions/alertActions';
 import { createCategory } from '../actions/categoryActions';
 
 class CreateCategory extends Component {
@@ -20,6 +21,7 @@ class CreateCategory extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.props.clearAlerts();
 
     const { name } = this.state;
 
@@ -43,7 +45,7 @@ class CreateCategory extends Component {
 }
 
 const mapDispatchToProps = {
-  createCategory
+  clearAlerts, createCategory
 };
 
 export default connect(

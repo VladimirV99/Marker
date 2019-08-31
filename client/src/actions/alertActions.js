@@ -1,14 +1,21 @@
-import { SET_ALERT, CLEAR_ALERT } from './types';
+import { ALERT_ADD, ALERT_DISMISS, ALERTS_CLEAR } from './types';
 
-export const createAlert = (message, type, status) => {
+export const addAlert = (message, type, status) => {
   return {
-    type: SET_ALERT,
-    payload: { message, type }
+    type: ALERT_ADD,
+    payload: { message, type, status }
   };
 };
 
-export const clearAlert = () => {
+export const dismissAlert = id => {
   return {
-    type: CLEAR_ALERT
+    type: ALERT_DISMISS,
+    payload: id
+  }
+}
+
+export const clearAlerts = () => {
+  return {
+    type: ALERTS_CLEAR
   };
 };
