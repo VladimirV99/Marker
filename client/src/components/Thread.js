@@ -6,7 +6,7 @@ import { clearAlert } from '../actions/alertActions';
 import { loadPosts } from '../actions/postActions';
 import Post from './Post';
 import Reply from './Reply';
-import Pagination from './Pagination';
+import Pagination from './pagination/Pagination';
 
 import './Thread.css';
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { clearAlert } from '../actions/alertActions';
 import { loadThreads } from '../actions/threadActions';
-import Pagination from './Pagination';
+import Pagination from './pagination/Pagination';
 
 import './Forum.css';
 

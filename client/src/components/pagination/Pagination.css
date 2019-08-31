@@ -22,7 +22,3 @@
 .pagination-item:not(.pagination-selected):hover {
   background-color: lightgrey;
 }
-
-.pagination-hidden {
-  display:none;
-}

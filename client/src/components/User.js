@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import { createAlert, clearAlert } from '../actions/alertActions';
 import UserPost from './UserPost';
-import Pagination from './Pagination';
+import Pagination from './pagination/Pagination';
 
 import './User.css';
 
