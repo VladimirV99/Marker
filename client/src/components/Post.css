@@ -18,6 +18,10 @@
   color: white;
 }
 
+.post-creator a {
+  color: white;
+}
+
 .post-content {
   box-sizing: border-box;
   padding: 1rem;

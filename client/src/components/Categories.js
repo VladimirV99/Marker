@@ -55,8 +55,8 @@ class Categories extends Component {
                         <div className="forum-last">
                           { forum.threads[0] ? (
                             <div>
-                            <p><Link to={`/threads/${forum.threads[0].id}`}>{forum.threads[0].subject}</Link></p>
-                            <p><small className="text-muted">by <Link to={`/users/${forum.threads[0].author.id}`}>{forum.threads[0].author.username}</Link></small></p>
+                            <p><Link to={`/thread/${forum.threads[0].id}`}>{forum.threads[0].subject}</Link></p>
+                            <p><small className="text-muted">by <Link to={`/user/${forum.threads[0].author.username}`}>{forum.threads[0].author.username}</Link></small></p>
                             <p className="text-muted"><small>{forum.threads[0].updated_at}</small></p>
                           </div>
                           ) : (

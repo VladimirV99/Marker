@@ -76,7 +76,7 @@ class Forum extends Component {
                 <div className="thread-last">
                   { thread.posts && thread.posts[0] ? (
                     <div>
-                      <p>by {thread.posts[0].author.username}</p>
+                      <p>by <Link to={`/user/${thread.posts[0].author.username}`}>{thread.posts[0].author.username}</Link></p>
                       <p className="text-muted"><small>{thread.posts[0].created_at}</small></p>
                     </div>
                   ) : null }

@@ -107,6 +107,22 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), (req, r
   res.status(200).json(req.user);
 });
 
+router.get('/get/:username', (req, res) => {
+  if(!req.params.username) {
+    res.status(400).json({ message: 'You must provide a username' });
+  } else {
+    User.findOne({ where: { username: req.params.username }, attributes: ['first_name', 'last_name', 'username', 'photo', 'email'] }).then(user => {
+      if(!user) {
+        res.status(404).json({ message: 'User not found' });
+      } else {
+        res.status(200).json({ user });
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'Something went wrong' });
+    });
+  }
+});
+
 router.put('/update', passport.authenticate('jwt', { session: false }), (req, res) => {
   User.findOne({ where: { id: req.user.id } }).then(user => {
     if(!user) {

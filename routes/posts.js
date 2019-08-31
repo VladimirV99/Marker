@@ -73,4 +73,39 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   }
 });
 
+router.get('/user/:username/page/:page/:itemsPerPage', (req, res) => {
+  let itemsPerPage = 20;
+  if(!req.params.username) {
+    res.status(400).json({ message: 'You must provide a username' });
+  } else if(!req.params.page) {
+    res.status(400).json({ message: 'You must provide a page number' });
+  } else {
+    User.findOne({ where: { username: req.params.username } }).then(user => {
+      if(!user) {
+        res.status(404).json({ message: 'User not found' });
+      } else {
+        let page = req.params.page;
+        if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30)
+          itemsPerPage = parseInt(req.params.itemsPerPage);
+        Post.findAndCountAll({
+          attributes: ['id', 'content', 'is_main', 'created_at'],
+          where: { author_id: user.id },
+          offset: (page-1)*itemsPerPage,
+          limit: itemsPerPage,
+          include: [{ model: Thread, attributes: ['id', 'subject'] }]
+        }).then(result => {
+          res.status(200).json({
+            posts: result.rows,
+            total: result.count
+          });
+        }).catch(err => {
+          res.status(500).json({ message: 'Something went wrong' });
+        });
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'Something went wrong' });
+    });
+  }
+});
+
 module.exports = router;

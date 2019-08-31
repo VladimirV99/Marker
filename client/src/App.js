@@ -17,6 +17,7 @@ import Forum from './components/Forum';
 import CreateThread from './components/CreateThread';
 import Thread from './components/Thread';
 import Profile from './components/Profile';
+import User from './components/User';
 
 class App extends Component {
   componentDidMount() {
@@ -36,6 +37,7 @@ class App extends Component {
             <Route exact path='/login' component={Login} />
 
             <Route exact path='/profile' component={Profile} />
+            <Route exact path='/user/:username' component={User} />
 
             <Route exact path='/forum/:id' component={Forum} />
             <Route exact path='/forum/:id/add' component={CreateThread} />

@@ -1,0 +1,17 @@
+.user-data {
+  display: flex;
+  background-color: white;
+  margin-bottom: 1rem;
+}
+
+.user-photo-large {
+  background-color: lightgray;
+  border-radius: 50%;
+  max-width: 140px;
+  margin: .5rem;
+}
+
+.user-info {
+  display: inline-block;
+  text-align: left;
+}
