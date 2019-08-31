@@ -6,6 +6,7 @@ import store from './store';
 import { loadUser } from './actions/authActions';
 
 import './App.css';
+import './Form.css';
 
 import Navbar from './components/Navbar';
 import Alerts from './components/alerts/Alerts';

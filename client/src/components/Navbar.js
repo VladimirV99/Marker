@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { logout } from '../actions/authActions';
 import UserMenu from './UserMenu';
 
+import './Navbar.css';
+
 class Navbar extends Component {
   constructor(props) {
     super(props);

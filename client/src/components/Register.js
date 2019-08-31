@@ -52,11 +52,11 @@ class Register extends Component {
             <input type='text' className='form-control' name='username' onChange={this.handleChange}></input>
           </div>
           <div>
-            <div className='form-group w-50 pr-1'>
+            <div className='form-group w-50 pr-025'>
               <label htmlFor='username'>First Name</label>
               <input type='text' className='form-control' name='first_name' onChange={this.handleChange}></input>
             </div>
-            <div className='form-group w-50 pl-1'>
+            <div className='form-group w-50 pl-025'>
               <label htmlFor='username'>Last Name</label>
               <input type='text' className='form-control' name='last_name' onChange={this.handleChange}></input>
             </div>

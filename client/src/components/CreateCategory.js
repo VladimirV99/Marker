@@ -36,8 +36,10 @@ class CreateCategory extends Component {
     return (
       <div className='container'>
         <form onSubmit={this.handleSubmit}>
-          <input type='text' className='form-control form-control-inline' name='name' onChange={this.handleChange}></input>
-          <input type='submit' className='btn btn-blue btn-inline' value='Create Category'></input>
+          <div className='form-group-inline'>
+            <input type='text' className='form-control' name='name' onChange={this.handleChange}></input>
+            <input type='submit' className='btn btn-blue' value='Create Category'></input>
+          </div>
         </form>
       </div>
     );

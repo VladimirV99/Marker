@@ -39,8 +39,10 @@ class CreateForum extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit} id='create-forum'>
-        <input type='text' className='form-control form-control-inline' name='name' onChange={this.handleChange}></input>
-        <input type='submit' className='btn btn-blue btn-inline' value='Create Forum'></input>
+        <div className='form-group-inline'>
+          <input type='text' className='form-control' name='name' onChange={this.handleChange}></input>
+          <input type='submit' className='btn btn-blue' value='Create Forum'></input>
+        </div>
       </form>
     );
   }

@@ -16,10 +16,10 @@ class UserMenu extends Component {
   toggleDropdown() {
     if(this.state.open) {
       this.setState({ open: false });
-      document.removeEventListener('mousedown', this.handleClickOutside);
+      document.removeEventListener('click', this.handleClickOutside);
     } else {
       this.setState({ open: true });
-      document.addEventListener('mousedown', this.handleClickOutside);
+      document.addEventListener('click', this.handleClickOutside);
     }
   }
 
@@ -28,7 +28,7 @@ class UserMenu extends Component {
   }
 
   handleClickOutside(event) {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+    if (this.wrapperRef && (event.target.tagName==='A' || !this.wrapperRef.contains(event.target))) {
       this.toggleDropdown();
     }
   }
@@ -43,7 +43,7 @@ class UserMenu extends Component {
       <div ref={this.setWrapperRef} className={`dropdown ${this.state.open? 'dropdown-open': ''}`}>
         <div className='dropdown-toggle'>
           <div id='user-menu' className='nav-link' onClick={this.toggleDropdown}>
-            <span>{user.first_name + ' ' + user.last_name}</span>
+            <span className='profile-name'>{user.first_name + ' ' + user.last_name}</span>
             <img className='profile-icon' src={'http://localhost:5000/'+user.photo} alt={user.username} />
           </div>
         </div>
