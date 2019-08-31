@@ -28,7 +28,7 @@ class UserMenu extends Component {
   }
 
   handleClickOutside(event) {
-    if (this.wrapperRef && (event.target.tagName==='A' || !this.wrapperRef.contains(event.target))) {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       this.toggleDropdown();
     }
   }

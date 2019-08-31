@@ -6,12 +6,13 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  USER_UPDATE_PROFILE
 } from '../actions/types';
 
 const initialState = {
   token: localStorage.getItem('token'),
-  isAuthenticated: null,
+  isAuthenticated: false,
   isLoading: false,
   user: null
 };
@@ -50,6 +51,16 @@ export default function(state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false
+      };
+    case USER_UPDATE_PROFILE:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          first_name: action.payload.first_name,
+          last_name: action.payload.last_name,
+          email: action.payload.email
+        }
       };
     default:
       return state;

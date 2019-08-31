@@ -201,11 +201,17 @@ label {
   text-align: center;
 }
 
+.display-none {
+  display: none;
+}
+
 @media screen and (max-width: 768px) {
   .container {
     width: 90%;
   }
+}
 
+@media screen and (max-width: 576px) {
   .dropdown {
     position: inherit;
   }

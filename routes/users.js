@@ -112,8 +112,12 @@ router.put('/update', passport.authenticate('jwt', { session: false }), (req, re
     if(!user) {
       res.status(404).json({ message: 'User not found' });
     } else {
-      user.first_name = req.body.first_name;
-      user.last_name = req.body.last_name;
+      if(req.body.first_name)
+        user.first_name = req.body.first_name;
+      if(req.body.last_name)
+        user.last_name = req.body.last_name;
+      if(req.body.email)
+        user.email = req.body.email;
       user.save().then(() => {
         res.status(200).json({ message: 'Profile Updated' });
       }).catch(err => {
@@ -214,7 +218,7 @@ router.post('/uploadPhoto', passport.authenticate('jwt', { session: false }), (r
           } else {
             user.photo = photo_path + req.file.filename;
             user.save().then(() => {
-              res.status(200).json({ success: true, message: 'Photo uploaded' });
+              res.status(200).json({ message: 'Photo uploaded' });
             }).catch(err => {
               res.status(500).json({ message: 'Something went wrong' });
             });

@@ -23,7 +23,7 @@ export const loadCategories = () => dispatch => {
 };
 
 export const createCategory = (newCategory) => (dispatch, getState) => {
-  axios.post('/api/categories/create', newCategory, createAuthHeaders(getState)).then(res => {
+  axios.post('/api/categories/create', newCategory, createAuthHeaders(getState())).then(res => {
     res.data.category.forums = [];
     dispatch({
       type: CATEGORY_ADD,

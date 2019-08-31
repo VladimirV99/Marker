@@ -24,7 +24,7 @@ export const loadPosts = (thread_id, page) => dispatch => {
 };
 
 export const createPost = (newPost) => (dispatch, getState) => {
-  axios.post('/api/posts/create', newPost, createAuthHeaders(getState)).then(res => {
+  axios.post('/api/posts/create', newPost, createAuthHeaders(getState())).then(res => {
     dispatch({
       type: ADD_POST,
       payload: res.data
@@ -35,7 +35,7 @@ export const createPost = (newPost) => (dispatch, getState) => {
 };
 
 export const deletePost = (id) => (dispatch, getState) => {
-  axios.delete(`/api/posts/delete/${id}`, createAuthHeaders(getState)).then(res => {
+  axios.delete(`/api/posts/delete/${id}`, createAuthHeaders(getState())).then(res => {
     dispatch({
       type: DELETE_POST,
       payload: id

@@ -7,7 +7,7 @@ import {
 } from './types';
 
 export const createForum = (newForum) => (dispatch, getState) => {
-  axios.post('/api/forums/create', newForum, createAuthHeaders(getState)).then(res => {
+  axios.post('/api/forums/create', newForum, createAuthHeaders(getState())).then(res => {
     dispatch({
       type: CATEGORIES_ADD_FORUM,
       payload: {

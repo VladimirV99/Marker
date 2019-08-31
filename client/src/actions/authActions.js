@@ -16,7 +16,7 @@ export const loadUser = () => (dispatch, getState) => {
   if(getState().auth.token) {
     dispatch({ type: USER_LOADING });
 
-    axios.get('/api/users/profile', createAuthHeaders(getState)).then(res => {
+    axios.get('/api/users/profile', createAuthHeaders(getState())).then(res => {
       dispatch({
         type: USER_LOADED,
         payload: res.data
@@ -66,6 +66,36 @@ export const logout = () => {
   };
 };
 
+export const updateProfile = newProfile => (dispatch, getState) => {
+  axios.put('/api/users/update', newProfile, createAuthHeaders(getState())).then(res => {
+    dispatch(createAlert(res.data.message, 'success', res.status));
+  }).catch(err => {
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+  });
+};
+
+export const updatePassword = newPassword => (dispatch, getState) => {
+  axios.put('/api/users/changePassword', newPassword, createAuthHeaders(getState())).then(res => {
+    dispatch(createAlert(res.data.message, 'success', res.status));
+  }).catch(err => {
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+  });
+};
+
+export const updatePhoto = photo => (dispatch, getState) => {
+  const formData = new FormData();
+  formData.append('user_photo', photo);
+  
+  const config = createAuthHeaders(getState());
+  config.headers['Content-Type'] = 'multipart/form-data';
+
+  axios.post('/api/users/uploadPhoto', formData, createAuthHeaders(getState())).then(res => {
+    dispatch(createAlert(res.data.message, 'success', res.status));
+  }).catch(err => {
+    dispatch(createAlert(err.response.data.message, 'error', err.response.status));
+  });
+};
+
 export const createHeaders = () => {
   return {
     headers: {
@@ -74,13 +104,9 @@ export const createHeaders = () => {
   };
 }
 
-export const createAuthHeaders = getState => {
-  const token = getState().auth.token;
-  const config = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
+export const createAuthHeaders = state => {
+  const token = state.auth.token;
+  const config = createHeaders();
   if(token) {
     config.headers['Authorization'] = token;
   }

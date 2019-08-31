@@ -22,7 +22,7 @@ export const loadThreads = (forum_id, page) => dispatch => {
 };
 
 export const createThread = (newThread, history) => (dispatch, getState) => {
-  axios.post('/api/threads/create', newThread, createAuthHeaders(getState)).then(res => {
+  axios.post('/api/threads/create', newThread, createAuthHeaders(getState())).then(res => {
     history.push(`/thread/${res.data.thread.id}`);
   }).catch(err => {
     dispatch(createAlert(err.response.data.message, 'error', err.response.status));
