@@ -53,7 +53,7 @@ class Thread extends Component {
             <Link to='/'>Home</Link> > <Link to={`/category/${category.id}`}>{category.name}</Link> > <Link to={`/forum/${forum.id}`}>{forum.name}</Link>
           </p>
           <h1>{thread.subject}</h1>
-          Started by <Link to={`/user/${thread.author.username}`}>{thread.author.first_name} {thread.author.last_name}</Link> on {thread.created_at}.
+          Started by <Link to={`/user/${thread.author.username}`}>{thread.author.first_name} {thread.author.last_name}</Link> on {new Date(thread.created_at).toDateString()}.
         </div>
         {
           posts.map(post => (

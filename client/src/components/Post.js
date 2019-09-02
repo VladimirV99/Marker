@@ -26,7 +26,7 @@ function Post(props) {
         <img className='profile-photo' src={'/'+post.author.photo} alt={post.author.username} />
         <div>
           <Link to={`/user/${post.author.username}`}><strong>{post.author.first_name} {post.author.last_name}</strong></Link>
-          <footer><small>Posted on: {post.created_at}</small></footer>
+          <footer><small>Posted on: {new Date(post.created_at).toLocaleString('en-GB', { timeZone: 'UTC' })}</small></footer>
         </div>
       </div>
 

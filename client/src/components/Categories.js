@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { getReadableTimeDifference } from '../util/TimeHelper';
 
 import { clearAlerts } from '../actions/alertActions';
 import { loadCategories } from '../actions/categoryActions';
@@ -57,7 +58,7 @@ class Categories extends Component {
                             <div>
                             <p><Link to={`/thread/${forum.threads[0].id}`}>{forum.threads[0].subject}</Link></p>
                             <p><small className="text-muted">by <Link to={`/user/${forum.threads[0].author.username}`}>{forum.threads[0].author.username}</Link></small></p>
-                            <p className="text-muted"><small>{forum.threads[0].updated_at}</small></p>
+                            <p className="text-muted"><small>{getReadableTimeDifference(new Date(forum.threads[0].updated_at))}</small></p>
                           </div>
                           ) : (
                             <p>No Threads</p>

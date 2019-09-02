@@ -22,7 +22,7 @@ function UserPost(props) {
 
       <div className='user-post-header'>
         Posted to: <strong>{post.thread.subject}</strong>
-        <footer><small>on: {post.created_at}</small></footer>
+        <footer><small>on: {new Date(post.created_at).toLocaleString('en-GB', { timeZone: 'UTC' })}</small></footer>
       </div>
 
       <div className='user-post-content'>

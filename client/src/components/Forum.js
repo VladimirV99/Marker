@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { getReadableTimeDifference } from '../util/TimeHelper';
 
 import { clearAlerts } from '../actions/alertActions';
 import { loadThreads } from '../actions/threadActions';
@@ -77,7 +78,7 @@ class Forum extends Component {
                   { thread.posts && thread.posts[0] ? (
                     <div>
                       <p>by <Link to={`/user/${thread.posts[0].author.username}`}>{thread.posts[0].author.username}</Link></p>
-                      <p className="text-muted"><small>{thread.posts[0].created_at}</small></p>
+                      <p className="text-muted"><small>{getReadableTimeDifference(new Date(thread.posts[0].created_at))}</small></p>
                     </div>
                   ) : null }
                 </div>
