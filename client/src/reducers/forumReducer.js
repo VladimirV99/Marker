@@ -7,11 +7,30 @@ import {
 const initialState = {
   category: null,
   forums: [],
-  isLoading: false
+  isLoading: true
 };
 
 export default function(state = initialState, action) {
   switch(action.type) {
+    case FORUMS_LOADING:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case FORUMS_LOADED:
+      return {
+        ...state,
+        category: action.payload.category,
+        forums: action.payload.forums,
+        isLoading: false
+      };
+    case FORUMS_RESET:
+      return {
+        ...state,
+        category: null,
+        forums: [],
+        isLoading: false
+      };
     default:
       return state;
   }

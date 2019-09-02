@@ -28,7 +28,7 @@ class Categories extends Component {
             { categories.map(category => (
               <div key={category.id} className='category'>
 
-                <h3 className='category-name'>{category.name}</h3>
+                <h3 className='category-navigation'><Link to={`/category/${category.id}`}>{category.name}</Link></h3>
 
                 <div className='category-header'>
                   <div className='forum-title'>Title</div>

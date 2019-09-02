@@ -14,6 +14,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Banner from './components/Banner';
 import Categories from './components/Categories';
+import Category from './components/Category';
 import Forum from './components/Forum';
 import CreateThread from './components/CreateThread';
 import Thread from './components/Thread';
@@ -40,6 +41,7 @@ class App extends Component {
             <Route exact path='/profile' component={Profile} />
             <Route exact path='/user/:username' component={User} />
 
+            <Route exact path='/category/:id' component={Category} />
             <Route exact path='/forum/:id' component={Forum} />
             <Route exact path='/forum/:id/add' component={CreateThread} />
             <Route exact path='/thread/:id' component={Thread} />

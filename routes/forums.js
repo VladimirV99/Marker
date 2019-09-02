@@ -60,8 +60,14 @@ router.get('/category/:id', (req, res) => {
       if(!category) {
         res.status(404).json({ message: 'Category not found' });
       } else {
-        Forum.findAll({ where: { category_id: req.params.id } }).then(forums => {
-          res.status(200).json({ forums });
+        Forum.findAll({
+          where: { category_id: req.params.id },
+          include: [{
+            model: Thread, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'subject', 'updated_at'],
+            include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
+          }]
+        }).then(forums => {
+          res.status(200).json({ category, forums });
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });
         });
