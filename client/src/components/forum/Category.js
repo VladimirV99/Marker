@@ -17,7 +17,7 @@ class Categories extends Component {
   }
 
   render() {
-    const { category, forums, isLoading } = this.props.forum;
+    const { category, forums, isLoading } = this.props.categoryPage;
     if(!isLoading) {
       return (
         <Fragment>
@@ -82,7 +82,7 @@ class Categories extends Component {
 }
 
 const mapStateToProps = state => ({
-  forum: state.forum
+  categoryPage: state.categoryPage
 });
 
 const mapDispatchToProps = {

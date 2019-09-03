@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux';
 import alertReducer from './alertReducer';
 import authReducer from './authReducer';
-import categoryReducer from './categoryReducer';
-import forumReducer from './forumReducer';
-import threadReducer from './threadReducer';
-import postReducer from './postReducer';
+import categoriesPageReducer from './categoriesPageReducer';
+import categoryPageReducer from './categoryPageReducer';
+import forumPageReducer from './forumPageReducer';
+import threadPageReducer from './threadPageReducer';
 
 export default combineReducers({
   alert: alertReducer,
   auth: authReducer,
-  category: categoryReducer,
-  forum: forumReducer,
-  thread: threadReducer,
-  post: postReducer
+  categoriesPage: categoriesPageReducer,
+  categoryPage: categoryPageReducer,
+  forumPage: forumPageReducer,
+  threadPage: threadPageReducer
 });

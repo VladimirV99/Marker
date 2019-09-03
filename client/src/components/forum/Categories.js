@@ -20,7 +20,8 @@ class Categories extends Component {
   }
 
   render() {
-    const { categories, isLoading } = this.props.category;
+    const { categories, isLoading } = this.props.categoriesPage;
+    
     if(!isLoading) {
       return (
         <Fragment>
@@ -86,7 +87,7 @@ class Categories extends Component {
 }
 
 const mapStateToProps = state => ({
-  category: state.category
+  categoriesPage: state.categoriesPage
 });
 
 const mapDispatchToProps = {

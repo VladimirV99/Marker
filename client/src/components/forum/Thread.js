@@ -37,7 +37,7 @@ class Thread extends Component {
   }
 
   render() {
-    const { category, forum, thread, posts, postCount, isLoading } = this.props.post;
+    const { category, forum, thread, posts, postCount, isLoading } = this.props.threadPage;
     const totalPages = Math.ceil(postCount/5);
 
     if(isLoading || !thread) {
@@ -68,7 +68,7 @@ class Thread extends Component {
 }
 
 const mapStateToProps = state => ({
-  post: state.post
+  threadPage: state.threadPage
 });
 
 const mapDispatchToProps = {

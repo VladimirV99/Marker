@@ -33,7 +33,7 @@ class Forum extends Component {
 
   render() {
     const { isAuthenticated, user } = this.props.auth;
-    const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.thread;
+    const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.forumPage;
     const totalPages = Math.ceil(threadCount/5);
 
     if(!isLoaded || pageLoading) {
@@ -97,7 +97,7 @@ class Forum extends Component {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  thread: state.thread
+  forumPage: state.forumPage
 });
 
 const mapDispatchToProps = {
