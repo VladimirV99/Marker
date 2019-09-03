@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import { addAlert, clearAlerts } from '../actions/alertActions';
+import { addAlert, clearAlerts } from '../../actions/alertActions';
 import UserPost from './UserPost';
-import Pagination from './pagination/Pagination';
+import Pagination from '../pagination/Pagination';
 
 import './User.css';
 

@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { clearAlerts } from '../actions/alertActions';
-import { loadPosts } from '../actions/postActions';
+import { clearAlerts } from '../../actions/alertActions';
+import { loadPosts } from '../../actions/postActions';
 import Post from './Post';
 import Reply from './Reply';
-import Pagination from './pagination/Pagination';
+import Pagination from '../pagination/Pagination';
 
 import './Thread.css';
 

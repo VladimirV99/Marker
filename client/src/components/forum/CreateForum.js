@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { clearAlerts } from '../actions/alertActions';
-import { createForum } from '../actions/forumActions';
+import { clearAlerts } from '../../actions/alertActions';
+import { createForum } from '../../actions/forumActions';
 
 import './CreateForum.css';
 

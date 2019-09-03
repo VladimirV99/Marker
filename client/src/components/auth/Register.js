@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { clearAlerts } from '../actions/alertActions';
-import { register } from '../actions/authActions';
+import { clearAlerts } from '../../actions/alertActions';
+import { register } from '../../actions/authActions';
 
 class Register extends Component {
   constructor(props) {

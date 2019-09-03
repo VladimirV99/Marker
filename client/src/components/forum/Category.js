@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { clearAlerts } from '../actions/alertActions';
-import { loadForums } from '../actions/forumActions';
+import { clearAlerts } from '../../actions/alertActions';
+import { loadForums } from '../../actions/forumActions';
 
 import CreateForum from './CreateForum';
 

@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { logout } from '../actions/authActions';
-import UserMenu from './UserMenu';
+import { logout } from '../../actions/authActions';
+import NavbarUserMenu from './NavbarUserMenu';
 
 import './Navbar.css';
 
@@ -23,7 +23,7 @@ class Navbar extends Component {
 
     const authLinks = (
       <li className='nav-item'>
-        <UserMenu user={user} onLogoutClick={this.onLogoutClick}></UserMenu>
+        <NavbarUserMenu user={user} onLogoutClick={this.onLogoutClick}></NavbarUserMenu>
       </li>
     );
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { clearAlerts } from '../actions/alertActions';
-import { updateProfile, updatePassword, updatePhoto } from '../actions/authActions';
+import { clearAlerts } from '../../actions/alertActions';
+import { updateProfile, updatePassword, updatePhoto } from '../../actions/authActions';
 
 class Profile extends Component {
   constructor(props) {

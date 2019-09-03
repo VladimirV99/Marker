@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getReadableTimeDifference } from '../util/TimeHelper';
+import { getReadableTimeDifference } from '../../util/TimeHelper';
 
-import { clearAlerts } from '../actions/alertActions';
-import { loadThreads } from '../actions/threadActions';
-import Pagination from './pagination/Pagination';
+import { clearAlerts } from '../../actions/alertActions';
+import { loadThreads } from '../../actions/threadActions';
+import Pagination from '../pagination/Pagination';
 
 import './Forum.css';
 

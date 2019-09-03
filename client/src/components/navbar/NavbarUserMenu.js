@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-class UserMenu extends Component {
+class NavbarUserMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -70,4 +70,4 @@ class UserMenu extends Component {
   }
 }
 
-export default UserMenu;
+export default NavbarUserMenu;

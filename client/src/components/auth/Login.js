@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { clearAlerts } from '../actions/alertActions';
-import { login } from '../actions/authActions';
+import { clearAlerts } from '../../actions/alertActions';
+import { login } from '../../actions/authActions';
 
 class Login extends Component {
   constructor(props) {

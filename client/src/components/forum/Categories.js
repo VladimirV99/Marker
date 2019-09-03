@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getReadableTimeDifference } from '../util/TimeHelper';
+import { getReadableTimeDifference } from '../../util/TimeHelper';
 
-import { clearAlerts } from '../actions/alertActions';
-import { loadCategories } from '../actions/categoryActions';
+import { clearAlerts } from '../../actions/alertActions';
+import { loadCategories } from '../../actions/categoryActions';
 
 import './Categories.css';
 import CreateCategory from './CreateCategory';

@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { clearAlerts } from '../actions/alertActions';
-import { createPost } from '../actions/postActions';
+import { clearAlerts } from '../../actions/alertActions';
+import { createCategory } from '../../actions/categoryActions';
 
-import './Reply.css';
-
-class Reply extends Component {
+class CreateCategory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: ''
+      name: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -25,25 +23,23 @@ class Reply extends Component {
     event.preventDefault();
     this.props.clearAlerts();
 
-    const { content } = this.state;
+    const { name } = this.state;
 
-    let newPost = {
-      content,
-      thread: this.props.thread
+    let newCategory = {
+      name
     };
 
-    this.props.createPost(newPost);
+    this.props.createCategory(newCategory);
   }
 
   render() {
     return (
-      <div className='reply'>
+      <div className='container'>
         <form onSubmit={this.handleSubmit}>
-          <div className='form-group'>
-            <label htmlFor='content'>Content</label>
-            <textarea className='form-control' name='content' onChange={this.handleChange}></textarea>
+          <div className='form-group-inline'>
+            <input type='text' className='form-control' name='name' onChange={this.handleChange}></input>
+            <input type='submit' className='btn btn-blue' value='Create Category'></input>
           </div>
-          <input type='submit' className='btn btn-blue btn-block' value='Reply'></input>
         </form>
       </div>
     );
@@ -51,10 +47,10 @@ class Reply extends Component {
 }
 
 const mapDispatchToProps = {
-  clearAlerts, createPost
+  clearAlerts, createCategory
 };
 
 export default connect(
   null,
   mapDispatchToProps
-)(Reply);
+)(CreateCategory);

@@ -8,18 +8,18 @@ import { loadUser } from './actions/authActions';
 import './App.css';
 import './Form.css';
 
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar/Navbar';
 import Alerts from './components/alerts/Alerts';
-import Register from './components/Register';
-import Login from './components/Login';
-import Banner from './components/Banner';
-import Categories from './components/Categories';
-import Category from './components/Category';
-import Forum from './components/Forum';
-import CreateThread from './components/CreateThread';
-import Thread from './components/Thread';
-import Profile from './components/Profile';
-import User from './components/User';
+import Register from './components/auth/Register';
+import Login from './components/auth/Login';
+import Banner from './components/banner/Banner';
+import Categories from './components/forum/Categories';
+import Category from './components/forum/Category';
+import Forum from './components/forum/Forum';
+import CreateThread from './components/forum/CreateThread';
+import Thread from './components/forum/Thread';
+import Profile from './components/user/Profile';
+import User from './components/user/User';
 
 class App extends Component {
   componentDidMount() {
