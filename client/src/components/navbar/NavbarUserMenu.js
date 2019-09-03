@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import Switch from '../switch/Switch';
+
 class NavbarUserMenu extends Component {
   constructor(props) {
     super(props);
@@ -52,11 +54,9 @@ class NavbarUserMenu extends Component {
           <div className='dropdown-content'>
             <ul className='dropdown-menu'>
               <li className='dropdown-item'><Link className='dropdown-link' to='/profile'>Profile</Link></li>
-              <li className='dropdown-item'>
+              <li className='dropdown-item dropdown-switch'>
                 Dark mode
-                <label className='switch'>
-                  <input type='checkbox'></input>
-                </label>
+                <Switch></Switch>
               </li>
               <hr className='dropdown-divider'/>
               <li className='dropdown-item'>

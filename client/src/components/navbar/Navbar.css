@@ -88,6 +88,11 @@
   width: 100%;
 }
 
+.dropdown-switch {
+  padding: .5rem 0;
+  text-align: center;
+}
+
 .dropdown-link {
   padding: .5rem 0rem;
   color: var(--color-text-primary);
