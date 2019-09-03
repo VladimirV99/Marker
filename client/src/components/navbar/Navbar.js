@@ -22,7 +22,7 @@ class Navbar extends Component {
     const { isAuthenticated, user } = this.props.auth;
 
     const authLinks = (
-      <li className='nav-item'>
+      <li className='nav-item nav-item-dropdown'>
         <NavbarUserMenu user={user} onLogoutClick={this.onLogoutClick}></NavbarUserMenu>
       </li>
     );

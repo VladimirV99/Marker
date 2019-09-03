@@ -7,8 +7,6 @@ import { clearAlerts } from '../../actions/alertActions';
 import { loadThreads } from '../../actions/threadActions';
 import Pagination from '../pagination/Pagination';
 
-import './Forum.css';
-
 class Forum extends Component {
   constructor(props) {
     super(props);

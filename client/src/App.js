@@ -7,6 +7,7 @@ import { loadUser } from './actions/authActions';
 
 import './App.css';
 import './Form.css';
+import './Forum.css';
 
 import Navbar from './components/navbar/Navbar';
 import Alerts from './components/alerts/Alerts';

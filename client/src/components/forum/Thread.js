@@ -8,8 +8,6 @@ import Post from './Post';
 import Reply from './Reply';
 import Pagination from '../pagination/Pagination';
 
-import './Thread.css';
-
 class Thread extends Component {
   constructor(props) {
     super(props);

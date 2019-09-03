@@ -6,7 +6,6 @@ import { getReadableTimeDifference } from '../../util/TimeHelper';
 import { clearAlerts } from '../../actions/alertActions';
 import { loadCategories } from '../../actions/categoryActions';
 
-import './Categories.css';
 import CreateCategory from './CreateCategory';
 import CreateForum from './CreateForum';
 
@@ -21,7 +20,7 @@ class Categories extends Component {
 
   render() {
     const { categories, isLoading } = this.props.categoriesPage;
-    
+
     if(!isLoading) {
       return (
         <Fragment>

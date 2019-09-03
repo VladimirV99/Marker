@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { clearAlerts } from '../../actions/alertActions';
 import { createForum } from '../../actions/forumActions';
 
-import './CreateForum.css';
-
 class CreateForum extends Component {
   constructor(props) {
     super(props);
