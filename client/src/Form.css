@@ -44,12 +44,13 @@ label {
   width: 100%;
 }
 
-.btn-blue {
-  background-color: #1f76ce;
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
 }
 
-.btn-blue:hover {
-  background-color: #1761aa;
+.btn-primary:hover {
+  background-color: var(--color-primary-active);
 }
 
 @media screen and (max-width: 768px) {

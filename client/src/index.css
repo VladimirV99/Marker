@@ -1,18 +1,30 @@
+:root {
+  --color-primary: #16528e;
+  --color-primary-active: #114579;
+  --color-secondary: #212223;
+  --color-tertiary: white;
+  --color-tertiary-muted: grey;
+  --color-background: lightgrey;
+
+  --color-text: black;
+  --color-text-primary: white;
+  --color-text-primary-muted: lightgrey;
+  --color-text-secondary: white;
+  --color-text-tertiary: black;
+  --color-text-muted: grey;
+}
+
 body {
-  background-color: lightgrey;
+  background-color: var(--color-background);
   padding: 0;
   margin: 0;
   font-family: Arial, sans-serif;
 }
 
-.bg-color-blue {
-  background-color: #16528e;
-}
-
 a {
   text-decoration: none;
   text-align: center;
-  color: black;
+  color: var(--color-text);
 }
 
 .container {
@@ -35,7 +47,7 @@ a {
 }
 
 .text-muted {
-  color: grey;
+  color: var(--color-text-muted);
 }
 
 .text-center {

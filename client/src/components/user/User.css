@@ -1,6 +1,6 @@
 .user-data {
   display: flex;
-  background-color: white;
+  background-color: var(--color-tertiary);
   margin-bottom: 1rem;
 }
 

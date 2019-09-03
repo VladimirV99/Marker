@@ -52,7 +52,7 @@ class CreateThread extends Component {
             <label htmlFor='content'>Content</label>
             <textarea className='form-control' name='content' onChange={this.handleChange}></textarea>
           </div>
-          <input type='submit' className='btn btn-blue btn-block' value='Create Thread'></input>
+          <input type='submit' className='btn btn-primary btn-block' value='Create Thread'></input>
         </form>
       </main>
     );

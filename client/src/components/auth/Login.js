@@ -49,7 +49,7 @@ class Login extends Component {
             <label htmlFor='password'>Password</label>
             <input type='password' className='form-control' name='password' onChange={this.handleChange}></input>
           </div>
-          <input type='submit' className='btn btn-blue btn-block' value='Log In'></input>
+          <input type='submit' className='btn btn-primary btn-block' value='Log In'></input>
         </form>
       </div>
     );

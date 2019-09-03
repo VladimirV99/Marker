@@ -101,9 +101,9 @@ class Profile extends Component {
         <h2 className='text-center'>Update Photo</h2>
         <form onSubmit={this.handlePhotoSubmit} encType='multipart/form-data'>
           <img src={user.photo} alt={user.username} className='profile-photo' />
-          <label className='btn btn-blue'>Select photo<input type='file' name='photo' className='display-none' onChange={this.handlePhotoSelect}/></label>
+          <label className='btn btn-primary'>Select photo<input type='file' name='photo' className='display-none' onChange={this.handlePhotoSelect}/></label>
           {this.state.photo_url? <img src={this.state.photo_url} alt={user.username} className='profile-photo' /> : null}
-          <input type='submit' className='btn btn-blue' value='Update Photo' />
+          <input type='submit' className='btn btn-primary' value='Update Photo' />
         </form>
 
         <h2 className='text-center'>Update Profile</h2>
@@ -120,7 +120,7 @@ class Profile extends Component {
             <label htmlFor='email'>Email</label>
             <input type='text' className='form-control' name='email' value={this.state.email} onChange={this.handleChange}></input>
           </div>
-          <input type='submit' className='btn btn-blue btn-block' value='Update Profile'></input>
+          <input type='submit' className='btn btn-primary btn-block' value='Update Profile'></input>
         </form>
 
         <h2 className='text-center'>Change Password</h2>
@@ -137,7 +137,7 @@ class Profile extends Component {
             <label htmlFor='new_password_confirm'>Confirm New Password</label>
             <input type='password' className='form-control' name='new_password_confirm' onChange={this.handleChange}></input>
           </div>
-          <input type='submit' className='btn btn-blue btn-block' value='Change Password'></input>
+          <input type='submit' className='btn btn-primary btn-block' value='Change Password'></input>
         </form>
       </main>
     );

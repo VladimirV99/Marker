@@ -1,4 +1,4 @@
 .reply {
-  background-color: white;
+  background-color: var(--color-tertiary);
   padding: .5rem;
 }

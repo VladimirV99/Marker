@@ -39,7 +39,7 @@ class Navbar extends Component {
     );
 
     return (
-      <nav className='navbar bg-color-blue'>
+      <nav className='navbar'>
         <Link to='/' className='navbar-brand'>Marker</Link>
 
         <ul className='navbar-nav'>

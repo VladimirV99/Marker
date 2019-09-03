@@ -43,7 +43,7 @@ class Reply extends Component {
             <label htmlFor='content'>Content</label>
             <textarea className='form-control' name='content' onChange={this.handleChange}></textarea>
           </div>
-          <input type='submit' className='btn btn-blue btn-block' value='Reply'></input>
+          <input type='submit' className='btn btn-primary btn-block' value='Reply'></input>
         </form>
       </div>
     );

@@ -5,4 +5,9 @@
 
 .thread-header {
   margin: 1.5rem 0;
+  color: var(--color-text-tertiary);
+}
+
+.thread-header a {
+  color: var(--color-text-tertiary);
 }

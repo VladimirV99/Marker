@@ -1,5 +1,6 @@
 .post {
-  background-color:white;
+  background-color: var(--color-tertiary);
+  color: var(--color-text-tertiary);
   margin-bottom: 1rem;
   display: flex;
   position: relative;
@@ -14,12 +15,12 @@
   align-items: center;
   text-align: center;
   box-sizing: border-box;
-  background-color: #16528e;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
 }
 
 .post-creator a {
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .post-content {
@@ -69,6 +70,6 @@
 
   .post-delete {
     top: .75rem;
-    color: white;
+    color: var(--color-text-primary);
   }
 }
