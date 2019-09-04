@@ -3,6 +3,14 @@ label {
   margin-bottom: .5rem;
 }
 
+.form-row {
+  display: flex;
+}
+
+.form-row .form-group{
+  display: inline-block;
+}
+
 .form-group {
   display: block;
   margin-bottom: 1rem;
@@ -40,6 +48,10 @@ label {
   cursor: pointer;
 }
 
+.btn:disabled {
+  cursor: default;
+}
+
 .btn-block {
   width: 100%;
 }
@@ -53,6 +65,11 @@ label {
   background-color: var(--color-primary-active);
 }
 
+.btn-primary:disabled {
+  color: var(--color-text-primary-muted);
+  background-color: var(--color-primary-inactive);
+}
+
 @media screen and (max-width: 768px) {
   .form-group-inline input[type="text"] {
     width: 100%;
@@ -62,4 +79,36 @@ label {
   .form-group-inline input[type="submit"] {
     width: 100%;
   }
+}
+
+.form-control-invalid {
+  border-color: red;
+}
+
+.form-control-invalid:focus {
+  outline-color: red;
+}
+
+.form-control-valid {
+  border-color: green;
+}
+
+.form-control-valid:focus {
+  outline-color: green;
+}
+
+.validation-block {
+  width: 100%;
+  margin-block-start: .25rem;
+  margin-block-end: 0;
+  padding-left: 1.5rem;
+  font-size: 80%;
+}
+
+.validation-error {
+  color: red;
+}
+
+.validation-success {
+  color: green;
 }

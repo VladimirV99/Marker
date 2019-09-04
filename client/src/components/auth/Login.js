@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { clearAlerts } from '../../actions/alertActions';
 import { login } from '../../actions/authActions';
@@ -34,10 +35,12 @@ class Login extends Component {
       password
     };
 
-    this.props.login(user);
+    this.props.login(user, this.props.history);
   }
 
   render() {
+    const can_submit = this.state.username && this.state.password;
+
     return(
       <div className='container'>
         <form onSubmit={this.handleSubmit}>
@@ -49,7 +52,7 @@ class Login extends Component {
             <label htmlFor='password'>Password</label>
             <input type='password' className='form-control' name='password' onChange={this.handleChange}></input>
           </div>
-          <input type='submit' className='btn btn-primary btn-block' value='Log In'></input>
+          <input type='submit' disabled={!can_submit} className='btn btn-primary btn-block' value='Log In'></input>
         </form>
       </div>
     );
@@ -68,4 +71,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(withRouter(Login));

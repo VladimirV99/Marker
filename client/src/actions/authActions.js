@@ -30,13 +30,14 @@ export const loadUser = () => (dispatch, getState) => {
   }
 };
 
-export const register = ({ username, first_name, last_name, email, password }) => dispatch => {
+export const register = ({ username, first_name, last_name, email, password }, history) => dispatch => {
   const body = JSON.stringify({ username, first_name, last_name, email, password });
   axios.post('/api/users/register', body, createHeaders()).then(res => {
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data
     });
+    history.push('/');
   }).catch(err => {
     dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({
@@ -45,13 +46,14 @@ export const register = ({ username, first_name, last_name, email, password }) =
   });
 };
 
-export const login = ({ username, password }) => dispatch => {
+export const login = ({ username, password }, history) => dispatch => {
   const body = JSON.stringify({ username, password });
   axios.post('/api/users/login', body, createHeaders()).then(res => {
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data
-    })
+    });
+    history.push('/');
   }).catch(err => {
     dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({

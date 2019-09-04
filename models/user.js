@@ -47,10 +47,10 @@ const UserModel = (sequelize, DataTypes) => {
         },
         len: {
           args: [3, 15],
-          msg: 'First name must between 3 and 15 characters long'
+          msg: 'Username must between 3 and 15 characters long'
         },
         isAlphanumeric: {
-          msg: 'First name can\'t contain special characters'
+          msg: 'Username can\'t contain special characters'
         }
       }
     },

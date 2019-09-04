@@ -30,7 +30,7 @@ const upload = multer({
 
 router.get('/checkUsername/:username', (req, res) => {
   if (!req.params.username) {
-    res.status(400).json({ message: 'E-mail was not provided' });
+    res.status(400).json({ message: 'Username was not provided' });
   } else {
     User.findOne({ where: { username: req.params.username } }).then(user => {
       if (user) {

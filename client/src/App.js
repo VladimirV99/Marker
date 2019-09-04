@@ -9,6 +9,9 @@ import './App.css';
 import './Form.css';
 import './Forum.css';
 
+import AuthRoute from './components/common/AuthRoute';
+import NonAuthRoute from './components/common/NonAuthRoute';
+
 import Navbar from './components/navbar/Navbar';
 import Alerts from './components/alerts/Alerts';
 import Register from './components/auth/Register';
@@ -36,10 +39,11 @@ class App extends Component {
             <Route exact path='/' component={Banner} />
             <Alerts></Alerts>
             <Route exact path='/' component={Categories} />
-            <Route exact path='/register' component={Register} />
-            <Route exact path='/login' component={Login} />
 
-            <Route exact path='/profile' component={Profile} />
+            <NonAuthRoute exact path='/register' component={Register} />
+            <NonAuthRoute exact path='/login' component={Login} />
+            
+            <AuthRoute exact path='/profile' component={Profile} />
             <Route exact path='/user/:username' component={User} />
 
             <Route exact path='/category/:id' component={Category} />
