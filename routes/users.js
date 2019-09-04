@@ -247,4 +247,24 @@ router.post('/uploadPhoto', passport.authenticate('jwt', { session: false }), (r
   });
 });
 
+router.post('/darkMode', passport.authenticate('jwt', {session: false}), (req, res) => {
+  User.findByPk(req.user.id).then(user => {
+    if(!user) {
+      res.status(404).json({ message: 'User not found' });
+    } else {
+      user.dark_mode = req.body.status;
+      user.save().then(() => {
+        if(user.dark_mode)
+          res.status(200).json({ message: 'Dark Mode Activated' });
+        else
+          res.status(200).json({ message: 'Dark Mode Deactivated' });
+      }).catch(err => {
+        res.status(500).json({ message: 'Something went wrong' });
+      });
+    }
+  }).catch(err => {
+    res.status(500).json({ message: 'Something went wrong' });
+  });
+});
+
 module.exports = router;

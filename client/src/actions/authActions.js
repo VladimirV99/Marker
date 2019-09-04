@@ -9,7 +9,8 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  USER_SET_DARK_MODE
 } from './types';
 
 export const loadUser = () => (dispatch, getState) => {
@@ -97,6 +98,15 @@ export const updatePhoto = photo => (dispatch, getState) => {
     dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };
+
+export const setDarkMode = flag => (dispatch, getState) => {
+  axios.post('/api/users/darkMode', {status: flag}, createAuthHeaders(getState())).then(res => {
+    dispatch({
+      type: USER_SET_DARK_MODE,
+      payload: flag
+    });
+  });
+}
 
 export const createHeaders = () => {
   return {

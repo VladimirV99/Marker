@@ -56,7 +56,7 @@ class NavbarUserMenu extends Component {
               <li className='dropdown-item'><Link className='dropdown-link' to='/profile'>Profile</Link></li>
               <li className='dropdown-item dropdown-switch'>
                 Dark mode
-                <Switch></Switch>
+                <Switch checked={user.dark_mode} onCheck={this.props.onDarkModeChange}></Switch>
               </li>
               <hr className='dropdown-divider'/>
               <li className='dropdown-item'>

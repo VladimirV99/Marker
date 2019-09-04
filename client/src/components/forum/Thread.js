@@ -40,7 +40,7 @@ class Thread extends Component {
 
     if(isLoading || !thread) {
       return (
-        <h3>Loading</h3>
+        <h3 className='loading'>Loading</h3>
       );
     }
 

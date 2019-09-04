@@ -7,7 +7,8 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  USER_UPDATE_PROFILE
+  USER_UPDATE_PROFILE,
+  USER_SET_DARK_MODE
 } from '../actions/types';
 
 const initialState = {
@@ -62,6 +63,14 @@ export default function(state = initialState, action) {
           email: action.payload.email
         }
       };
+    case USER_SET_DARK_MODE:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          dark_mode: action.payload
+        }
+      }
     default:
       return state;
   }

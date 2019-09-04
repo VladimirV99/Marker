@@ -36,7 +36,7 @@ class Forum extends Component {
 
     if(!isLoaded || pageLoading) {
       return (
-        <h3>Loading</h3>
+        <h3 className='loading'>Loading</h3>
       );
     }
 

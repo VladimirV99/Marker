@@ -8,6 +8,7 @@ import { loadCategories } from '../../actions/categoryActions';
 
 import CreateCategory from './CreateCategory';
 import CreateForum from './CreateForum';
+import FileIcon from '../common/FileIcon';
 
 class Categories extends Component {
   componentDidMount() {
@@ -42,7 +43,7 @@ class Categories extends Component {
                     category.forums.map(forum => (
                       <div key={forum.id} className='forum'>
                         <div className='forum-title'>
-                          <span><img src='file_icon.svg' className='icon' alt='File Icon' /></span>
+                          <FileIcon></FileIcon>
                           <div>
                             <p><Link to={`/forum/${forum.id}`}><strong>{forum.name}</strong></Link></p>
                             <p className='text-muted'>{forum.name}</p>
@@ -79,7 +80,7 @@ class Categories extends Component {
       );
     } else {
       return (
-        <h3>Loading</h3>
+        <h3 className='loading'>Loading</h3>
       );
     }
   }

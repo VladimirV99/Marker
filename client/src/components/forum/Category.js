@@ -75,7 +75,7 @@ class Categories extends Component {
       );
     } else {
       return (
-        <h3>Loading</h3>
+        <h3 className='loading'>Loading</h3>
       );
     }
   }

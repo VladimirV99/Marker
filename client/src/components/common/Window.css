@@ -1,0 +1,26 @@
+#window {
+  height: 100%;
+  min-height: 100vh;
+}
+
+#window.dark_mode {
+  --color-tertiary: rgb(77, 77, 77);
+  --color-tertiary-muted: grey;
+  --color-background: rgb(40, 40, 40);
+
+  --color-text: white;
+  --color-text-tertiary: white;
+  --color-text-muted: lightgrey;
+
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+#window.light_mode {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-text);
+}

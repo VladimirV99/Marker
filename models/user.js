@@ -118,6 +118,10 @@ const UserModel = (sequelize, DataTypes) => {
     is_moderator: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    dark_mode: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
     underscored: true
@@ -203,7 +207,8 @@ const UserModel = (sequelize, DataTypes) => {
                     last_name: user.last_name,
                     email: user.email,
                     photo: user.photo,
-                    is_moderator: user.is_moderator
+                    is_moderator: user.is_moderator,
+                    dark_mode: user.dark_mode
                   }
                 });
               } else {

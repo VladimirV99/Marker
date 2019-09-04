@@ -58,7 +58,9 @@ class User extends Component {
     const totalPages = Math.ceil(totalPosts/5);
 
     if(isLoading) {
-      return null;
+      return (
+        <h3 className='loading'>Loading</h3>
+      );
     }
 
     return (
