@@ -1,7 +1,7 @@
 .banner {
   padding: .75rem;
-  background-color: #212223;
-  color: white;
+  background-color: var(--color-secondary);
+  color: var(--color-text-secondary);
   text-align: center;
   margin-bottom: 2rem;
 }

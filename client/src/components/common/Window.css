@@ -4,11 +4,13 @@
 }
 
 #window.dark_mode {
+  --color-secondary: #141414;
   --color-tertiary: rgb(77, 77, 77);
   --color-tertiary-muted: grey;
   --color-background: rgb(40, 40, 40);
 
   --color-text: white;
+  --color-text-secondary: white;
   --color-text-tertiary: white;
   --color-text-muted: lightgrey;
 
