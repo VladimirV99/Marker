@@ -37,11 +37,45 @@ label {
   box-sizing: border-box;
 }
 
+.form-control-invalid {
+  border-color: red;
+}
+
+.form-control-invalid:focus {
+  outline-color: red;
+}
+
+.form-control-valid {
+  border-color: green;
+}
+
+.form-control-valid:focus {
+  outline-color: green;
+}
+
+.validation-block {
+  width: 100%;
+  margin-block-start: .25rem;
+  margin-block-end: 0;
+  padding-left: 1.5rem;
+  font-size: 80%;
+}
+
+.validation-error {
+  color: red;
+}
+
+.validation-success {
+  color: green;
+}
+
 .btn {
   font-size: 1rem;
   padding: .4rem .75rem;
   border: 1px solid black;
   border-radius: .25rem;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .btn:hover {
@@ -79,36 +113,4 @@ label {
   .form-group-inline input[type="submit"] {
     width: 100%;
   }
-}
-
-.form-control-invalid {
-  border-color: red;
-}
-
-.form-control-invalid:focus {
-  outline-color: red;
-}
-
-.form-control-valid {
-  border-color: green;
-}
-
-.form-control-valid:focus {
-  outline-color: green;
-}
-
-.validation-block {
-  width: 100%;
-  margin-block-start: .25rem;
-  margin-block-end: 0;
-  padding-left: 1.5rem;
-  font-size: 80%;
-}
-
-.validation-error {
-  color: red;
-}
-
-.validation-success {
-  color: green;
 }

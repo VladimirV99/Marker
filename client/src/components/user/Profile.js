@@ -7,6 +7,8 @@ import { updateProfile, updatePassword, updatePhoto } from '../../actions/authAc
 import Validation from '../../util/Validation';
 import ValidationBlock from '../validation/ValidationBlock';
 
+import './Profile.css';
+
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -67,6 +69,11 @@ class Profile extends Component {
     };
 
     this.props.updateProfile(newProfile);
+    this.setState({
+      photo_file: null,
+      photo_name: '',
+      photo_url: null
+    });
   }
 
   handlePasswordSubmit(event) {
@@ -174,11 +181,13 @@ class Profile extends Component {
     return (
       <main className='container'>
         <h2 className='text-center'>Update Photo</h2>
-        <form onSubmit={this.handlePhotoSubmit} encType='multipart/form-data'>
-          <img src={user.photo} alt={user.username} className='profile-photo' />
-          <label className='btn btn-primary'>Select photo<input type='file' name='photo' className='display-none' onChange={this.handlePhotoSelect}/></label>
-          {this.state.photo_url? <img src={this.state.photo_url} alt={user.username} className='profile-photo' /> : null}
-          <input type='submit' disabled={!can_submit_photo} className='btn btn-primary' value='Update Photo' />
+        <form className='profile-photo-form' onSubmit={this.handlePhotoSubmit} encType='multipart/form-data'>
+          {!this.state.photo_url? <img src={user.photo} alt={user.username} className='profile-photo-large' /> : null}
+          {this.state.photo_url? <img src={this.state.photo_url} alt={user.username} className='profile-photo-large' /> : null}
+          <div className='profile-photo-menu'>
+            <label className='btn btn-primary btn-block'>Select photo<input type='file' name='photo' className='display-none' onChange={this.handlePhotoSelect}/></label>
+            <input type='submit' disabled={!can_submit_photo} className='btn btn-primary btn-block' value='Update Photo' />
+          </div>
         </form>
 
         <h2 className='text-center'>Update Profile</h2>

@@ -1,0 +1,27 @@
+.profile-photo-form {
+  display: flex;
+  align-items: center;
+}
+
+.profile-photo-form .profile-photo-menu{
+  width: 100%;
+}
+
+.profile-photo-large {
+  border-radius: 50%;
+  width: 30%;
+  margin-right: 1rem;
+}
+
+@media screen and (max-width: 450px) {
+  .profile-photo-form {
+    flex-direction: column;
+  }
+
+  .profile-photo-large {
+    width: 70%;
+    text-align: center;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+}
