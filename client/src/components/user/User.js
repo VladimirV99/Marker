@@ -14,11 +14,12 @@ class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
+      isLoaded: false,
       user: null,
       posts: [],
-      totalPosts: 0,
+      postCount: 0,
       page: 1,
+      pageLoading: true,
       showModeratorPanel: false
     }
 
@@ -32,7 +33,7 @@ class User extends Component {
   componentDidMount() {
     axios.get(`/api/users/get/${this.props.match.params.username}`).then(res => {
       this.setState({
-        isLoading: false,
+        isLoaded: true,
         user: res.data.user
       });
       this.onPageChange(this.state.page);
@@ -48,12 +49,14 @@ class User extends Component {
   onPageChange(page) {
     this.props.clearAlerts();
     this.setState({
-      page
+      page,
+      pageLoading: true
     });
-    axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/5`).then(res => {
+    axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/20`).then(res => {
       this.setState({
         posts: res.data.posts,
-        totalPosts: res.data.total
+        postCount: res.data.total,
+        pageLoading: false
       });
     }).catch(err => {
       this.props.addAlert(err.response.data.message, 'error', err.response.status);
@@ -99,10 +102,10 @@ class User extends Component {
   }
 
   render() {
-    const { isLoading, user, posts, totalPosts, page } = this.state;
-    const totalPages = Math.ceil(totalPosts/5);
+    const { isLoaded, user, posts, postCount, page, pageLoading } = this.state;
+    const totalPages = Math.ceil(postCount/5);
 
-    if(isLoading) {
+    if(!isLoaded) {
       return (
         <h3 className='loading'>Loading</h3>
       );
@@ -157,15 +160,19 @@ class User extends Component {
 
         <h2>Posts:</h2>
         {
-          totalPosts>0 ? (
-            <Fragment>
-              {posts.map(post => (
-                <UserPost key={post.id} post={post}></UserPost>
-              ))}
-              <Pagination currentPage={page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
-            </Fragment>
+          pageLoading ? (
+            <h3 className='loading'>Loading</h3>
           ) : (
-            <h3 className='text-center'>This user has no posts</h3>
+            postCount>0 ? (
+              <Fragment>
+                {posts.map(post => (
+                  <UserPost key={post.id} post={post}></UserPost>
+                ))}
+                <Pagination currentPage={page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
+              </Fragment>
+            ) : (
+              <h3 className='text-center'>This user has no posts</h3>
+            )
           )
         }
         

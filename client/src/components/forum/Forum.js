@@ -34,7 +34,7 @@ class Forum extends Component {
     const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.forumPage;
     const totalPages = Math.ceil(threadCount/5);
 
-    if(!isLoaded || pageLoading) {
+    if(!isLoaded) {
       return (
         <h3 className='loading'>Loading</h3>
       );
@@ -56,36 +56,39 @@ class Forum extends Component {
             <div className='thread-last'>Last Post</div>
           </div>
           
-          { threads.length>0 ?
-            threads.map(thread => (
-              <div key={thread.id} className='thread'>
-                <div className='thread-title'>
-                  <div>
-                    <p><Link to={`/thread/${thread.id}`}><strong>{thread.subject}</strong></Link></p>
-                    <p className='text-muted'>{thread.subject}</p>
+          { 
+            !pageLoading ? (
+              threads.map(thread => (
+                <div key={thread.id} className='thread'>
+                  <div className='thread-title'>
+                    <div>
+                      <p><Link to={`/thread/${thread.id}`}><strong>{thread.subject}</strong></Link></p>
+                      <p className='text-muted'>{thread.subject}</p>
+                    </div>
+                  </div>
+
+                  <div className='thread-posts'>
+                    <p>{thread.post_count || 0}</p>
+                  </div>
+
+                  <div className="thread-last">
+                    { thread.posts && thread.posts[0] ? (
+                      <div>
+                        <p>by <Link to={`/user/${thread.posts[0].author.username}`}>{thread.posts[0].author.username}</Link></p>
+                        <p className="text-muted"><small>{getReadableTimeDifference(new Date(thread.posts[0].created_at))}</small></p>
+                      </div>
+                    ) : null }
                   </div>
                 </div>
-
-                <div className='thread-posts'>
-                  <p>{thread.post_count || 0}</p>
-                </div>
-
-                <div className="thread-last">
-                  { thread.posts && thread.posts[0] ? (
-                    <div>
-                      <p>by <Link to={`/user/${thread.posts[0].author.username}`}>{thread.posts[0].author.username}</Link></p>
-                      <p className="text-muted"><small>{getReadableTimeDifference(new Date(thread.posts[0].created_at))}</small></p>
-                    </div>
-                  ) : null }
-                </div>
-              </div>
-            )) :
-            <div className='thread'><h3>There are no threads in this forum</h3></div>
+              )) 
+            ) : (
+              <div className='thread'><h3>There are no threads in this forum</h3></div>
+            )
           }
 
           </div>
 
-        {threadCount>0?<Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>:''}
+        <Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
       </main>
     );
   }

@@ -35,10 +35,10 @@ class Thread extends Component {
   }
 
   render() {
-    const { category, forum, thread, posts, postCount, isLoading } = this.props.threadPage;
+    const { category, forum, thread, posts, postCount, isLoaded } = this.props.threadPage;
     const totalPages = Math.ceil(postCount/5);
 
-    if(isLoading || !thread) {
+    if(!isLoaded) {
       return (
         <h3 className='loading'>Loading</h3>
       );
@@ -58,7 +58,7 @@ class Thread extends Component {
             <Post key={post.id} post={post}></Post>
           ))
         }
-        {postCount>0?<Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>:''}
+        <Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
         <Reply thread={this.props.match.params.id}></Reply>
       </main>
     );

@@ -7,6 +7,10 @@ import './Pagination.css';
 class Pagination extends Component {
   render() {
     let { currentPage, totalPages, displayPages, onPageChange } = this.props;
+
+    if(totalPages<=1)
+      return null;
+
     let startPage;
     let endPage;
 
