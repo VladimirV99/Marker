@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
@@ -15,11 +16,13 @@ class User extends Component {
     super(props);
     this.state = {
       isLoaded: false,
+      errorLoading: false,
       user: null,
       posts: [],
       postCount: 0,
       page: 1,
       pageLoading: true,
+      pageLoadingError: false,
       showModeratorPanel: false
     }
 
@@ -38,6 +41,11 @@ class User extends Component {
       });
       this.onPageChange(this.state.page);
     }).catch(err => {
+      this.setState({
+        errorLoading: true
+      });
+      if(err.response.status === 404)
+        this.props.history.push('/');
       this.props.addAlert(err.response.data.message, 'error', err.response.status);
     });
   }
@@ -50,7 +58,8 @@ class User extends Component {
     this.props.clearAlerts();
     this.setState({
       page,
-      pageLoading: true
+      pageLoading: true,
+      pageLoadingError: false
     });
     axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/20`).then(res => {
       this.setState({
@@ -59,6 +68,9 @@ class User extends Component {
         pageLoading: false
       });
     }).catch(err => {
+      this.setState({
+        pageLoadingError: true
+      });
       this.props.addAlert(err.response.data.message, 'error', err.response.status);
     });
   }
@@ -102,8 +114,12 @@ class User extends Component {
   }
 
   render() {
-    const { isLoaded, user, posts, postCount, page, pageLoading } = this.state;
+    const { isLoaded, errorLoading, user, posts, postCount, page, pageLoading, pageLoadingError } = this.state;
     const totalPages = Math.ceil(postCount/5);
+
+    if(errorLoading) {
+      return null;
+    }
 
     if(!isLoaded) {
       return (
@@ -160,22 +176,26 @@ class User extends Component {
 
         <h2>Posts:</h2>
         {
-          pageLoading ? (
-            <h3 className='loading'>Loading</h3>
+          pageLoadingError ? (
+            <h3 className='loading'>Error Loading Posts</h3>
           ) : (
-            postCount>0 ? (
-              <Fragment>
-                {posts.map(post => (
-                  <UserPost key={post.id} post={post}></UserPost>
-                ))}
-                <Pagination currentPage={page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
-              </Fragment>
+            pageLoading ? (
+              <h3 className='loading'>Loading</h3>
             ) : (
+              postCount>0 ? (
+                <Fragment>
+                  {posts.map(post => (
+                    <UserPost key={post.id} post={post}></UserPost>
+                    ))}
+                  <Pagination currentPage={page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
+                </Fragment>
+              ) : (
               <h3 className='text-center'>This user has no posts</h3>
+              )
             )
           )
         }
-        
+            
       </div>
     );
   }
@@ -192,4 +212,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(User);
+)(withRouter(User));

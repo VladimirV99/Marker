@@ -17,8 +17,8 @@ export const loadCategories = () => dispatch => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({ type: CATEGORIES_RESET });
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };
 

@@ -32,9 +32,6 @@ class Pagination extends Component {
 
     let pages = Array(endPage - startPage + 1);
 
-    if(pages<2)
-      return null;
-
     for(let i = 0; i < pages.length; i++) {
       pages[i] = startPage + i;
     }

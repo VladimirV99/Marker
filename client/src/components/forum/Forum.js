@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getReadableTimeDifference } from '../../util/TimeHelper';
 
@@ -26,13 +26,17 @@ class Forum extends Component {
   }
 
   onPageChange(page) {
-    this.props.loadThreads(this.props.match.params.id, page);
+    this.props.loadThreads(this.props.match.params.id, page, this.props.history);
   }
 
   render() {
     const { isAuthenticated } = this.props.auth;
-    const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.forumPage;
+    const { category, forum, threads, threadCount, isLoaded, errorLoading } = this.props.forumPage;
     const totalPages = Math.ceil(threadCount/5);
+
+    if(errorLoading) {
+      return null;
+    }
 
     if(!isLoaded) {
       return (
@@ -57,7 +61,7 @@ class Forum extends Component {
           </div>
           
           { 
-            !pageLoading ? (
+            threadCount>0 ? (
               threads.map(thread => (
                 <div key={thread.id} className='thread'>
                   <div className='thread-title'>
@@ -86,7 +90,7 @@ class Forum extends Component {
             )
           }
 
-          </div>
+        </div>
 
         <Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
       </main>
@@ -106,4 +110,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Forum);
+)(withRouter(Forum));

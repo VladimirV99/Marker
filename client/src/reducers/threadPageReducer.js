@@ -12,8 +12,9 @@ const initialState = {
   thread: null,
   posts: [],
   postCount: 0,
-  pageLoading: false,
-  isLoaded: false
+  postsLoading: false,
+  isLoaded: false,
+  errorLoading: false
 };
 
 export default function(state = initialState, action) {
@@ -21,7 +22,7 @@ export default function(state = initialState, action) {
     case POSTS_LOADING:
       return {
         ...state,
-        pageLoading: true
+        postsLoading: true
       };
     case POSTS_LOADED:
       return {
@@ -31,7 +32,7 @@ export default function(state = initialState, action) {
         thread: action.payload.thread,
         posts: action.payload.posts,
         postCount: action.payload.total,
-        pageLoading: false,
+        postsLoading: false,
         isLoaded: true
       };
     case POSTS_RESET:
@@ -42,8 +43,9 @@ export default function(state = initialState, action) {
         thread: null,
         posts: [],
         postCount: 0,
-        pageLoading: false,
-        isLoaded: false
+        postsLoading: false,
+        isLoaded: false,
+        errorLoading: true
       }
     case ADD_POST:
       return {

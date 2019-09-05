@@ -7,7 +7,8 @@ import {
 const initialState = {
   category: null,
   forums: [],
-  isLoading: true
+  isLoaded: false,
+  errorLoading: false
 };
 
 export default function(state = initialState, action) {
@@ -15,21 +16,22 @@ export default function(state = initialState, action) {
     case FORUMS_LOADING:
       return {
         ...state,
-        isLoading: true
+        isLoaded: false
       };
     case FORUMS_LOADED:
       return {
         ...state,
         category: action.payload.category,
         forums: action.payload.forums,
-        isLoading: false
+        isLoaded: true
       };
     case FORUMS_RESET:
       return {
         ...state,
         category: null,
         forums: [],
-        isLoading: false
+        isLoaded: false,
+        errorLoading: true
       };
     default:
       return state;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
@@ -31,12 +31,16 @@ class Thread extends Component {
     this.setState({
       page
     });
-    this.props.loadPosts(this.props.match.params.id, page);
+    this.props.loadPosts(this.props.match.params.id, page, this.props.history);
   }
 
   render() {
-    const { category, forum, thread, posts, postCount, isLoaded } = this.props.threadPage;
+    const { category, forum, thread, posts, postCount, isLoaded, errorLoading } = this.props.threadPage;
     const totalPages = Math.ceil(postCount/5);
+
+    if(errorLoading) {
+      return null;
+    }
 
     if(!isLoaded) {
       return (
@@ -76,4 +80,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Thread);
+)(withRouter(Thread));

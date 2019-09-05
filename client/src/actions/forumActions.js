@@ -9,7 +9,7 @@ import {
   CATEGORIES_ADD_FORUM
 } from './types';
 
-export const loadForums = (category_id) => dispatch => {
+export const loadForums = (category_id, history) => dispatch => {
   dispatch({ type: FORUMS_LOADING });
   axios.get(`/api/forums/category/${category_id}`).then(res => {
     dispatch({
@@ -17,8 +17,10 @@ export const loadForums = (category_id) => dispatch => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({ type: FORUMS_RESET });
+    if(err.response.status === 404)
+      history.push('/');
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };
 

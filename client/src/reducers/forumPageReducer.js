@@ -9,8 +9,9 @@ const initialState = {
   forum: null,
   threads: [],
   threadCount: 0,
-  pageLoading: false,
-  isLoaded: false
+  threadsLoading: false,
+  isLoaded: false,
+  errorLoading: false
 };
 
 export default function(state = initialState, action) {
@@ -18,7 +19,7 @@ export default function(state = initialState, action) {
     case THREADS_LOADING:
       return {
         ...state,
-        pageLoading: true
+        threadsLoading: true
       };
     case THREADS_LOADED:
       return {
@@ -27,7 +28,7 @@ export default function(state = initialState, action) {
         forum: action.payload.forum,
         threads: action.payload.threads,
         threadCount: action.payload.total,
-        pageLoading: false,
+        threadsLoading: false,
         isLoaded: true
       };
     case THREADS_RESET:
@@ -37,8 +38,9 @@ export default function(state = initialState, action) {
         forum: null,
         threads: [],
         threadCount: 0,
-        pageLoading: false,
-        isLoaded: false
+        threadsLoading: false,
+        isLoaded: false,
+        errorLoading: true
       }
     default:
       return state;

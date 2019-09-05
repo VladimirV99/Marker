@@ -10,7 +10,7 @@ import {
   DELETE_POST
 } from './types';
 
-export const loadPosts = (thread_id, page) => dispatch => {
+export const loadPosts = (thread_id, page, history) => dispatch => {
   dispatch({ type: POSTS_LOADING });
   axios.get(`/api/threads/get/${thread_id}/page/${page}/15`).then(res => {
     dispatch({
@@ -18,8 +18,10 @@ export const loadPosts = (thread_id, page) => dispatch => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({ type: POSTS_RESET });
+    if(err.response.status === 404)
+      history.push('/');
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };
 

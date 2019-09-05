@@ -8,7 +8,7 @@ import {
   THREADS_RESET
 } from './types';
 
-export const loadThreads = (forum_id, page) => dispatch => {
+export const loadThreads = (forum_id, page, history) => dispatch => {
   dispatch({ type: THREADS_LOADING });
   axios.get(`/api/forums/get/${forum_id}/page/${page}/5`).then(res => {
     dispatch({
@@ -16,8 +16,10 @@ export const loadThreads = (forum_id, page) => dispatch => {
       payload: res.data
     });
   }).catch(err => {
-    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
     dispatch({ type: THREADS_RESET });
+    if(err.response.status === 404)
+      history.push('/');
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });
 };
 

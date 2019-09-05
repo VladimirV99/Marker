@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
@@ -10,7 +10,7 @@ import FileIcon from '../common/FileIcon';
 
 class Categories extends Component {
   componentDidMount() {
-    this.props.loadForums(this.props.match.params.id);
+    this.props.loadForums(this.props.match.params.id, this.props.history);
   }
 
   componentWillUnmount() {
@@ -18,9 +18,13 @@ class Categories extends Component {
   }
 
   render() {
-    const { category, forums, isLoading } = this.props.categoryPage;
+    const { category, forums, isLoaded, errorLoading } = this.props.categoryPage;
 
-    if(isLoading) {
+    if(errorLoading) {
+      return null;
+    }
+
+    if(!isLoaded) {
       return (
         <h3 className='loading'>Loading</h3>
       );
@@ -94,4 +98,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Categories);
+)(withRouter(Categories));
