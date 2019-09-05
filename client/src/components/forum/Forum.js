@@ -30,7 +30,7 @@ class Forum extends Component {
   }
 
   render() {
-    const { isAuthenticated, user } = this.props.auth;
+    const { isAuthenticated } = this.props.auth;
     const { category, forum, threads, threadCount, pageLoading, isLoaded } = this.props.forumPage;
     const totalPages = Math.ceil(threadCount/5);
 
@@ -42,9 +42,7 @@ class Forum extends Component {
 
     return (
       <main className='container'>
-        <p>
-          {isAuthenticated && user.is_moderator?<Link to={`/forum/${this.props.match.params.id}/add`} className='btn btn-primary'>Create Thread</Link>:''}
-        </p>
+        {isAuthenticated? <p><Link to={`/forum/${this.props.match.params.id}/add`} className='btn btn-primary'>Create Thread</Link></p> : ''}
 
         <div className='category'>
 

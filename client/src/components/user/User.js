@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { addAlert, clearAlerts } from '../../actions/alertActions';
+import { createAuthHeaders } from '../../actions/authActions';
 import UserPost from './UserPost';
 import Pagination from '../pagination/Pagination';
+import Modal from '../common/Modal';
 
 import './User.css';
 
@@ -16,10 +18,15 @@ class User extends Component {
       user: null,
       posts: [],
       totalPosts: 0,
-      page: 1
+      page: 1,
+      showModeratorPanel: false
     }
 
     this.onPageChange = this.onPageChange.bind(this);
+    this.handleAddModerator = this.handleAddModerator.bind(this);
+    this.handleRemoveModerator = this.handleRemoveModerator.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -53,6 +60,44 @@ class User extends Component {
     });
   }
 
+  handleAddModerator() {
+    axios.post(`/api/users/addModerator/${this.state.user.username}`, {}, createAuthHeaders({auth: this.props.auth})).then(res => {
+      this.setState({
+        user: {
+          ...this.state.user,
+          is_moderator: true
+        },
+        showModeratorPanel: false
+      });
+      this.props.addAlert(res.data.message, 'success', res.status);
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
+  handleRemoveModerator() {
+    axios.post(`/api/users/removeModerator/${this.state.user.username}`, {}, createAuthHeaders({auth: this.props.auth})).then(res => {
+      this.setState({
+        user: {
+          ...this.state.user,
+          is_moderator: false
+        },
+        showModeratorPanel: false
+      });
+      this.props.addAlert(res.data.message, 'success', res.status);
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
+  openModal() {
+    this.setState({ showModeratorPanel: true });
+  }
+
+  closeModal() {
+    this.setState({ showModeratorPanel: false });
+  }
+
   render() {
     const { isLoading, user, posts, totalPosts, page } = this.state;
     const totalPages = Math.ceil(totalPosts/5);
@@ -81,18 +126,49 @@ class User extends Component {
                 <th>email:</th>
                 <td>{user.email}</td>
               </tr>
+              <tr>
+                <th>member since:</th>
+                <td>{new Date(user.created_at).toDateString()}</td>
+              </tr>
+              <tr>
+                {
+                  this.props.auth.isAuthenticated && this.props.auth.user.is_moderator && this.props.auth.user.username!==user.username ? (
+                    user.is_moderator ? (
+                      <td colSpan='2'>
+                        <button className='btn btn-primary btn-block' onClick={this.openModal}>Remove Moderator</button>
+                        <Modal show={this.state.showModeratorPanel} title={'Confirm Moderator'} onConfirm={this.handleRemoveModerator} onDeny={this.closeModal}>
+                          Are you sure you want to remove {user.first_name} {user.last_name} as a moderator
+                        </Modal>
+                      </td>
+                    ) : (
+                      <td colSpan='2'>
+                        <button className='btn btn-primary btn-block' onClick={this.openModal}>Add Moderator</button>
+                        <Modal show={this.state.showModeratorPanel} title={'Confirm Moderator'} onConfirm={this.handleAddModerator} onDeny={this.closeModal}>
+                          Are you sure you want to add {user.first_name} {user.last_name} as a moderator
+                        </Modal>
+                      </td>
+                    )
+                  ) : null
+                }
+              </tr>
             </tbody>
           </table>
         </div>
 
         <h2>Posts:</h2>
         {
-          posts.map(post => (
-            <UserPost key={post.id} post={post}></UserPost>
-          ))
+          totalPosts>0 ? (
+            <Fragment>
+              {posts.map(post => (
+                <UserPost key={post.id} post={post}></UserPost>
+              ))}
+              <Pagination currentPage={page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
+            </Fragment>
+          ) : (
+            <h3 className='text-center'>This user has no posts</h3>
+          )
         }
-
-        {totalPosts>0?<Pagination currentPage={page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>:''}
+        
       </div>
     );
   }

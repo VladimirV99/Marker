@@ -29,6 +29,10 @@
   display: none;
 }
 
+.display-block {
+  display: block;
+}
+
 .loading {
   text-align: center;
 }

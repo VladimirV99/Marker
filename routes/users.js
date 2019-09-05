@@ -111,7 +111,7 @@ router.get('/get/:username', (req, res) => {
   if(!req.params.username) {
     res.status(400).json({ message: 'You must provide a username' });
   } else {
-    User.findOne({ where: { username: req.params.username }, attributes: ['first_name', 'last_name', 'username', 'photo', 'email'] }).then(user => {
+    User.findOne({ where: { username: req.params.username }, attributes: ['first_name', 'last_name', 'username', 'photo', 'email', 'created_at', 'is_moderator'] }).then(user => {
       if(!user) {
         res.status(404).json({ message: 'User not found' });
       } else {
@@ -179,7 +179,7 @@ router.put('/changePassword', passport.authenticate('jwt', { session: false }), 
 });
 
 router.post('/addModerator/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.user.is_moderator) {
+  if(!req.user.is_moderator || req.user.username==req.params.username) {
     res.status(401).json({ message: 'Unauthorized' });
   } else {
     User.findOne({ where: { username: req.params.username } }).then(user => {
@@ -200,7 +200,7 @@ router.post('/addModerator/:username', passport.authenticate('jwt', { session: f
 });
 
 router.post('/removeModerator/:username', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.user.is_moderator) {
+  if(!req.user.is_moderator || req.user.username==req.params.username) {
     res.status(401).json({ message: 'Unauthorized' });
   } else {
     User.findOne({ where: { username: req.params.username } }).then(user => {

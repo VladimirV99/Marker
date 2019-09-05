@@ -1,11 +1,11 @@
 .user-data {
   display: flex;
   background-color: var(--color-tertiary);
+  padding: .5rem;
   margin-bottom: 1rem;
 }
 
 .user-photo-large {
-  background-color: lightgray;
   border-radius: 50%;
   max-width: 140px;
   margin: .5rem;

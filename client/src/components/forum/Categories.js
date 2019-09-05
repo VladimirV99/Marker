@@ -20,12 +20,13 @@ class Categories extends Component {
   }
 
   render() {
+    const { isAuthenticated, user } = this.props.auth;
     const { categories, isLoading } = this.props.categoriesPage;
 
     if(!isLoading) {
       return (
         <Fragment>
-          <CreateCategory></CreateCategory>
+          {isAuthenticated && user.is_moderator? <CreateCategory></CreateCategory> : null}
           <main className='container'>
             { categories.map(category => (
               <div key={category.id} className='category'>
@@ -71,7 +72,7 @@ class Categories extends Component {
                     )) : <div className='forum'><h3>There are no forums in this category</h3></div>
                 }
 
-                <CreateForum category={category.id}></CreateForum>
+                {isAuthenticated && user.is_moderator? <CreateForum category={category.id}></CreateForum> : null}
 
               </div>
             )) }
@@ -87,6 +88,7 @@ class Categories extends Component {
 }
 
 const mapStateToProps = state => ({
+  auth: state.auth,
   categoriesPage: state.categoriesPage
 });
 
