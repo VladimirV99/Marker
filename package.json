@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dbmake": "sudo docker run --name marker -p 3306:3306 -v db:/var/lib/mysql -e MYSQL_DATABASE=marker -e MYSQL_ROOT_PASSWORD=marker -d mysql"
+    "dbmake": "podman run --name marker -p 3306:3306 -v ./db:/var/lib/mysql -e MYSQL_DATABASE=marker -e MYSQL_ROOT_PASSWORD=marker -d mysql",
+    "dbstart": "podman start marker"
   },
   "repository": {
     "type": "git",
