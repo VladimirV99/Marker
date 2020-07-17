@@ -51,7 +51,7 @@ class Forum extends Component {
         <div className='category'>
 
           <h3 className='category-navigation'>
-            <Link to='/'>Home</Link> > <Link to={`/category/${category.id}`}>{category.name}</Link> > {forum.name}
+            <Link to='/'>Home</Link> &gt; <Link to={`/category/${category.id}`}>{category.name}</Link> &gt; {forum.name}
           </h3>
 
           <div className='category-header'>

@@ -1,14 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getReadableTimeDifference } from '../../util/TimeHelper';
 
 import { clearAlerts } from '../../actions/alertActions';
 import { loadCategories } from '../../actions/categoryActions';
 
 import CreateCategory from './CreateCategory';
 import CreateForum from './CreateForum';
-import FileIcon from '../common/FileIcon';
+import ForumListItem from './ForumListItem';
 
 class Categories extends Component {
   componentDidMount() {
@@ -42,33 +41,7 @@ class Categories extends Component {
                 { 
                   category.forums.length>0 ?
                     category.forums.map(forum => (
-                      <div key={forum.id} className='forum'>
-                        <div className='forum-title'>
-                          <FileIcon></FileIcon>
-                          <div>
-                            <p><Link to={`/forum/${forum.id}`}><strong>{forum.name}</strong></Link></p>
-                            <p className='text-muted'>{forum.name}</p>
-                          </div>
-                        </div>
-
-                        <div className='forum-threads'>
-                          <p>{forum.thread_count || 0}</p>
-                        </div>
-
-                        <div className="forum-last">
-                          { forum.threads[0] ? (
-                            <div>
-                            <p><Link to={`/thread/${forum.threads[0].id}`}>{forum.threads[0].subject}</Link></p>
-                            <p><small className="text-muted">by <Link to={`/user/${forum.threads[0].author.username}`}>{forum.threads[0].author.username}</Link></small></p>
-                            <p className="text-muted"><small>{getReadableTimeDifference(new Date(forum.threads[0].updated_at))}</small></p>
-                          </div>
-                          ) : (
-                            <p>No Threads</p>
-                          )}
-                          
-                        </div>
-
-                      </div>
+                      <ForumListItem key={forum.id} forum={forum}></ForumListItem>
                     )) : <div className='forum'><h3>There are no forums in this category</h3></div>
                 }
 

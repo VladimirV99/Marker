@@ -6,6 +6,7 @@
 #window.dark_mode {
   --color-secondary: #141414;
   --color-tertiary: rgb(77, 77, 77);
+  --color-tertiary-active: #294a7c;
   --color-tertiary-muted: grey;
   --color-background: rgb(40, 40, 40);
 
