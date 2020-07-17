@@ -22,6 +22,11 @@
   margin-bottom: 0;
 }
 
+.mv-025 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 .text-muted {
   color: var(--color-text-muted);
 }

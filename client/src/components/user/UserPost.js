@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { deletePost } from '../../actions/postActions';
@@ -21,7 +22,7 @@ function UserPost(props) {
       {deleteButton}
 
       <div className='user-post-header'>
-        Posted to: <strong>{post.thread.subject}</strong>
+        Posted to: <strong><Link to={`/thread/${post.thread.id}`}>{post.thread.subject}</Link></strong>
         <footer><small>on: {new Date(post.created_at).toLocaleString('en-GB', { timeZone: 'UTC' })}</small></footer>
       </div>
 

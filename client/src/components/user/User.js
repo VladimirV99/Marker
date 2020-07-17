@@ -154,14 +154,14 @@ class User extends Component {
                   this.props.auth.isAuthenticated && this.props.auth.user.is_moderator && this.props.auth.user.username!==user.username ? (
                     user.is_moderator ? (
                       <td colSpan='2'>
-                        <button className='btn btn-primary btn-block' onClick={this.openModal}>Remove Moderator</button>
+                        <button className='btn btn-primary btn-block mv-025' onClick={this.openModal}>Remove Moderator</button>
                         <Modal show={this.state.showModeratorPanel} title={'Confirm Moderator'} onConfirm={this.handleRemoveModerator} onDeny={this.closeModal}>
                           Are you sure you want to remove {user.first_name} {user.last_name} as a moderator
                         </Modal>
                       </td>
                     ) : (
                       <td colSpan='2'>
-                        <button className='btn btn-primary btn-block' onClick={this.openModal}>Add Moderator</button>
+                        <button className='btn btn-primary btn-block mv-025' onClick={this.openModal}>Add Moderator</button>
                         <Modal show={this.state.showModeratorPanel} title={'Confirm Moderator'} onConfirm={this.handleAddModerator} onDeny={this.closeModal}>
                           Are you sure you want to add {user.first_name} {user.last_name} as a moderator
                         </Modal>
