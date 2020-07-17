@@ -1,5 +1,5 @@
 .container {
-  width: 70%;
+  width: 80%;
   margin: 1.5rem auto;
 }
 
@@ -15,6 +15,11 @@
 
 .pl-025 {
   padding-left: .25rem;
+}
+
+.mv-0 {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .text-muted {
@@ -35,6 +40,10 @@
 
 .loading {
   text-align: center;
+}
+
+hr {
+  border-color: var(--color-secondary);
 }
 
 @media screen and (max-width: 568px) {

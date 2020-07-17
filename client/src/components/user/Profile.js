@@ -179,55 +179,68 @@ class Profile extends Component {
     const can_submit_password = (current_password && new_password && new_password_confirm) && !(new_password_error || new_password_confirm_error);
 
     return (
-      <main className='container'>
-        <h2 className='text-center'>Update Photo</h2>
-        <form className='profile-photo-form' onSubmit={this.handlePhotoSubmit} encType='multipart/form-data'>
-          {!this.state.photo_url? <img src={user.photo} alt={user.username} className='profile-photo-large' /> : null}
-          {this.state.photo_url? <img src={this.state.photo_url} alt={user.username} className='profile-photo-large' /> : null}
-          <div className='profile-photo-menu'>
-            <label className='btn btn-primary btn-block'>Select photo<input type='file' name='photo' className='display-none' onChange={this.handlePhotoSelect}/></label>
-            <input type='submit' disabled={!can_submit_photo} className='btn btn-primary btn-block' value='Update Photo' />
-          </div>
-        </form>
+      <main className='container mv-0'>
 
-        <h2 className='text-center'>Update Profile</h2>
-        <form onSubmit={this.handleProfileSubmit}>
-          <div className='form-group'>
-            <label htmlFor='first_name'>First Name</label>
-            <input type='text' className='form-control' name='first_name' value={this.state.first_name} onChange={this.handleChange}></input>
-            <ValidationBlock validations={first_name_validation}></ValidationBlock>
+        <div className='profile-column profile-column-photo'>
+          <div className='form-panel'>
+            <h2 className='form-title'>Update Photo</h2>
+            <form className='profile-photo-form' onSubmit={this.handlePhotoSubmit} encType='multipart/form-data'>
+              {!this.state.photo_url? <img src={user.photo} alt={user.username} className='profile-photo-large' /> : null}
+              {this.state.photo_url? <img src={this.state.photo_url} alt={user.username} className='profile-photo-large' /> : null}
+              <div className='profile-photo-menu'>
+                <label className='btn btn-primary btn-block'>Select photo<input type='file' name='photo' className='display-none' onChange={this.handlePhotoSelect}/></label>
+                <input type='submit' disabled={!can_submit_photo} className='btn btn-primary btn-block' value='Update Photo' />
+              </div>
+            </form>
           </div>
-          <div className='form-group'>
-            <label htmlFor='last_name'>Last Name</label>
-            <input type='text' className='form-control' name='last_name' value={this.state.last_name} onChange={this.handleChange}></input>
-            <ValidationBlock validations={last_name_validation}></ValidationBlock>
-          </div>
-          <div className='form-group'>
-            <label htmlFor='email'>Email</label>
-            <input type='text' className='form-control' name='email' value={this.state.email} onChange={this.handleChange}></input>
-            <ValidationBlock validations={email_validation}></ValidationBlock>
-          </div>
-          <input type='submit' disabled={!can_submit_profile} className='btn btn-primary btn-block' value='Update Profile'></input>
-        </form>
+        </div>
 
-        <h2 className='text-center'>Change Password</h2>
-        <form onSubmit={this.handlePasswordSubmit}>
-          <div className='form-group'>
-            <label htmlFor='current_password'>Current Password</label>
-            <input type='password' className='form-control' name='current_password' onChange={this.handleChange}></input>
+        <div className='profile-column profile-column-settings'>
+          <div className='form-panel'>
+            <h2 className='form-title'>Update Profile</h2>
+            <form onSubmit={this.handleProfileSubmit}>
+              <div className='form-group'>
+                <label htmlFor='first_name'>First Name</label>
+                <input type='text' className='form-control' name='first_name' value={this.state.first_name} onChange={this.handleChange}></input>
+                <ValidationBlock validations={first_name_validation}></ValidationBlock>
+              </div>
+              <div className='form-group'>
+                <label htmlFor='last_name'>Last Name</label>
+                <input type='text' className='form-control' name='last_name' value={this.state.last_name} onChange={this.handleChange}></input>
+                <ValidationBlock validations={last_name_validation}></ValidationBlock>
+              </div>
+              <div className='form-group'>
+                <label htmlFor='email'>Email</label>
+                <input type='text' className='form-control' name='email' value={this.state.email} onChange={this.handleChange}></input>
+                <ValidationBlock validations={email_validation}></ValidationBlock>
+              </div>
+              <input type='submit' disabled={!can_submit_profile} className='btn btn-primary btn-block' value='Update Profile'></input>
+            </form>
           </div>
-          <div className='form-group'>
-            <label htmlFor='new_password'>New Password</label>
-            <input type='password' className='form-control' name='new_password' onChange={this.handleChange}></input>
-            <ValidationBlock validations={new_password_validation}></ValidationBlock>
+
+          <hr/>
+
+          <div className='form-panel'>
+            <h2 className='form-title'>Change Password</h2>
+            <form onSubmit={this.handlePasswordSubmit}>
+              <div className='form-group'>
+                <label htmlFor='current_password'>Current Password</label>
+                <input type='password' className='form-control' name='current_password' onChange={this.handleChange}></input>
+              </div>
+              <div className='form-group'>
+                <label htmlFor='new_password'>New Password</label>
+                <input type='password' className='form-control' name='new_password' onChange={this.handleChange}></input>
+                <ValidationBlock validations={new_password_validation}></ValidationBlock>
+              </div>
+              <div className='form-group'>
+                <label htmlFor='new_password_confirm'>Confirm New Password</label>
+                <input type='password' className='form-control' name='new_password_confirm' onChange={this.handleChange}></input>
+                <ValidationBlock validations={new_password_confirm_validation}></ValidationBlock>
+              </div>
+              <input type='submit' disabled={!can_submit_password} className='btn btn-primary btn-block' value='Change Password'></input>
+            </form>
           </div>
-          <div className='form-group'>
-            <label htmlFor='new_password_confirm'>Confirm New Password</label>
-            <input type='password' className='form-control' name='new_password_confirm' onChange={this.handleChange}></input>
-            <ValidationBlock validations={new_password_confirm_validation}></ValidationBlock>
-          </div>
-          <input type='submit' disabled={!can_submit_password} className='btn btn-primary btn-block' value='Change Password'></input>
-        </form>
+        </div>
       </main>
     );
   }

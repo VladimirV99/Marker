@@ -13,13 +13,43 @@
   margin-right: 1rem;
 }
 
-@media screen and (max-width: 450px) {
+.profile-column {
+  display: inline-block;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+  vertical-align: top;
+}
+
+.profile-column-photo {
+  width: 30%;
+}
+
+.profile-column-settings {
+  width: 70%;
+}
+
+@media screen and (max-width: 500px) {
+  .profile-column {
+    display: block;
+    margin: 0;
+  }
+
+  .profile-column-photo {
+    width: 100%;
+  }
+  
+  .profile-column-settings {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 500px) {
   .profile-photo-form {
     flex-direction: column;
   }
 
   .profile-photo-large {
-    width: 70%;
+    width: 60%;
     text-align: center;
     margin-right: 0;
     margin-bottom: 1rem;

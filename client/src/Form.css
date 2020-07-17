@@ -3,6 +3,16 @@ label {
   margin-bottom: .5rem;
 }
 
+.form-panel {
+  padding: 1.5rem 0;
+}
+
+.form-title {
+  margin-top: 0;
+  margin-bottom: 0.7rem;
+  text-align: center;
+}
+
 .form-row {
   display: flex;
 }
