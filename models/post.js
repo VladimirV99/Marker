@@ -29,6 +29,8 @@ const PostModel = (sequelize, DataTypes) => {
   Post.associate = (models) => {
     Post.belongsTo(models.thread, { onDelete: 'CASCADE' });
     Post.belongsTo(models.user, { as: 'author' });
+    Post.belongsToMany(models.user, { as: 'votes', through: models.vote });
+    Post.hasOne(models.vote_count, { foreignKey: { allowNull: false, primaryKey: true } });
   };
 
   Post.createPost = (newPost, thread, user) => {
@@ -46,11 +48,13 @@ const PostModel = (sequelize, DataTypes) => {
   
         Post.create(newPost).then(post => {
           post.setAuthor(user).then(() => {
-            thread.addPost(post).then(() => {
-              thread.post_count = thread.post_count + 1;
-              thread.save().then(() => {
-                Post.findOne({ where: { id: post.id }, include: [{ model: User, as: 'author' }] }).then(post => {
-                  resolve(post);
+            post.createVote_count().then(() => {
+              thread.addPost(post).then(() => {
+                thread.post_count = thread.post_count + 1;
+                thread.save().then(() => {
+                  Post.findOne({ where: { id: post.id }, include: [{ model: User, as: 'author' }] }).then(post => {
+                    resolve(post);
+                  });
                 });
               });
             });

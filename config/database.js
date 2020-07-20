@@ -6,6 +6,8 @@ const CategoryModel = require('../models/category');
 const ForumModel = require('../models/forum');
 const ThreadModel = require('../models/thread');
 const PostModel = require('../models/post');
+const VoteModel = require('../models/vote');
+const VoteCountModel = require('../models/vote_count');
 
 const sequelize = new Sequelize(credentials.db_name, credentials.db_user, credentials.db_password, {
   host: credentials.db_host,
@@ -24,8 +26,10 @@ const Category = CategoryModel(sequelize, Sequelize);
 const Forum = ForumModel(sequelize, Sequelize);
 const Thread = ThreadModel(sequelize, Sequelize);
 const Post = PostModel(sequelize, Sequelize);
+const Vote = VoteModel(sequelize, Sequelize);
+const VoteCount = VoteCountModel(sequelize, Sequelize);
 
-let models = [ User, Category, Forum, Thread, Post ];
+let models = [ User, Category, Forum, Thread, Post, Vote, VoteCount ];
 models.forEach(model => {
   if(model.associate)
     model.associate(sequelize.models);
@@ -45,5 +49,7 @@ module.exports = {
   Category,
   Forum,
   Thread,
-  Post
+  Post,
+  Vote,
+  VoteCount
 }

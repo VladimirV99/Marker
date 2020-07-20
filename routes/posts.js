@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { User, Thread, Post } = require('../config/database');
+const Sequelize = require('sequelize');
+const { User, Thread, Post, Vote, VoteCount } = require('../config/database');
+const { get_user } = require('../util/auth');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.body.content) {
@@ -73,7 +75,105 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   }
 });
 
-router.get('/user/:username/page/:page/:itemsPerPage', (req, res) => {
+router.post('/upvote/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if(!req.params.id) {
+    res.status(400).json({ message: 'You must provide the post id' });
+  } else {
+    Post.findByPk(req.params.id, {include: VoteCount}).then(post => {
+      if(!post) {
+        res.status(404).json({ message: 'Post not found' });
+      } else {
+        if(post.authorId != req.user.id) {
+          Vote.findOne({ user_id: req.user.id, post_id:post.id }).then(vote => {
+            if(!vote) {
+              Vote.create({ userId: req.user.id, postId:post.id, type: 1 }).then(vote => {
+                post.vote_count.count += 1;
+                post.vote_count.save().then(() => {
+                  res.status(200).json({ message: 'Upvoted post' });
+                });
+              });
+            } else {
+              if(vote.type != 1) {
+                let diff = 1 - vote.type;
+                vote.type = 1;
+                vote.save().then(() => {
+                  post.vote_count.count += diff;
+                  post.vote_count.save().then(() => {
+                    res.status(200).json({ message: 'Upvoted post' });
+                  });
+                });
+              } else {
+                vote.destroy().then(() => {
+                  post.vote_count.count -= 1;
+                  post.vote_count.save().then(() => {
+                    res.status(200).json({ message: 'Upvote removed' });
+                  });
+                });
+              }
+            }
+          }).catch(err => {
+            res.status(500).json({ message: 'Something went wrong' });
+          });
+        } else {
+          res.status(401).json({ message: 'You can\'t upvote your own post' });
+        }
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'Something went wrong' });
+    });
+  }
+});
+
+router.post('/downvote/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if(!req.params.id) {
+    res.status(400).json({ message: 'You must provide the post id' });
+  } else {
+    Post.findByPk(req.params.id, {include: VoteCount}).then(post => {
+      if(!post) {
+        res.status(404).json({ message: 'Post not found' });
+      } else {
+        if(post.authorId != req.user.id) {
+          Vote.findOne({ user_id: req.user.id, post_id:post.id }).then(vote => {
+            if(!vote) {
+              Vote.create({ userId: req.user.id, postId:post.id, type: -1 }).then(vote => {
+                post.vote_count.count -= 1;
+                post.vote_count.save().then(() => {
+                  res.status(200).json({ message: 'Downvoted post' });
+                });
+              });
+            } else {
+              if(vote.type != -1) {
+                let diff = -1 - vote.type;
+                vote.type = 1;
+                vote.save().then(() => {
+                  post.vote_count.count += diff;
+                  post.vote_count.save().then(() => {
+                    res.status(200).json({ message: 'Downvoted post' });
+                  });
+                });
+              } else {
+                vote.destroy().then(() => {
+                  post.vote_count.count += 1;
+                  post.vote_count.save().then(() => {
+                    res.status(200).json({ message: 'Downvote removed' });
+                  });
+                });
+              }
+            }
+          }).catch(err => {
+            res.status(500).json({ message: 'Something went wrong' });
+          });
+        } else {
+          res.status(401).json({ message: 'You can\'t downvote your own post' });
+        }
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'Something went wrong' });
+    });
+  }
+});
+
+router.get('/user/:username/page/:page/:itemsPerPage', get_user, (req, res) => {
   let itemsPerPage = 20;
   if(!req.params.username) {
     res.status(400).json({ message: 'You must provide a username' });
@@ -92,7 +192,17 @@ router.get('/user/:username/page/:page/:itemsPerPage', (req, res) => {
           where: { author_id: user.id },
           offset: (page-1)*itemsPerPage,
           limit: itemsPerPage,
-          include: [{ model: Thread, attributes: ['id', 'subject'] }]
+          include: [
+            { model: Thread, attributes: ['id', 'subject'] },
+            { model: VoteCount, attributes: [[Sequelize.fn('COALESCE', Sequelize.col('count'), 0), 'count']] },
+            { 
+              model: User,
+              through: { attributes: ['type'], where: { 'user_id': req.user.id } },
+              as: 'votes'
+            }
+          ],
+          subQuery: false,
+          order: [['created_at', 'DESC']]
         }).then(result => {
           res.status(200).json({
             posts: result.rows,

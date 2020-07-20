@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { User, Category, Forum, Thread, Post } = require('../config/database');
+const Sequelize = require('sequelize');
+const { User, Category, Forum, Thread, Post, VoteCount } = require('../config/database');
+const { get_user } = require('../util/auth');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.body.subject) {
@@ -70,7 +72,7 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   }
 });
 
-router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
+router.get('/get/:id/page/:page/:itemsPerPage', get_user, (req, res) => {
   let itemsPerPage = 20;
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide a thread' });
@@ -89,25 +91,36 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
         res.status(404).json({ message: 'Thread not found' });
       } else {
         let page = req.params.page;
-        if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30)
+        if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30) {
           itemsPerPage = parseInt(req.params.itemsPerPage);
-        Post.findAndCountAll({
-          attributes: ['id', 'content', 'is_main', 'created_at'],
-          where: { thread_id: thread.id },
-          offset: (page-1)*itemsPerPage,
-          limit: itemsPerPage,
-          include: [{ model: User, attributes: ['id', 'username', 'first_name', 'last_name', 'photo'], as: 'author' }]
-        }).then(result => {
-          res.status(200).json({
-            category: thread.forum.category,
-            forum: { id: thread.forum.id, name: thread.forum.name },
-            thread: { id: thread.id, subject: thread.subject, author: thread.author, created_at: thread.dataValues.created_at },
-            posts: result.rows,
-            total: result.count
+          Post.findAndCountAll({
+            attributes: ['id', 'content', 'is_main', 'created_at'],
+            where: { thread_id: thread.id },
+            offset: (page-1)*itemsPerPage,
+            limit: itemsPerPage,
+            include: [
+              { model: User, attributes: ['id', 'username', 'first_name', 'last_name', 'photo'], as: 'author' },
+              { model: VoteCount, attributes: [[Sequelize.fn('COALESCE', Sequelize.col('count'), 0), 'count']] },
+              { 
+                model: User, 
+                through: { attributes: ['type'], where: { 'user_id': req.user.id } },
+                as: 'votes'
+              }
+            ],
+            subQuery: false,
+            order: [['created_at', 'ASC']]
+          }).then(result => {
+            res.status(200).json({
+              category: thread.forum.category,
+              forum: { id: thread.forum.id, name: thread.forum.name },
+              thread: { id: thread.id, subject: thread.subject, author: thread.author, created_at: thread.dataValues.created_at },
+              posts: result.rows,
+              total: result.count
+            });
+          }).catch(err => {
+            res.status(500).json({ message: 'Something went wrong' });
           });
-        }).catch(err => {
-          res.status(500).json({ message: 'Something went wrong' });
-        });
+        }
       }
     }).catch(err => {
       res.status(500).json({ message: 'Something went wrong' });

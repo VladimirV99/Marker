@@ -127,6 +127,10 @@ const UserModel = (sequelize, DataTypes) => {
     underscored: true
   });
 
+  User.associate = (models) => {
+    User.belongsToMany(models.post, { through: models.vote });
+  };
+
   User.comparePassword = (candidatePassword, currentHash, callback) => {
     bcrypt.compare(candidatePassword, currentHash, (err, isMatch) => {
       if(err) {

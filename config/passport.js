@@ -15,8 +15,11 @@ module.exports = (passport) => {
       if(!user) {
         return next(null, false);
       } else {
-        let userData = user.dataValues;
-        userData.authenticated = true;
+        let userData = {
+          model: user,
+          ...user.dataValues,
+          authenticated: true
+        };
         return next(null, userData);
       }
     }).catch(err => {

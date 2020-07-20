@@ -94,7 +94,7 @@ class Register extends Component {
         if(!res.error) {
           axios.get(`/api/users/checkEmail/${event.target.value}`).then(res => {
             this.setState({
-              username_validation: [
+              email_validation: [
                 ...this.state.username_validation,
                 { key: 10, message: 'Email is available', type: 'success' }
               ]
@@ -102,11 +102,11 @@ class Register extends Component {
           }).catch(err => {
             if(err.response.status === 400) {
               this.setState({
-                username_validation: [
-                  ...this.state.username_validation,
+                email_validation: [
+                  ...this.state.email_validation,
                   { key: 10, message: 'Email is already taken', type: 'error' }
                 ],
-                username_error: true
+                email_error: true
               });
             }
           });
