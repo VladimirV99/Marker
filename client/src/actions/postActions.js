@@ -7,12 +7,14 @@ import {
   POSTS_LOADED,
   POSTS_RESET,
   ADD_POST,
-  DELETE_POST
+  DELETE_POST,
+  UPVOTE_POST,
+  DOWNVOTE_POST
 } from './types';
 
-export const loadPosts = (thread_id, page, history) => dispatch => {
+export const loadPosts = (thread_id, page, history) => (dispatch, getState) => {
   dispatch({ type: POSTS_LOADING });
-  axios.get(`/api/threads/get/${thread_id}/page/${page}/15`).then(res => {
+  axios.get(`/api/threads/get/${thread_id}/page/${page}/15`, createAuthHeaders(getState())).then(res => {
     dispatch({
       type: POSTS_LOADED,
       payload: res.data
@@ -41,7 +43,29 @@ export const deletePost = (id) => (dispatch, getState) => {
     dispatch({
       type: DELETE_POST,
       payload: id
-    })
+    });
+  }).catch(err => {
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
+  });
+};
+
+export const upvotePost = (id) => (dispatch, getState) => {
+  axios.post(`/api/posts/upvote/${id}`, {}, createAuthHeaders(getState())).then(res => {
+    dispatch({
+      type: UPVOTE_POST,
+      payload: res.data
+    });
+  }).catch(err => {
+    dispatch(addAlert(err.response.data.message, 'error', err.response.status));
+  });
+};
+
+export const downvotePost = (id) => (dispatch, getState) => {
+  axios.post(`/api/posts/downvote/${id}`, {}, createAuthHeaders(getState())).then(res => {
+    dispatch({
+      type: DOWNVOTE_POST,
+      payload: res.data
+    });
   }).catch(err => {
     dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });

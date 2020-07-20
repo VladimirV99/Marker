@@ -49,10 +49,10 @@ class Thread extends Component {
     }
 
     return (
-      <main className='container'>
+      <main className='container main'>
         <div className='thread-header'>
           <p>
-            <Link to='/'>Home</Link> > <Link to={`/category/${category.id}`}>{category.name}</Link> > <Link to={`/forum/${forum.id}`}>{forum.name}</Link>
+            <Link to='/'>Home</Link> &gt; <Link to={`/category/${category.id}`}>{category.name}</Link> &gt; <Link to={`/forum/${forum.id}`}>{forum.name}</Link>
           </p>
           <h1>{thread.subject}</h1>
           Started by <Link to={`/user/${thread.author.username}`}>{thread.author.first_name} {thread.author.last_name}</Link> on {new Date(thread.created_at).toDateString()}.

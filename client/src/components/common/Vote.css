@@ -1,0 +1,21 @@
+.vote-menu {
+  display: inline-flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.vote {
+  cursor: pointer;
+}
+
+.vote svg {
+  fill: var(--color-text-muted);
+}
+
+.vote svg:hover {
+  fill: var(--color-primary);
+}
+
+.vote-active svg {
+  fill: var(--color-primary);
+}

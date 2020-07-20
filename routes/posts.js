@@ -89,7 +89,13 @@ router.post('/upvote/:id', passport.authenticate('jwt', { session: false }), (re
               Vote.create({ userId: req.user.id, postId:post.id, type: 1 }).then(vote => {
                 post.vote_count.count += 1;
                 post.vote_count.save().then(() => {
-                  res.status(200).json({ message: 'Upvoted post' });
+                  res.status(200).json({
+                    id: post.id,
+                    count: post.vote_count.count,
+                    upvoted: true,
+                    user_id: req.user.id,
+                    message: 'Upvoted post'
+                  });
                 });
               });
             } else {
@@ -99,14 +105,26 @@ router.post('/upvote/:id', passport.authenticate('jwt', { session: false }), (re
                 vote.save().then(() => {
                   post.vote_count.count += diff;
                   post.vote_count.save().then(() => {
-                    res.status(200).json({ message: 'Upvoted post' });
+                    res.status(200).json({
+                      id: post.id,
+                      count: post.vote_count.count,
+                      upvoted: true,
+                      user_id: req.user.id,
+                      message: 'Upvoted post'
+                    });
                   });
                 });
               } else {
                 vote.destroy().then(() => {
                   post.vote_count.count -= 1;
                   post.vote_count.save().then(() => {
-                    res.status(200).json({ message: 'Upvote removed' });
+                    res.status(200).json({
+                      id: post.id,
+                      count: post.vote_count.count,
+                      upvoted: false,
+                      user_id: req.user.id,
+                      message: 'Upvote removed'
+                    });
                   });
                 });
               }
@@ -138,24 +156,42 @@ router.post('/downvote/:id', passport.authenticate('jwt', { session: false }), (
               Vote.create({ userId: req.user.id, postId:post.id, type: -1 }).then(vote => {
                 post.vote_count.count -= 1;
                 post.vote_count.save().then(() => {
-                  res.status(200).json({ message: 'Downvoted post' });
+                  res.status(200).json({
+                    id: post.id,
+                    count: post.vote_count.count,
+                    downvoted: true,
+                    user_id: req.user.id,
+                    message: 'Downvoted post'
+                  });
                 });
               });
             } else {
               if(vote.type != -1) {
                 let diff = -1 - vote.type;
-                vote.type = 1;
+                vote.type = -1;
                 vote.save().then(() => {
                   post.vote_count.count += diff;
                   post.vote_count.save().then(() => {
-                    res.status(200).json({ message: 'Downvoted post' });
+                    res.status(200).json({
+                      id: post.id,
+                      count: post.vote_count.count,
+                      downvoted: true,
+                      user_id: req.user.id,
+                      message: 'Downvoted post'
+                    });
                   });
                 });
               } else {
                 vote.destroy().then(() => {
                   post.vote_count.count += 1;
                   post.vote_count.save().then(() => {
-                    res.status(200).json({ message: 'Downvote removed' });
+                    res.status(200).json({
+                      id: post.id,
+                      count: post.vote_count.count,
+                      downvoted: false,
+                      user_id: req.user.id,
+                      message: 'Downvote removed'
+                    });
                   });
                 });
               }

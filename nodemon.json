@@ -1,0 +1,7 @@
+{
+    "ignore": [
+        "client/*",
+        "README.md",
+        "LICENSE"
+    ]
+}

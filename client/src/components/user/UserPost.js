@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { deletePost } from '../../actions/postActions';
+import Vote from '../common/Vote';
 
 import './UserPost.css';
 
@@ -27,6 +28,7 @@ function UserPost(props) {
       </div>
 
       <div className='user-post-content'>
+        <Vote id={post.id} balance={post.vote_count?post.vote_count.count:0} vote={post.votes.length===1?post.votes[0].vote.type:0}></Vote>
         {post.content}
       </div>
     </article>

@@ -128,7 +128,7 @@ class User extends Component {
     }
 
     return (
-      <div className='container'>
+      <div className='container main'>
         <div className='user-data'>
           <img src={'/' + user.photo} alt={user.username} className='user-photo-large' />
 

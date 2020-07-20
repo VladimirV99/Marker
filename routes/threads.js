@@ -102,9 +102,10 @@ router.get('/get/:id/page/:page/:itemsPerPage', get_user, (req, res) => {
               { model: User, attributes: ['id', 'username', 'first_name', 'last_name', 'photo'], as: 'author' },
               { model: VoteCount, attributes: [[Sequelize.fn('COALESCE', Sequelize.col('count'), 0), 'count']] },
               { 
-                model: User, 
+                model: User,
+                attributes: ['id'],
                 through: { attributes: ['type'], where: { 'user_id': req.user.id } },
-                as: 'votes'
+                as: 'votes',
               }
             ],
             subQuery: false,
