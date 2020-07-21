@@ -9,6 +9,7 @@
 .post-creator {
   padding: 1rem 0.5rem;
   max-width: 200px;
+  min-width: 200px;
   display: flex;
   flex-direction: column;
   padding-right: 1rem;
@@ -23,9 +24,16 @@
   color: var(--color-text-primary);
 }
 
-.post-content {
+.post-body {
+  display: flex;
   box-sizing: border-box;
-  padding: 1rem;
+  margin: 0 0.5rem;
+}
+
+.post-content {
+  display: inline-block;
+  overflow-wrap: anywhere;
+  margin: 0.75rem;
 }
 
 .profile-photo {
@@ -57,7 +65,7 @@
     text-align: left;
   }
 
-  .post-content {
+  .post-body {
     width: 100%;
   }
 

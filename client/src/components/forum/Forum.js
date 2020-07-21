@@ -45,7 +45,7 @@ class Forum extends Component {
     }
 
     return (
-      <main className='container'>
+      <main className='container main'>
         {isAuthenticated? <p><Link to={`/forum/${this.props.match.params.id}/add`} className='btn btn-primary'>Create Thread</Link></p> : ''}
 
         <div className='category'>

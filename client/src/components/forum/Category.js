@@ -32,7 +32,7 @@ class Category extends Component {
 
     return (
       <Fragment>
-        <main className='container'>
+        <main className='container main'>
           <div className='category'>
 
             <h3 className='category-navigation'>

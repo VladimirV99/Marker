@@ -26,7 +26,7 @@ class Categories extends Component {
       return (
         <Fragment>
           {isAuthenticated && user.is_moderator? <CreateCategory></CreateCategory> : null}
-          <main className='container'>
+          <main className='container main'>
             { categories.map(category => (
               <div key={category.id} className='category'>
 

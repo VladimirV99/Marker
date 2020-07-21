@@ -16,10 +16,21 @@
   color: var(--color-text-primary);
 }
 
-.user-post-content {
+.user-post-header a {
+  color: var(--color-text-primary);
+}
+
+.user-post-body {
+  display: flex;
   box-sizing: border-box;
-  padding: 1rem;
+  margin: 0 0.5rem;
   width: 100%;
+}
+
+.user-post-content {
+  display: inline-block;
+  overflow-wrap: anywhere;
+  margin: 0.75rem;
 }
 
 .user-post-delete {

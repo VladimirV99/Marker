@@ -179,7 +179,7 @@ class Profile extends Component {
     const can_submit_password = (current_password && new_password && new_password_confirm) && !(new_password_error || new_password_confirm_error);
 
     return (
-      <main className='container mv-0'>
+      <main className='container main'>
 
         <div className='profile-column profile-column-photo'>
           <div className='form-panel'>
