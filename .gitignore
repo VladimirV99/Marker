@@ -3,3 +3,4 @@
 db/**
 public/photos
 !no_photo
+dump.rdb

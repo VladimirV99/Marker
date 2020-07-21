@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const { setCache, getCache } = require('../config/redis');
 const { Category } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -42,9 +43,10 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   }
 });
 
-router.get('/all', (req, res) => {
+router.get('/all', getCache('categories/all'), (req, res) => {
   Category.findAll().then(categories => {
     res.status(200).json({ categories });
+    setCache('categories/all', {status: 200, response: {categories}}, 300);
   }).catch(err => {
     res.status(500).json({ message: 'Something went wrong' });
   });

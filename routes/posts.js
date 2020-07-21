@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const Sequelize = require('sequelize');
 const { User, Thread, Post, Vote, VoteCount } = require('../config/database');
-const { get_user } = require('../util/auth');
+const { getUser } = require('../util/auth');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.body.content) {
@@ -209,7 +209,7 @@ router.post('/downvote/:id', passport.authenticate('jwt', { session: false }), (
   }
 });
 
-router.get('/user/:username/page/:page/:itemsPerPage', get_user, (req, res) => {
+router.get('/user/:username/page/:page/:itemsPerPage', getUser, (req, res) => {
   let itemsPerPage = 20;
   if(!req.params.username) {
     res.status(400).json({ message: 'You must provide a username' });

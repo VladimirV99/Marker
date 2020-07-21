@@ -7,7 +7,10 @@
     "start": "nodemon app",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dbmake": "podman run --name marker -p 3306:3306 -v ./db:/var/lib/mysql -e MYSQL_DATABASE=marker -e MYSQL_ROOT_PASSWORD=marker -d mysql",
-    "dbstart": "podman start marker"
+    "dbstart": "podman start marker",
+    "dbstop": "podman stop marker",
+    "redisstart": "redis-server &",
+    "redisstop": "redis-cli shutdown"
   },
   "repository": {
     "type": "git",
@@ -27,6 +30,7 @@
     "mysql2": "^2.1.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "redis": "^3.0.2",
     "sequelize": "^6.3.0"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const { setCache, getCache } = require('../config/redis');
 const { Category, Forum, Thread, Post, User } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -52,7 +53,7 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   }
 });
 
-router.get('/category/:id', (req, res) => {
+router.get('/category/:id', getCache('forums/category/', true), (req, res) => {
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide a category' });
   } else {
@@ -67,7 +68,9 @@ router.get('/category/:id', (req, res) => {
             include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
           }]
         }).then(forums => {
-          res.status(200).json({ category, forums });
+          let response = { category, forums };
+          res.status(200).json(response);
+          setCache('forums/category/'+req.params.id, {status: 200, response}, 60);
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });
         });
@@ -78,7 +81,7 @@ router.get('/category/:id', (req, res) => {
   }
 });
 
-router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
+router.get('/get/:id/page/:page/:itemsPerPage', getCache('forums/', true), (req, res) => {
   let itemsPerPage = 5;
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide a forum' });
@@ -105,7 +108,9 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
             { model: User, as: 'author', attributes: ['id', 'username'] }
           ]
         }).then(result => {
-          res.status(200).json({ category: forum.category, forum: {id: forum.id, name: forum.name}, threads: result.rows, total: result.count });
+          let response = { category: forum.category, forum: {id: forum.id, name: forum.name}, threads: result.rows, total: result.count }
+          res.status(200).json(response);
+          setCache('forums/'+req.params.id, {status: 200, response}, 300);
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });
         });
@@ -116,7 +121,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
   }
 });
 
-router.get('/all', (req, res) => {
+router.get('/all', getCache('forums/all'), (req, res) => {
   Category.findAll({ include: [
     { model: Forum, include: [
       {
@@ -126,6 +131,7 @@ router.get('/all', (req, res) => {
     ]}
   ], order: [['id', 'ASC']] }).then(categories => {
     res.status(200).json({ categories });
+    setCache('forums/all', {status: 200, response: {categories}}, 60);
   }).catch(err => {
     res.status(500).json({ message: 'Something went wrong' });
   });

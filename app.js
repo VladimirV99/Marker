@@ -7,12 +7,19 @@ const forums = require('./routes/forums');
 const threads = require('./routes/threads');
 const posts = require('./routes/posts');
 
+const PORT = process.env.PORT || 5000;
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
+
 const { db } = require('./config/database');
+const { createCache } = require('./config/redis');
+
 db.authenticate().then(() => {
   console.log('Connected to Database.');
 }).catch(err => {
   console.error('Unable to Connect to the Database:', err);
 });
+
+createCache(REDIS_PORT);
 
 const app = express();
 
@@ -46,7 +53,6 @@ app.get('/', (req, res) => {
   res.send('Invalid Endpoint');
 });
 
-const port = process.env.port || 5000;
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
-})
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});
