@@ -4,6 +4,7 @@ let redis_client = null;
 
 function createCache(port) {
   redis_client = redis.createClient(port);
+  return redis_client;
 }
 
 function setCache(path, object, exp=60) {

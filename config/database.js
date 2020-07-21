@@ -12,13 +12,13 @@ const VoteCountModel = require('../models/vote_count');
 const sequelize = new Sequelize(credentials.db_name, credentials.db_user, credentials.db_password, {
   host: credentials.db_host,
   dialect: 'mysql',
-
   pool: {
     max: 5,
     min: 0,
     acquire: 30000,
     idle: 10000
   },
+  logging: false
 });
 
 const User = UserModel(sequelize, Sequelize);
@@ -35,7 +35,6 @@ models.forEach(model => {
     model.associate(sequelize.models);
 });
 
-// TODO Migrations
 sequelize.sync().then(() => { 
   console.log('Synced Database Tables');
 });
