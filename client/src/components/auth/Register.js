@@ -48,22 +48,12 @@ class Register extends Component {
         res = Validation.validateUsername(event.target.value);
         if(!res.error) {
           axios.get(`/api/users/checkUsername/${event.target.value}`).then(res => {
-            this.setState({
-              username_validation: [
-                ...this.state.username_validation,
-                { key: 10, message: 'Username is available', type: 'success' }
-              ]
-            });
-          }).catch(err => {
-            if(err.response.status === 400) {
-              this.setState({
-                username_validation: [
-                  ...this.state.username_validation,
-                  { key: 10, message: 'Username is already taken', type: 'error' }
-                ],
-                username_error: true
-              });
-            }
+            let validation = this.state.username_validation.filter(err => err.key!==10);
+            if(res.data.available)
+              validation = [...validation, { key: 10, message: 'Username is available', type: 'success' }];
+            else
+              validation = [...validation, { key: 10, message: 'Username is already taken', type: 'error' }];
+            this.setState({ username_validation: validation });
           });
         }
         this.setState({ 
@@ -85,30 +75,19 @@ class Register extends Component {
         this.setState({ 
           last_name: event.target.value,
           last_name_validation: res.validation,
-          last_name_error: res.error,
-          input_dirty: true
+          last_name_error: res.error
         });
         break;
       case 'email':
         res = Validation.validateEmail(event.target.value);
         if(!res.error) {
           axios.get(`/api/users/checkEmail/${event.target.value}`).then(res => {
-            this.setState({
-              email_validation: [
-                ...this.state.username_validation,
-                { key: 10, message: 'Email is available', type: 'success' }
-              ]
-            });
-          }).catch(err => {
-            if(err.response.status === 400) {
-              this.setState({
-                email_validation: [
-                  ...this.state.email_validation,
-                  { key: 10, message: 'Email is already taken', type: 'error' }
-                ],
-                email_error: true
-              });
-            }
+            let validation = this.state.email_validation.filter(err => err.key!==10);
+            if(res.data.available)
+              validation = [...validation, { key: 10, message: 'Email is available', type: 'success' }];
+            else
+              validation = [...validation, { key: 10, message: 'Email is already taken', type: 'error' }];
+            this.setState({ email_validation: validation });
           });
         }
         this.setState({ 

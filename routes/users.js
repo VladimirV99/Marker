@@ -34,9 +34,9 @@ router.get('/checkUsername/:username', (req, res) => {
   } else {
     User.findOne({ where: { username: req.params.username } }).then(user => {
       if (user) {
-        res.status(400).json({ message: 'Username is already taken' });
+        res.status(200).json({ available: false });
       } else {
-        res.status(200).json({ message: 'Username is available' });
+        res.status(200).json({ available: true });
       }
     }).catch(err => {
       res.status(500).json({ message: 'Something went wrong' });
@@ -50,9 +50,9 @@ router.get('/checkEmail/:email', (req, res) => {
   } else {
     User.findOne({ where: { email: req.params.email } }).then(user => {
       if (user) {
-        res.status(400).json({ message: 'E-mail is already taken' });
+        res.status(200).json({ available: false });
       } else {
-        res.status(200).json({ message: 'E-mail is available' });
+        res.status(200).json({ available: true });
       }
     }).catch(err => {
       res.status(500).json({ message: 'Something went wrong' });
