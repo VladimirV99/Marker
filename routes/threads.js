@@ -91,37 +91,36 @@ router.get('/get/:id/page/:page/:itemsPerPage', getUser, (req, res) => {
         res.status(404).json({ message: 'Thread not found' });
       } else {
         let page = req.params.page;
-        if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30) {
+        if(req.params.itemsPerPage && req.params.itemsPerPage>0 && req.params.itemsPerPage<30)
           itemsPerPage = parseInt(req.params.itemsPerPage);
-          Post.findAndCountAll({
-            attributes: ['id', 'content', 'is_main', 'created_at'],
-            where: { thread_id: thread.id },
-            offset: (page-1)*itemsPerPage,
-            limit: itemsPerPage,
-            include: [
-              { model: User, attributes: ['id', 'username', 'first_name', 'last_name', 'photo'], as: 'author' },
-              { model: VoteCount, attributes: [[Sequelize.fn('COALESCE', Sequelize.col('count'), 0), 'count']] },
-              { 
-                model: User,
-                attributes: ['id'],
-                through: { attributes: ['type'], where: { 'user_id': req.user.id } },
-                as: 'votes',
-              }
-            ],
-            subQuery: false,
-            order: [['created_at', 'ASC']]
-          }).then(result => {
-            res.status(200).json({
-              category: thread.forum.category,
-              forum: { id: thread.forum.id, name: thread.forum.name },
-              thread: { id: thread.id, subject: thread.subject, author: thread.author, created_at: thread.dataValues.created_at },
-              posts: result.rows,
-              total: result.count
-            });
-          }).catch(err => {
-            res.status(500).json({ message: 'Something went wrong' });
+        Post.findAndCountAll({
+          attributes: ['id', 'content', 'is_main', 'created_at'],
+          where: { thread_id: thread.id },
+          offset: (page-1)*itemsPerPage,
+          limit: itemsPerPage,
+          include: [
+            { model: User, attributes: ['id', 'username', 'first_name', 'last_name', 'photo'], as: 'author' },
+            { model: VoteCount, attributes: [[Sequelize.fn('COALESCE', Sequelize.col('count'), 0), 'count']] },
+            { 
+              model: User,
+              attributes: ['id'],
+              through: { attributes: ['type'], where: { 'user_id': req.user.id } },
+              as: 'votes',
+            }
+          ],
+          subQuery: false,
+          order: [['created_at', 'ASC']]
+        }).then(result => {
+          res.status(200).json({
+            category: thread.forum.category,
+            forum: { id: thread.forum.id, name: thread.forum.name },
+            thread: { id: thread.id, subject: thread.subject, author: thread.author, created_at: thread.dataValues.created_at },
+            posts: result.rows,
+            total: result.count
           });
-        }
+        }).catch(err => {
+          res.status(500).json({ message: 'Something went wrong' });
+        });
       }
     }).catch(err => {
       res.status(500).json({ message: 'Something went wrong' });

@@ -48,7 +48,7 @@ const ThreadModel = (sequelize, DataTypes) => {
         Thread.create(newThread).then(thread => {
           thread.setAuthor(user).then(() => {
             thread.setForum(forum).then(() => {
-              forum.thread_count = forum.thread_count + 1;
+              forum.thread_count += 1;
               forum.save().then(() => {
                 let newPost = {
                   content: newThread.content,

@@ -8,14 +8,15 @@ import Vote from '../common/Vote';
 import './UserPost.css';
 
 function UserPost(props) {
-  const { post } = props;
+  const { isAuthenticated, user } = props.auth;
+  const { post, author } = props;
 
   function handleDelete(event) {
     event.preventDefault();
     props.deletePost(post.id);
   }
 
-  const deleteButton = !post.is_main?
+  const deleteButton = (isAuthenticated && (author.id===user.id || user.is_moderator))?
     <span className='user-post-delete' onClick={handleDelete}>&times;</span> 
     : null;
   return (
@@ -28,18 +29,22 @@ function UserPost(props) {
       </div>
 
       <div className='user-post-body'>
-        <Vote id={post.id} balance={post.vote_count?post.vote_count.count:0} vote={post.votes.length===1?post.votes[0].vote.type:0}></Vote>
+        <Vote id={post.id} author_id={author.id} balance={post.vote_count?post.vote_count.count:0} vote={post.votes.length===1?post.votes[0].vote.type:0}></Vote>
         <p className='user-post-content'>{post.content}</p>
       </div>
     </article>
   );
 }
 
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
 const mapDispatchToProps = {
   deletePost
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(UserPost);

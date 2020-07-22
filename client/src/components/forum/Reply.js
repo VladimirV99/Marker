@@ -33,6 +33,7 @@ class Reply extends Component {
     };
 
     this.props.createPost(newPost);
+    this.setState({ content: '' });
   }
 
   render() {
@@ -41,7 +42,7 @@ class Reply extends Component {
         <form onSubmit={this.handleSubmit}>
           <div className='form-group'>
             <label htmlFor='content'>Content</label>
-            <textarea className='form-control' name='content' onChange={this.handleChange}></textarea>
+            <textarea className='form-control' name='content' value={this.state.content} onChange={this.handleChange}></textarea>
           </div>
           <input type='submit' className='btn btn-primary btn-block' value='Reply'></input>
         </form>

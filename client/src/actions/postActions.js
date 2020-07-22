@@ -14,7 +14,7 @@ import {
 
 export const loadPosts = (thread_id, page, history) => (dispatch, getState) => {
   dispatch({ type: POSTS_LOADING });
-  axios.get(`/api/threads/get/${thread_id}/page/${page}/15`, createAuthHeaders(getState())).then(res => {
+  axios.get(`/api/threads/get/${thread_id}/page/${page}/5`, createAuthHeaders(getState())).then(res => {
     dispatch({
       type: POSTS_LOADED,
       payload: res.data
@@ -38,12 +38,14 @@ export const createPost = (newPost) => (dispatch, getState) => {
   });
 };
 
-export const deletePost = (id) => (dispatch, getState) => {
+export const deletePost = (id, redirect=false, history=null) => (dispatch, getState) => {
   axios.delete(`/api/posts/delete/${id}`, createAuthHeaders(getState())).then(res => {
     dispatch({
       type: DELETE_POST,
       payload: id
     });
+    if(redirect)
+      history.push('/');
   }).catch(err => {
     dispatch(addAlert(err.response.data.message, 'error', err.response.status));
   });

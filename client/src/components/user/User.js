@@ -185,7 +185,7 @@ class User extends Component {
               postCount>0 ? (
                 <Fragment>
                   {posts.map(post => (
-                    <UserPost key={post.id} post={post}></UserPost>
+                    <UserPost key={post.id} author={user} post={post}></UserPost>
                     ))}
                   <Pagination currentPage={page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
                 </Fragment>

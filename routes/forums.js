@@ -102,7 +102,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', getCache('forums/', true), (req,
           limit: itemsPerPage,
           include: [
             {
-              model: Post, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'content', 'created_at'],
+              model: Post, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'content', 'created_at', 'authorId'],
               include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
             },
             { model: User, as: 'author', attributes: ['id', 'username'] }

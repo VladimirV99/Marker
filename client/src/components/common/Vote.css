@@ -5,6 +5,14 @@
   margin: 0.5rem 0;
 }
 
+.vote-menu-disabled .vote {
+  cursor: default;
+}
+
+.vote-menu-disabled .vote svg:hover {
+  fill: var(--color-text-muted);
+}
+
 .vote {
   cursor: pointer;
 }

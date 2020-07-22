@@ -111,7 +111,7 @@ router.get('/get/:username', (req, res) => {
   if(!req.params.username) {
     res.status(400).json({ message: 'You must provide a username' });
   } else {
-    User.findOne({ where: { username: req.params.username }, attributes: ['first_name', 'last_name', 'username', 'photo', 'email', 'created_at', 'is_moderator'] }).then(user => {
+    User.findOne({ where: { username: req.params.username }, attributes: ['id', 'first_name', 'last_name', 'username', 'photo', 'email', 'created_at', 'is_moderator'] }).then(user => {
       if(!user) {
         res.status(404).json({ message: 'User not found' });
       } else {

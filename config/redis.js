@@ -28,8 +28,13 @@ function getCache(path, appendId=false) {
   };
 }
 
+function deleteCache(path) {
+  redis_client.delete(path);
+}
+
 module.exports = {
   createCache,
   setCache,
-  getCache
+  getCache,
+  deleteCache
 }

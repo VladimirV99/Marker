@@ -52,7 +52,7 @@ export default function(state = initialState, action) {
     case ADD_POST:
       return {
         ...state,
-        posts: [...state.posts, action.payload.post],
+        posts: [...state.posts, { ...action.payload.post, created_at: Date.now(), vote_count: { count: 0 }, votes: [] }],
         postCount: state.postCount+1
       };
     case DELETE_POST:

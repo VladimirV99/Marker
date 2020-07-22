@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const Sequelize = require('sequelize');
-const { User, Thread, Post, Vote, VoteCount } = require('../config/database');
+const { User, Forum, Thread, Post, Vote, VoteCount } = require('../config/database');
 const { getUser } = require('../util/auth');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -38,32 +38,36 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide the post id' });
   } else {
-    Post.findByPk(req.params.id).then(post => {
+    Post.findByPk(req.params.id, {
+      attributes: [ 'id', 'is_main' ],
+      include: [{ model: Thread, attributes: ['id'], include: { model: Forum, attributes: ['id'] } }]
+    }).then(post => {
       if(!post) {
         res.status(404).json({ message: 'Post not found' });
       } else {
         if(post.author_id == req.user.id || req.user.is_moderator) {
           if(!post.is_main) {
-            Thread.findByPk(post.thread_id).then(thread => {
-              if(!thread) {
-                res.status(404).json({ message: 'Thread not found' });
-              } else {
-                thread.post_count = thread.post_count-1;
-                thread.save().then(() => {
-                  post.destroy().then(() => {
-                    res.status(200).json({ message: 'Post deleted' });
-                  }).catch(err => {
-                    res.status(500).json({ message: 'Something went wrong' });
-                  });
-                }).catch(err => {
-                  res.status(500).json({ message: 'Something went wrong' });
-                });
-              }
+            post.thread.post_count -= 1;
+            post.thread.save().then(() => {
+              post.destroy().then(() => {
+                res.status(200).json({ message: 'Post deleted' });
+              }).catch(err => {
+                res.status(500).json({ message: 'Something went wrong' });
+              });
             }).catch(err => {
               res.status(500).json({ message: 'Something went wrong' });
             });
           } else {
-            res.status(400).json({ message: 'Can\'t delete main post' });
+            post.thread.forum.thread_count -= 1;
+            post.thread.forum.save().then(() => {
+              post.thread.destroy().then(() => {
+                res.status(200).json({ message: 'Thread deleted' });
+              }).catch(err => {
+                res.status(500).json({ message: 'Something went wrong' });
+              });
+            }).catch(err => {
+              res.status(500).json({ message: 'Something went wrong' });
+            });
           }
         } else {
           res.status(401).json({ message: 'Unauthorized' });

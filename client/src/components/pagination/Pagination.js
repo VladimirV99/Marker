@@ -42,7 +42,7 @@ class Pagination extends Component {
         { currentPage!==1 ? <PaginationItem onPageChange={onPageChange} page={currentPage-1}>Prev</PaginationItem> : null }
         
         {pages.map(page => (
-          <PaginationItem onPageChange={onPageChange} page={page} selected={page===currentPage}>{page}</PaginationItem>
+          <PaginationItem key={page} onPageChange={onPageChange} page={page} selected={page===currentPage}>{page}</PaginationItem>
         ))}
 
         { currentPage!==totalPages ? <PaginationItem onPageChange={onPageChange} page={currentPage+1}>Next</PaginationItem> : null }

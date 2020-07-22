@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 import { deletePost } from '../../actions/postActions';
 import Vote from '../common/Vote';
@@ -13,10 +13,10 @@ function Post(props) {
 
   function handleDelete(event) {
     event.preventDefault();
-    props.deletePost(post.id);
+    props.deletePost(post.id, post.is_main, props.history);
   }
 
-  const deleteButton = (!post.is_main && isAuthenticated && (post.user_id===user.id || user.is_moderator))?
+  const deleteButton = (isAuthenticated && (post.user_id===user.id || user.is_moderator))?
     <span className='post-delete' onClick={handleDelete}>&times;</span> 
     : null;
   return (
@@ -32,7 +32,7 @@ function Post(props) {
       </div>
 
       <div className='post-body'>
-        <Vote id={post.id} balance={post.vote_count?post.vote_count.count:0} vote={post.votes.length===1?post.votes[0].vote.type:0}></Vote>
+        <Vote id={post.id} author_id={post.author.id} balance={post.vote_count?post.vote_count.count:0} vote={post.votes.length===1?post.votes[0].vote.type:0}></Vote>
         <p className='post-content'>
           {post.content}
         </p>
@@ -52,4 +52,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Post);
+)(withRouter(Post));
