@@ -7,10 +7,11 @@ import {
   THREADS_LOADED,
   THREADS_RESET
 } from './types';
+import { itemsPerPage } from '../util/Constants';
 
 export const loadThreads = (forum_id, page, history) => dispatch => {
   dispatch({ type: THREADS_LOADING });
-  axios.get(`/api/forums/get/${forum_id}/page/${page}/5`).then(res => {
+  axios.get(`/api/forums/get/${forum_id}/page/${page}/${itemsPerPage}`).then(res => {
     dispatch({
       type: THREADS_LOADED,
       payload: res.data

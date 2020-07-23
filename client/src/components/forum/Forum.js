@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import { getReadableTimeDifference } from '../../util/TimeHelper';
+import { itemsPerPage, displayPages } from '../../util/Constants';
 
 import { clearAlerts } from '../../actions/alertActions';
 import { loadThreads } from '../../actions/threadActions';
@@ -32,7 +34,7 @@ class Forum extends Component {
   render() {
     const { isAuthenticated } = this.props.auth;
     const { category, forum, threads, threadCount, isLoaded, errorLoading } = this.props.forumPage;
-    const totalPages = Math.ceil(threadCount/5);
+    const totalPages = Math.ceil(threadCount/itemsPerPage);
 
     if(errorLoading) {
       return null;
@@ -92,7 +94,7 @@ class Forum extends Component {
 
         </div>
 
-        <Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
+        <Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={displayPages} onPageChange={this.onPageChange}></Pagination>
       </main>
     );
   }

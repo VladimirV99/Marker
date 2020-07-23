@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { itemsPerPage, displayPages } from '../../util/Constants';
 import { clearAlerts } from '../../actions/alertActions';
-import { loadPosts } from '../../actions/postActions';
+import { loadPosts, deletePost } from '../../actions/postActions';
+
 import Post from './Post';
 import Reply from './Reply';
 import Pagination from '../pagination/Pagination';
@@ -16,6 +18,7 @@ class Thread extends Component {
     };
 
     this.onPageChange = this.onPageChange.bind(this);
+    this.deletePost = this.deletePost.bind(this);
   }
 
   componentDidMount() {
@@ -34,9 +37,13 @@ class Thread extends Component {
     this.props.loadPosts(this.props.match.params.id, page, this.props.history);
   }
 
+  deletePost(id) {
+    this.props.deletePost(id);
+  }
+
   render() {
     const { category, forum, thread, posts, postCount, isLoaded, errorLoading } = this.props.threadPage;
-    const totalPages = Math.ceil(postCount/5);
+    const totalPages = Math.ceil(postCount/itemsPerPage);
 
     if(errorLoading) {
       return null;
@@ -59,10 +66,10 @@ class Thread extends Component {
         </div>
         {
           posts.map(post => (
-            <Post key={post.id} post={post}></Post>
+            <Post key={post.id} post={post} deletePost={this.deletePost}></Post>
           ))
         }
-        <Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
+        <Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={displayPages} onPageChange={this.onPageChange}></Pagination>
         <Reply thread={this.props.match.params.id}></Reply>
       </main>
     );
@@ -74,7 +81,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  clearAlerts, loadPosts
+  clearAlerts, loadPosts, deletePost
 };
 
 export default connect(

@@ -11,10 +11,11 @@ import {
   UPVOTE_POST,
   DOWNVOTE_POST
 } from './types';
+import { itemsPerPage } from '../util/Constants';
 
 export const loadPosts = (thread_id, page, history) => (dispatch, getState) => {
   dispatch({ type: POSTS_LOADING });
-  axios.get(`/api/threads/get/${thread_id}/page/${page}/5`, createAuthHeaders(getState())).then(res => {
+  axios.get(`/api/threads/get/${thread_id}/page/${page}/${itemsPerPage}`, createAuthHeaders(getState())).then(res => {
     dispatch({
       type: POSTS_LOADED,
       payload: res.data

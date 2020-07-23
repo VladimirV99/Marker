@@ -3,8 +3,10 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
+import { itemsPerPage, displayPages } from '../../util/Constants';
 import { addAlert, clearAlerts } from '../../actions/alertActions';
 import { createAuthHeaders } from '../../actions/authActions';
+
 import UserPost from './UserPost';
 import Pagination from '../pagination/Pagination';
 import Modal from '../common/Modal';
@@ -31,6 +33,7 @@ class User extends Component {
     this.handleRemoveModerator = this.handleRemoveModerator.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.deletePost = this.deletePost.bind(this);
   }
 
   componentDidMount() {
@@ -56,17 +59,27 @@ class User extends Component {
 
   onPageChange(page) {
     this.props.clearAlerts();
+    const totalPages = Math.ceil(this.state.postCount/itemsPerPage);
+    if(!this.state.pageLoading && page>totalPages)
+      page = totalPages;
     this.setState({
       page,
       pageLoading: true,
       pageLoadingError: false
     });
-    axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/20`).then(res => {
-      this.setState({
-        posts: res.data.posts,
-        postCount: res.data.total,
-        pageLoading: false
-      });
+    axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/${itemsPerPage}`).then(res => {
+      if(res.data.posts.length===0 && res.data.total!==0) {
+        this.setState({
+          postCount: res.data.total
+        });
+        this.onPageChange(Math.min(page, Math.ceil(this.state.postCount/itemsPerPage)));
+      } else {
+        this.setState({
+          posts: res.data.posts,
+          postCount: res.data.total,
+          pageLoading: false
+        });
+      }
     }).catch(err => {
       this.setState({
         pageLoadingError: true
@@ -113,9 +126,18 @@ class User extends Component {
     this.setState({ showModeratorPanel: false });
   }
 
+  deletePost(id) {
+    axios.delete(`/api/posts/delete/${id}`, createAuthHeaders({auth: this.props.auth})).then(res => {
+      this.setState({ postCount: this.state.postCount-1 });
+      this.onPageChange(this.state.page);
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
   render() {
     const { isLoaded, errorLoading, user, posts, postCount, page, pageLoading, pageLoadingError } = this.state;
-    const totalPages = Math.ceil(postCount/5);
+    const totalPages = Math.ceil(postCount/itemsPerPage);
 
     if(errorLoading) {
       return null;
@@ -185,9 +207,9 @@ class User extends Component {
               postCount>0 ? (
                 <Fragment>
                   {posts.map(post => (
-                    <UserPost key={post.id} author={user} post={post}></UserPost>
+                    <UserPost key={post.id} author={user} post={post} deletePost={this.deletePost}></UserPost>
                     ))}
-                  <Pagination currentPage={page} totalPages={totalPages} displayPages={5} onPageChange={this.onPageChange}></Pagination>
+                  <Pagination currentPage={page} totalPages={totalPages} displayPages={displayPages} onPageChange={this.onPageChange}></Pagination>
                 </Fragment>
               ) : (
               <h3 className='text-center'>This user has no posts</h3>

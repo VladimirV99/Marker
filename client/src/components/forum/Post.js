@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
 
-import { deletePost } from '../../actions/postActions';
 import Vote from '../common/Vote';
+import Modal from '../common/Modal';
 
 import './Post.css';
 
 function Post(props) {
+  const [showDeletePanel, setDeletePanel] = useState(false);
+
   const { isAuthenticated, user } = props.auth;
-  const { post } = props;
+  const { post, deletePost } = props;
 
   function handleDelete(event) {
     event.preventDefault();
-    props.deletePost(post.id, post.is_main, props.history);
+    deletePost(post.id);
   }
 
   const deleteButton = (isAuthenticated && (post.user_id===user.id || user.is_moderator))?
-    <span className='post-delete' onClick={handleDelete}>&times;</span> 
+    <Fragment>
+      <span className='post-delete' onClick={() => setDeletePanel(true)}>&times;</span>
+      <Modal show={showDeletePanel} title={'Confirm Delete'} onConfirm={handleDelete} onDeny={() => setDeletePanel(false)}>
+        Are you sure you want to delete this post
+      </Modal>
+    </Fragment>
     : null;
   return (
     <article className='post'>
@@ -45,11 +52,7 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-const mapDispatchToProps = {
-  deletePost
-};
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(withRouter(Post));
+  null
+)(Post);
