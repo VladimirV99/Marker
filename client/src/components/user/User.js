@@ -67,7 +67,7 @@ class User extends Component {
       pageLoading: true,
       pageLoadingError: false
     });
-    axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/${itemsPerPage}`).then(res => {
+    axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/${itemsPerPage}`, createAuthHeaders({auth: this.props.auth})).then(res => {
       if(res.data.posts.length===0 && res.data.total!==0) {
         this.setState({
           postCount: res.data.total

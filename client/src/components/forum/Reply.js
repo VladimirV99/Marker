@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
-import { createPost } from '../../actions/postActions';
 
 import './Reply.css';
 
@@ -28,8 +27,7 @@ class Reply extends Component {
     const { content } = this.state;
 
     let newPost = {
-      content,
-      thread: this.props.thread
+      content
     };
 
     this.props.createPost(newPost);
@@ -52,7 +50,7 @@ class Reply extends Component {
 }
 
 const mapDispatchToProps = {
-  clearAlerts, createPost
+  clearAlerts
 };
 
 export default connect(

@@ -30,11 +30,3 @@ export const FORUM_ADD = 'FORUM_ADD';
 export const THREADS_LOADING = 'THREADS_LOADING';
 export const THREADS_LOADED = 'THREADS_LOADED';
 export const THREADS_RESET = 'THREADS_RESET';
-
-export const POSTS_LOADING = 'POSTS_LOADING';
-export const POSTS_LOADED = 'POSTS_LOADED';
-export const POSTS_RESET = 'POSTS_RESET';
-export const ADD_POST = 'POST_ADD';
-export const DELETE_POST = 'POST_DELETE';
-export const UPVOTE_POST = 'POST_UPVOTE';
-export const DOWNVOTE_POST = 'POST_DOWNVOTE';

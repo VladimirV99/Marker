@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { addAlert } from './alertActions';
-import { createAuthHeaders } from './authActions';
+import { createAuthHeadersFromState } from './authActions';
 import {
   FORUMS_LOADING,
   FORUMS_LOADED,
@@ -25,7 +25,7 @@ export const loadForums = (category_id, history) => dispatch => {
 };
 
 export const createForum = (newForum) => (dispatch, getState) => {
-  axios.post('/api/forums/create', newForum, createAuthHeaders(getState())).then(res => {
+  axios.post('/api/forums/create', newForum, createAuthHeadersFromState(getState())).then(res => {
     dispatch({
       type: CATEGORIES_ADD_FORUM,
       payload: {

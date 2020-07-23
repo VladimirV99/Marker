@@ -15,10 +15,10 @@ function Post(props) {
 
   function handleDelete(event) {
     event.preventDefault();
-    deletePost(post.id);
+    deletePost(post);
   }
 
-  const deleteButton = (isAuthenticated && (post.user_id===user.id || user.is_moderator))?
+  const deleteButton = (isAuthenticated && (post.author.id===user.id || user.is_moderator))?
     <Fragment>
       <span className='post-delete' onClick={() => setDeletePanel(true)}>&times;</span>
       <Modal show={showDeletePanel} title={'Confirm Delete'} onConfirm={handleDelete} onDeny={() => setDeletePanel(false)}>
@@ -39,7 +39,9 @@ function Post(props) {
       </div>
 
       <div className='post-body'>
-        <Vote id={post.id} author_id={post.author.id} balance={post.vote_count?post.vote_count.count:0} vote={post.votes.length===1?post.votes[0].vote.type:0}></Vote>
+        <Vote id={post.id} author_id={post.author.id} balance={post.vote_count?post.vote_count.count:0} 
+          vote={post.votes.length===1?post.votes[0].vote.type:0} upvote={props.upvotePost} downvote={props.downvotePost}>
+        </Vote>
         <p className='post-content'>
           {post.content}
         </p>

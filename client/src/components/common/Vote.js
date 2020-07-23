@@ -2,8 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { upvotePost, downvotePost } from '../../actions/postActions';
-
 import './Vote.css';
 
 function Vote(props) {
@@ -14,7 +12,7 @@ function Vote(props) {
     event.preventDefault();
     if(isAuthenticated) {
       if(author_id!==user.id)
-        props.upvotePost(id);
+        props.upvote(id);
     } else {
       props.history.push('/login');
     }
@@ -24,7 +22,7 @@ function Vote(props) {
     event.preventDefault();
     if(isAuthenticated) {
       if(author_id!==user.id)
-        props.downvotePost(id);
+        props.downvote(id);
     } else {
       props.history.push('/login');
     }
@@ -49,12 +47,7 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-const mapDispatchToProps = {
-  upvotePost,
-  downvotePost
-};
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(withRouter(Vote));

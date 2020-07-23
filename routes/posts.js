@@ -40,12 +40,15 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
   } else {
     Post.findByPk(req.params.id, {
       attributes: [ 'id', 'is_main' ],
-      include: [{ model: Thread, attributes: ['id'], include: { model: Forum, attributes: ['id'] } }]
+      include: [
+        { model: User, attributes: ['id'], as: 'author' },
+        { model: Thread, attributes: ['id'], include: { model: Forum, attributes: ['id'] } }
+      ]
     }).then(post => {
       if(!post) {
         res.status(404).json({ message: 'Post not found' });
       } else {
-        if(post.author_id == req.user.id || req.user.is_moderator) {
+        if((post.author.id == req.user.id) || req.user.is_moderator) {
           if(!post.is_main) {
             post.thread.post_count -= 1;
             post.thread.save().then(() => {

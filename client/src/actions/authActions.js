@@ -116,11 +116,15 @@ export const createHeaders = () => {
   };
 }
 
-export const createAuthHeaders = state => {
-  const token = state.auth.token;
+export const createAuthHeaders = auth => {
+  const token = auth.token;
   const config = createHeaders();
   if(token) {
     config.headers['Authorization'] = token;
   }
   return config;
+}
+
+export const createAuthHeadersFromState = state => {
+  return createAuthHeadersFromState(state.auth);
 }

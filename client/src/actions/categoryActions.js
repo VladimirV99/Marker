@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { addAlert } from './alertActions';
-import { createAuthHeaders } from './authActions';
+import { createAuthHeadersFromState } from './authActions';
 import {
   CATEGORIES_LOADING,
   CATEGORIES_LOADED,
@@ -23,7 +23,7 @@ export const loadCategories = () => dispatch => {
 };
 
 export const createCategory = (newCategory) => (dispatch, getState) => {
-  axios.post('/api/categories/create', newCategory, createAuthHeaders(getState())).then(res => {
+  axios.post('/api/categories/create', newCategory, createAuthHeadersFromState(getState())).then(res => {
     res.data.category.forums = [];
     dispatch({
       type: CATEGORY_ADD,
