@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
-import { createForum } from '../../actions/forumActions';
 
 class CreateForum extends Component {
   constructor(props) {
@@ -24,11 +23,10 @@ class CreateForum extends Component {
     this.props.clearAlerts();
 
     const { name } = this.state;
-    const { category } = this.props;
 
     let newForum = {
       name,
-      category
+      category: this.props.category
     };
 
     this.props.createForum(newForum);
@@ -46,11 +44,15 @@ class CreateForum extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
 const mapDispatchToProps = {
-  clearAlerts, createForum
+  clearAlerts
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(CreateForum);

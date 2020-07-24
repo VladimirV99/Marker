@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import { getReadableTimeDifference } from '../../util/TimeHelper';
 import { itemsPerPage, displayPages } from '../../util/Constants';
 
-import { clearAlerts } from '../../actions/alertActions';
-import { loadThreads } from '../../actions/threadActions';
+import { addAlert, clearAlerts } from '../../actions/alertActions';
 import Pagination from '../pagination/Pagination';
 
 class Forum extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoaded: false,
+      errorLoading: false,
+      category: null,
+      forum: null,
+      threads: [],
+      threadCount: 0,
       page: 1
     };
 
@@ -28,12 +34,29 @@ class Forum extends Component {
   }
 
   onPageChange(page) {
-    this.props.loadThreads(this.props.match.params.id, page, this.props.history);
+    const forum_id = this.props.match.params.id;
+    axios.get(`/api/forums/get/${forum_id}/page/${page}/${itemsPerPage}`).then(res => {
+      this.setState({
+        isLoaded: true,
+        errorLoading: false,
+        category: res.data.category,
+        forum: res.data.forum,
+        threads: res.data.threads,
+        threadCount: res.data.total
+      });
+    }).catch(err => {
+      this.setState({
+        errorLoading: true
+      });
+      if(err.response.status === 404)
+        this.props.history.push('/');
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
   }
 
   render() {
     const { isAuthenticated } = this.props.auth;
-    const { category, forum, threads, threadCount, isLoaded, errorLoading } = this.props.forumPage;
+    const { isLoaded, errorLoading, category, forum, threads, threadCount } = this.state;
     const totalPages = Math.ceil(threadCount/itemsPerPage);
 
     if(errorLoading) {
@@ -106,7 +129,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  clearAlerts, loadThreads
+  addAlert, clearAlerts
 };
 
 export default connect(

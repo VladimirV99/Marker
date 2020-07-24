@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 
-import { clearAlerts } from '../../actions/alertActions';
-import { createThread } from '../../actions/threadActions';
+import { addAlert, clearAlerts } from '../../actions/alertActions';
+import { createAuthHeaders } from '../../actions/authActions';
 
 class CreateThread extends Component {
   constructor(props) {
@@ -37,7 +38,11 @@ class CreateThread extends Component {
       forum: this.props.match.params.id
     };
 
-    this.props.createThread(newThread, this.props.history);
+    axios.post('/api/threads/create', newThread, createAuthHeaders(this.props.auth)).then(res => {
+      this.props.history.push(`/thread/${res.data.thread.id}`);
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
   }
 
   render() {
@@ -59,11 +64,15 @@ class CreateThread extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
 const mapDispatchToProps = {
-  clearAlerts, createThread
+  addAlert, clearAlerts
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(withRouter(CreateThread));

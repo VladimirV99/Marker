@@ -64,7 +64,7 @@ router.get('/category/:id', getCache('forums/category/', true), (req, res) => {
         Forum.findAll({
           where: { category_id: req.params.id },
           include: [{
-            model: Thread, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'subject', 'updated_at'],
+            model: Thread, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'subject', 'updated_at', 'authorId'],
             include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
           }]
         }).then(forums => {
@@ -122,10 +122,10 @@ router.get('/get/:id/page/:page/:itemsPerPage', getCache('forums/', true), (req,
 });
 
 router.get('/all', getCache('forums/all'), (req, res) => {
-  Category.findAll({ include: [
-    { model: Forum, include: [
+  Category.findAll({
+    include: [{ model: Forum, include: [
       {
-        model: Thread, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'subject', 'updated_at'],
+        model: Thread, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'subject', 'updated_at', 'authorId'],
         include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
       }
     ]}

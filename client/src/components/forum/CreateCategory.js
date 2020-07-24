@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
-import { createCategory } from '../../actions/categoryActions';
 
 class CreateCategory extends Component {
   constructor(props) {
@@ -47,7 +46,7 @@ class CreateCategory extends Component {
 }
 
 const mapDispatchToProps = {
-  clearAlerts, createCategory
+  clearAlerts
 };
 
 export default connect(

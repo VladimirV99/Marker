@@ -17,7 +17,7 @@ export const loadUser = () => (dispatch, getState) => {
   if(getState().auth.token) {
     dispatch({ type: USER_LOADING });
 
-    axios.get('/api/users/profile', createAuthHeaders(getState())).then(res => {
+    axios.get('/api/users/profile', createAuthHeadersFromState(getState())).then(res => {
       dispatch({
         type: USER_LOADED,
         payload: res.data
@@ -70,7 +70,7 @@ export const logout = () => {
 };
 
 export const updateProfile = newProfile => (dispatch, getState) => {
-  axios.put('/api/users/update', newProfile, createAuthHeaders(getState())).then(res => {
+  axios.put('/api/users/update', newProfile, createAuthHeadersFromState(getState())).then(res => {
     dispatch(addAlert(res.data.message, 'success', res.status));
   }).catch(err => {
     dispatch(addAlert(err.response.data.message, 'error', err.response.status));
@@ -78,7 +78,7 @@ export const updateProfile = newProfile => (dispatch, getState) => {
 };
 
 export const updatePassword = newPassword => (dispatch, getState) => {
-  axios.put('/api/users/changePassword', newPassword, createAuthHeaders(getState())).then(res => {
+  axios.put('/api/users/changePassword', newPassword, createAuthHeadersFromState(getState())).then(res => {
     dispatch(addAlert(res.data.message, 'success', res.status));
   }).catch(err => {
     dispatch(addAlert(err.response.data.message, 'error', err.response.status));
@@ -92,7 +92,7 @@ export const updatePhoto = photo => (dispatch, getState) => {
   const config = createAuthHeaders(getState());
   config.headers['Content-Type'] = 'multipart/form-data';
 
-  axios.post('/api/users/uploadPhoto', formData, createAuthHeaders(getState())).then(res => {
+  axios.post('/api/users/uploadPhoto', formData, createAuthHeadersFromState(getState())).then(res => {
     dispatch(addAlert(res.data.message, 'success', res.status));
   }).catch(err => {
     dispatch(addAlert(err.response.data.message, 'error', err.response.status));
@@ -100,7 +100,7 @@ export const updatePhoto = photo => (dispatch, getState) => {
 };
 
 export const setDarkMode = flag => (dispatch, getState) => {
-  axios.post('/api/users/darkMode', {status: flag}, createAuthHeaders(getState())).then(res => {
+  axios.post('/api/users/darkMode', {status: flag}, createAuthHeadersFromState(getState())).then(res => {
     dispatch({
       type: USER_SET_DARK_MODE,
       payload: flag
@@ -126,5 +126,5 @@ export const createAuthHeaders = auth => {
 }
 
 export const createAuthHeadersFromState = state => {
-  return createAuthHeadersFromState(state.auth);
+  return createAuthHeaders(state.auth);
 }
