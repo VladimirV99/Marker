@@ -5,8 +5,10 @@ import axios from 'axios';
 
 import { getReadableTimeDifference } from '../../util/TimeHelper';
 import { itemsPerPage, displayPages } from '../../util/Constants';
-
 import { addAlert, clearAlerts } from '../../actions/alertActions';
+import { createAuthHeaders } from '../../actions/authActions';
+
+import DeleteButton from '../common/DeleteButton';
 import Pagination from '../pagination/Pagination';
 
 class Forum extends Component {
@@ -23,6 +25,7 @@ class Forum extends Component {
     };
 
     this.onPageChange = this.onPageChange.bind(this);
+    this.deleteForum = this.deleteForum.bind(this);
   }
 
   componentDidMount() {
@@ -54,8 +57,17 @@ class Forum extends Component {
     });
   }
 
+  deleteForum() {
+    console.log(this.state.forum);
+    axios.delete(`/api/forums/delete/${this.state.forum.id}`, createAuthHeaders(this.props.auth)).then(res => {
+      this.props.history.push(`/category/${this.state.category.id}`);
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
   render() {
-    const { isAuthenticated } = this.props.auth;
+    const { isAuthenticated, user } = this.props.auth;
     const { isLoaded, errorLoading, category, forum, threads, threadCount } = this.state;
     const totalPages = Math.ceil(threadCount/itemsPerPage);
 
@@ -75,9 +87,15 @@ class Forum extends Component {
 
         <div className='category'>
 
-          <h3 className='category-navigation'>
-            <Link to='/'>Home</Link> &gt; <Link to={`/category/${category.id}`}>{category.name}</Link> &gt; {forum.name}
-          </h3>
+          <div className='category-navigation'>
+            <h3 className='category-name'>
+              <Link to='/'>Home</Link> &gt; <Link to={`/category/${category.id}`}>{category.name}</Link> &gt; {forum.name}
+            </h3>
+
+            {(isAuthenticated && user.is_moderator)?
+            <DeleteButton title='Confirm Delete' content='Are you sure you want to delete this forum?' onConfirm={this.deleteForum} />
+            : null}
+          </div>
 
           <div className='category-header'>
             <div className='thread-title'>Thread</div>

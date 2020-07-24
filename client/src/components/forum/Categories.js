@@ -9,6 +9,7 @@ import { createAuthHeaders } from '../../actions/authActions';
 import CreateCategory from './CreateCategory';
 import CreateForum from './CreateForum';
 import ForumListItem from './ForumListItem';
+import DeleteButton from '../common/DeleteButton';
 
 class Categories extends Component {
   constructor(props) {
@@ -16,10 +17,11 @@ class Categories extends Component {
     this.state = {
       isLoaded: false,
       errorLoading: false,
-      categories: null,
+      categories: null
     };
 
     this.createCategory = this.createCategory.bind(this);
+    this.deleteCategory = this.deleteCategory.bind(this);
     this.createForum = this.createForum.bind(this);
   }
 
@@ -58,6 +60,16 @@ class Categories extends Component {
     });
   }
 
+  deleteCategory(id) {
+    axios.delete(`/api/categories/delete/${id}`, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        categories: this.state.categories.filter(category => category.id!==id)
+      });
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
   createForum(newForum) {
     axios.post('/api/forums/create', newForum, createAuthHeaders(this.props.auth)).then(res => {
       this.setState({
@@ -90,8 +102,6 @@ class Categories extends Component {
       );
     }
 
-    console.log(categories);
-
     return (
       <Fragment>
         {isAuthenticated && user.is_moderator? <CreateCategory createCategory={this.createCategory}></CreateCategory> : null}
@@ -99,7 +109,13 @@ class Categories extends Component {
           { categories.map(category => (
             <div key={category.id} className='category'>
 
-              <h3 className='category-navigation'><Link to={`/category/${category.id}`}>{category.name}</Link></h3>
+              <div className='category-navigation'>
+                <h3 className='category-name'><Link to={`/category/${category.id}`}>{category.name}</Link></h3>
+
+                {(isAuthenticated && user.is_moderator)?
+                <DeleteButton title='Confirm Delete' content='Are you sure you want to delete this category?' onConfirm={() => this.deleteCategory(category.id)} />
+                : null}
+              </div>
 
               <div className='category-header'>
                 <div className='forum-title'>Title</div>

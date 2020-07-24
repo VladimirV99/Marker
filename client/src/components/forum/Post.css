@@ -43,15 +43,6 @@
   margin-bottom: .5rem;
 }
 
-.post-delete {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: .1rem;
-  cursor: pointer;
-  font-size: 1.5rem;
-}
-
 @media screen and (max-width: 768px) {
   .post {
     flex-direction: column;

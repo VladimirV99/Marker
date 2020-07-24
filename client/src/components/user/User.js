@@ -127,7 +127,7 @@ class User extends Component {
   }
 
   deletePost(id) {
-    axios.delete(`/api/posts/delete/${id}`, createAuthHeaders({auth: this.props.auth})).then(res => {
+    axios.delete(`/api/posts/delete/${id}`, createAuthHeaders(this.props.auth)).then(res => {
       this.setState({ postCount: this.state.postCount-1 });
       this.onPageChange(this.state.page);
     }).catch(err => {

@@ -8,6 +8,7 @@ import { createAuthHeaders } from '../../actions/authActions';
 
 import CreateForum from './CreateForum';
 import ForumListItem from './ForumListItem';
+import DeleteButton from '../common/DeleteButton';
 
 class Category extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class Category extends Component {
       forums: []
     };
 
+    this.deleteCategory = this.deleteCategory.bind(this);
     this.createForum = this.createForum.bind(this);
   }
 
@@ -39,6 +41,14 @@ class Category extends Component {
       });
       if(err.response.status === 404)
         this.props.history.push('/');
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
+  deleteCategory() {
+    axios.delete(`/api/categories/delete/${this.state.category.id}`, createAuthHeaders(this.props.auth)).then(res => {
+      this.props.history.push('/');
+    }).catch(err => {
       this.props.addAlert(err.response.data.message, 'error', err.response.status);
     });
   }
@@ -79,9 +89,13 @@ class Category extends Component {
         <main className='container main'>
           <div className='category'>
 
-            <h3 className='category-navigation'>
-              <Link to='/'>Home</Link> &gt; {category.name}
-            </h3>
+            <div className='category-navigation'>
+              <h3 className='category-name'><Link to='/'>Home</Link> &gt; {category.name}</h3>
+
+              {(isAuthenticated && user.is_moderator)?
+              <DeleteButton title='Confirm Delete' content='Are you sure you want to delete this category?' onConfirm={this.deleteCategory} />
+              : null}
+            </div>
 
             <div className='category-header'>
               <div className='forum-title'>Title</div>

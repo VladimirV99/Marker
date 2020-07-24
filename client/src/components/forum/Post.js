@@ -1,30 +1,18 @@
-import React, { Fragment, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Vote from '../common/Vote';
-import Modal from '../common/Modal';
+import DeleteButton from '../common/DeleteButton';
 
 import './Post.css';
 
 function Post(props) {
-  const [showDeletePanel, setDeletePanel] = useState(false);
-
   const { isAuthenticated, user } = props.auth;
   const { post, deletePost } = props;
 
-  function handleDelete(event) {
-    event.preventDefault();
-    deletePost(post);
-  }
-
   const deleteButton = (isAuthenticated && (post.author.id===user.id || user.is_moderator))?
-    <Fragment>
-      <span className='post-delete' onClick={() => setDeletePanel(true)}>&times;</span>
-      <Modal show={showDeletePanel} title={'Confirm Delete'} onConfirm={handleDelete} onDeny={() => setDeletePanel(false)}>
-        Are you sure you want to delete this post
-      </Modal>
-    </Fragment>
+    <DeleteButton title='Confirm Delete' content='Are you sure you want to delete this post?' onConfirm={() => deletePost(post)} />
     : null;
   return (
     <article className='post'>
