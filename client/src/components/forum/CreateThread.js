@@ -10,8 +10,8 @@ class CreateThread extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subject: '',
-      content: ''
+      thread_subject: '',
+      thread_content: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -30,11 +30,11 @@ class CreateThread extends Component {
     event.preventDefault();
     this.props.clearAlerts();
 
-    const { subject, content } = this.state;
+    const { thread_subject, thread_content } = this.state;
 
     let newThread = {
-      subject,
-      content,
+      subject: thread_subject,
+      content: thread_content,
       forum: this.props.match.params.id
     };
 
@@ -51,11 +51,11 @@ class CreateThread extends Component {
         <form onSubmit={this.handleSubmit}>
           <div className='form-group'>
             <label htmlFor='subject'>Subject</label>
-            <input type='text' className='form-control' name='subject' onChange={this.handleChange}></input>
+            <input type='text' className='form-control' name='thread_subject' onChange={this.handleChange}></input>
           </div>
           <div className='form-group'>
             <label htmlFor='content'>Content</label>
-            <textarea className='form-control' name='content' onChange={this.handleChange}></textarea>
+            <textarea className='form-control' name='thread_content' onChange={this.handleChange}></textarea>
           </div>
           <input type='submit' className='btn btn-primary btn-block' value='Create Thread'></input>
         </form>

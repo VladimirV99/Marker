@@ -7,7 +7,7 @@ class CreateForum extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: ''
+      forum_name: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -22,21 +22,22 @@ class CreateForum extends Component {
     event.preventDefault();
     this.props.clearAlerts();
 
-    const { name } = this.state;
+    const { forum_name } = this.state;
 
     let newForum = {
-      name,
+      name: forum_name,
       category: this.props.category
     };
 
     this.props.createForum(newForum);
+    this.setState({ forum_name: '' });
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit} className='forum-create'>
         <div className='form-group-inline'>
-          <input type='text' className='form-control' name='name' onChange={this.handleChange}></input>
+          <input type='text' className='form-control' name='forum_name' value={this.state.forum_name} onChange={this.handleChange}></input>
           <input type='submit' className='btn btn-primary' value='Create Forum'></input>
         </div>
       </form>

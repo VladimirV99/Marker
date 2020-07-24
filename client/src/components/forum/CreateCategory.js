@@ -7,7 +7,7 @@ class CreateCategory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: ''
+      category_name: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -22,13 +22,14 @@ class CreateCategory extends Component {
     event.preventDefault();
     this.props.clearAlerts();
 
-    const { name } = this.state;
+    const { category_name } = this.state;
 
     let newCategory = {
-      name
+      name: category_name
     };
 
     this.props.createCategory(newCategory);
+    this.setState({ category_name: '' });
   }
 
   render() {
@@ -36,7 +37,7 @@ class CreateCategory extends Component {
       <div className='container'>
         <form onSubmit={this.handleSubmit} className='forum-create'>
           <div className='form-group-inline'>
-            <input type='text' className='form-control' name='name' onChange={this.handleChange}></input>
+            <input type='text' className='form-control' name='category_name' value={this.state.category_name} onChange={this.handleChange}></input>
             <input type='submit' className='btn btn-primary' value='Create Category'></input>
           </div>
         </form>
