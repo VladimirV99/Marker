@@ -40,6 +40,7 @@
   padding: 1.4rem .5rem;
   min-width: 80px;
   color: var(--color-text-primary-muted);
+  text-decoration: none;
 }
 
 .navbar .navbar-nav .nav-item:hover {
