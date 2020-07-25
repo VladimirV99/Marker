@@ -167,6 +167,7 @@ class Thread extends Component {
   }
 
   render() {
+    const { isAuthenticated } = this.props.auth;
     const { isLoaded, errorLoading, category, forum, thread, posts, postCount  } = this.state;
     const totalPages = Math.ceil(postCount/itemsPerPage);
 
@@ -196,7 +197,7 @@ class Thread extends Component {
           ))
         }
         <Pagination currentPage={this.state.page} totalPages={totalPages} displayPages={displayPages} onPageChange={this.onPageChange}></Pagination>
-        <Reply createPost={this.createPost}></Reply>
+        {isAuthenticated? <Reply createPost={this.createPost}></Reply> : null }
       </main>
     );
   }
