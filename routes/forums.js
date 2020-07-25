@@ -146,6 +146,22 @@ router.get('/get/:id/page/:page/:itemsPerPage', getCache('forums/', true), (req,
   }
 });
 
+router.get('/get/:id', (req, res) => {
+  if(!req.params.id) {
+    res.status(400).json({ message: 'You must provide a forum' });
+  } else {
+    Forum.findOne({ where: { id: req.params.id }, include: [{ model: Category }]}).then(forum => {
+      if(!forum) {
+        res.status(404).json({ message: 'Forum not found' });
+      } else {
+        res.status(200).json({ category: forum.category, forum: {id: forum.id, name: forum.name} });
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'Something went wrong' });
+    });;
+  }
+});
+
 router.get('/all', getCache('forums/all'), (req, res) => {
   Category.findAll({
     include: [{ model: Forum, include: [

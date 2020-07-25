@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import { addAlert, clearAlerts } from '../../actions/alertActions';
@@ -9,10 +9,16 @@ import { createAuthHeaders } from '../../actions/authActions';
 import Validation from '../../util/Validation';
 import ValidationBlock from '../validation/ValidationBlock';
 
+import '../../Forum.css';
+
 class CreateThread extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoaded: false,
+      errorLoading: false,
+      category: null,
+      forum: null,
       thread_subject: '',
       thread_subject_validation: [],
       thread_subject_error: false,
@@ -23,6 +29,26 @@ class CreateThread extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      isLoading: true,
+      errorLoading: false
+    });
+    const thread_id = this.props.match.params.id;
+    axios.get(`/api/forums/get/${thread_id}`).then(res => {
+      this.setState({
+        isLoaded: true,
+        category: res.data.category,
+        forum: res.data.forum        
+      });
+    }).catch(err => {
+      this.setState({
+        errorLoading: true
+      });
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
   }
 
   componentWillUnmount() {
@@ -73,15 +99,31 @@ class CreateThread extends Component {
   }
 
   render() {
-    const { 
+    const {
+      isLoaded, errorLoading, category, forum,
       thread_subject, thread_subject_validation, thread_subject_error,
       thread_content, thread_content_validation, thread_content_error
     } = this.state;
 
     const canSubmit = (thread_subject && thread_content) && !(thread_subject_error || thread_content_error);
 
+    if(errorLoading) {
+      return null;
+    }
+
+    if(!isLoaded) {
+      return (
+        <h3 className='loading'>Loading</h3>
+      );
+    }
+
     return (
-      <main className='container'>
+      <main className='container main'>
+        <div className='thread-header'>
+          <p>
+            <Link to='/'>Home</Link> &gt; <Link to={`/category/${category.id}`}>{category.name}</Link> &gt; <Link to={`/forum/${forum.id}`}>{forum.name}</Link>
+          </p>
+        </div>
         <form onSubmit={this.handleSubmit}>
           <div className='form-group'>
             <label htmlFor='subject'>Subject</label>
