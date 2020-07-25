@@ -6,9 +6,9 @@ import axios from 'axios';
 import { addAlert, clearAlerts } from '../../actions/alertActions';
 import { createAuthHeaders } from '../../actions/authActions';
 
-import CreateForum from './CreateForum';
+import CreateForum from '../moderator/CreateForum';
 import ForumListItem from './ForumListItem';
-import DeleteButton from '../common/DeleteButton';
+import ModeratorMenu from '../moderator/ModeratorMenu';
 
 class Category extends Component {
   constructor(props) {
@@ -20,6 +20,7 @@ class Category extends Component {
       forums: []
     };
 
+    this.renameCategory = this.renameCategory.bind(this);
     this.deleteCategory = this.deleteCategory.bind(this);
     this.createForum = this.createForum.bind(this);
   }
@@ -41,6 +42,19 @@ class Category extends Component {
       });
       if(err.response.status === 404)
         this.props.history.push('/');
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
+  renameCategory(newName) {
+    axios.post(`/api/categories/rename/${this.state.category.id}`, {newName}, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        category: {
+          ...this.state.category,
+          name: newName
+        }
+      });
+    }).catch(err => {
       this.props.addAlert(err.response.data.message, 'error', err.response.status);
     });
   }
@@ -91,10 +105,7 @@ class Category extends Component {
 
             <div className='category-navigation'>
               <h3 className='category-name'><Link to='/'>Home</Link> &gt; {category.name}</h3>
-
-              {(isAuthenticated && user.is_moderator)?
-              <DeleteButton title='Confirm Delete' content='Are you sure you want to delete this category?' onConfirm={this.deleteCategory} />
-              : null}
+              <ModeratorMenu type='category' value={category.name} onRename={value => this.renameCategory(value)} onDelete={this.deleteCategory}></ModeratorMenu>
             </div>
 
             <div className='category-header'>

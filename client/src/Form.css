@@ -113,22 +113,40 @@ label {
   background-color: var(--color-primary-inactive);
 }
 
-.btn-danger {
+.btn-no {
   background-color: rgb(255, 29, 29);
   color: white;
 }
 
-.btn-danger:hover {
-  background-color: rgb(221, 18, 18);
+.btn-no:hover {
+  background-color: rgb(168, 0, 0);
 }
 
-.btn-success {
+.btn-yes {
   background-color: rgb(0, 151, 0);
   color: white;
 }
 
-.btn-success:hover {
+.btn-yes:hover {
   background-color: rgb(0, 117, 0);
+}
+
+.btn-confirm {
+  background-color: rgb(35, 146, 197);
+  color: white;
+}
+
+.btn-confirm:hover {
+  background-color: rgb(7, 126, 182);
+}
+
+.btn-cancel {
+  background-color: rgb(85, 85, 85);
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: rgb(75, 75, 75);
 }
 
 @media screen and (max-width: 768px) {

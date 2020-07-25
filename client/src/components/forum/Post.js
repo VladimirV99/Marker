@@ -3,21 +3,15 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Vote from '../common/Vote';
-import DeleteButton from '../common/DeleteButton';
+import DeletePostButton from './DeletePostButton';
 
 import './Post.css';
 
 function Post(props) {
-  const { isAuthenticated, user } = props.auth;
   const { post, deletePost } = props;
 
-  const deleteButton = (isAuthenticated && (post.author.id===user.id || user.is_moderator))?
-    <DeleteButton title='Confirm Delete' content='Are you sure you want to delete this post?' onConfirm={() => deletePost(post)} />
-    : null;
   return (
     <article className='post'>
-      {deleteButton}
-
       <div className='post-creator'>
         <img className='profile-photo' src={'/'+post.author.photo} alt={post.author.username} />
         <div>
@@ -34,6 +28,8 @@ function Post(props) {
           {post.content}
         </p>
       </div>
+
+      <DeletePostButton author_id={post.author.id} onConfirm={() => deletePost(post)} />
     </article>
   );
 }

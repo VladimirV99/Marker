@@ -9,7 +9,7 @@ import { createAuthHeaders } from '../../actions/authActions';
 
 import UserPost from './UserPost';
 import Pagination from '../pagination/Pagination';
-import Modal from '../common/Modal';
+import ConfirmModal from '../modal/ConfirmModal';
 
 import './User.css';
 
@@ -177,16 +177,16 @@ class User extends Component {
                     user.is_moderator ? (
                       <td colSpan='2'>
                         <button className='btn btn-primary btn-block mv-025' onClick={this.openModal}>Remove Moderator</button>
-                        <Modal show={this.state.showModeratorPanel} title={'Confirm Moderator'} onConfirm={this.handleRemoveModerator} onDeny={this.closeModal}>
+                        <ConfirmModal show={this.state.showModeratorPanel} title={'Confirm Moderator'} onConfirm={this.handleRemoveModerator} onDeny={this.closeModal}>
                           Are you sure you want to remove {user.first_name} {user.last_name} as a moderator
-                        </Modal>
+                        </ConfirmModal>
                       </td>
                     ) : (
                       <td colSpan='2'>
                         <button className='btn btn-primary btn-block mv-025' onClick={this.openModal}>Add Moderator</button>
-                        <Modal show={this.state.showModeratorPanel} title={'Confirm Moderator'} onConfirm={this.handleAddModerator} onDeny={this.closeModal}>
+                        <ConfirmModal show={this.state.showModeratorPanel} title={'Confirm Moderator'} onConfirm={this.handleAddModerator} onDeny={this.closeModal}>
                           Are you sure you want to add {user.first_name} {user.last_name} as a moderator
-                        </Modal>
+                        </ConfirmModal>
                       </td>
                     )
                   ) : null

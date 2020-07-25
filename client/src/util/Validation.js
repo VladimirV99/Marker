@@ -91,6 +91,19 @@ const validatePasswordConfirm = (password, password_confirm) => {
   return { validation, error };
 };
 
+const validateCategory = (category) => {
+  return validate(category, [ lengthValidator(1, 20, 'Category name must between 1 and 20 characters long') ]);
+};
+
+const validateForum = (forum) => {
+  return validate(forum, [ lengthValidator(1, 30, 'Forum name must between 1 and 20 characters long') ]);
+};
+
+const validateThread = (thread) => {
+  return validate(thread, [ lengthValidator(1, 30, 'Thread subject must between 1 and 60 characters long') ]);
+};
+
 export default {
-  validateUsername, validateFirstName, validateLastName, validateEmail, validatePassword, validatePasswordConfirm
+  validateUsername, validateFirstName, validateLastName, validateEmail, validatePassword, validatePasswordConfirm,
+  validateCategory, validateForum, validateThread
 }

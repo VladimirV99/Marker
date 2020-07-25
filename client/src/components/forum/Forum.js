@@ -8,7 +8,7 @@ import { itemsPerPage, displayPages } from '../../util/Constants';
 import { addAlert, clearAlerts } from '../../actions/alertActions';
 import { createAuthHeaders } from '../../actions/authActions';
 
-import DeleteButton from '../common/DeleteButton';
+import ModeratorMenu from '../moderator/ModeratorMenu';
 import Pagination from '../pagination/Pagination';
 
 class Forum extends Component {
@@ -57,8 +57,20 @@ class Forum extends Component {
     });
   }
 
+  renameForum(newName) {
+    axios.post(`/api/forums/rename/${this.state.forum.id}`, {newName}, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        forum: {
+          ...this.state.forum,
+          name: newName
+        }
+      });
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
   deleteForum() {
-    console.log(this.state.forum);
     axios.delete(`/api/forums/delete/${this.state.forum.id}`, createAuthHeaders(this.props.auth)).then(res => {
       this.props.history.push(`/category/${this.state.category.id}`);
     }).catch(err => {
@@ -67,7 +79,7 @@ class Forum extends Component {
   }
 
   render() {
-    const { isAuthenticated, user } = this.props.auth;
+    const { isAuthenticated } = this.props.auth;
     const { isLoaded, errorLoading, category, forum, threads, threadCount } = this.state;
     const totalPages = Math.ceil(threadCount/itemsPerPage);
 
@@ -91,10 +103,7 @@ class Forum extends Component {
             <h3 className='category-name'>
               <Link to='/'>Home</Link> &gt; <Link to={`/category/${category.id}`}>{category.name}</Link> &gt; {forum.name}
             </h3>
-
-            {(isAuthenticated && user.is_moderator)?
-            <DeleteButton title='Confirm Delete' content='Are you sure you want to delete this forum?' onConfirm={this.deleteForum} />
-            : null}
+            <ModeratorMenu type='forum' value={forum.name} onRename={value => this.renameForum(value)} onDelete={this.deleteForum}></ModeratorMenu>
           </div>
 
           <div className='category-header'>

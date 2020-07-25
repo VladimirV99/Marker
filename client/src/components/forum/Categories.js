@@ -6,10 +6,10 @@ import axios from 'axios';
 import { addAlert, clearAlerts } from '../../actions/alertActions';
 import { createAuthHeaders } from '../../actions/authActions';
 
-import CreateCategory from './CreateCategory';
-import CreateForum from './CreateForum';
+import CreateCategory from '../moderator/CreateCategory';
+import CreateForum from '../moderator/CreateForum';
 import ForumListItem from './ForumListItem';
-import DeleteButton from '../common/DeleteButton';
+import ModeratorMenu from '../moderator/ModeratorMenu';
 
 class Categories extends Component {
   constructor(props) {
@@ -21,6 +21,7 @@ class Categories extends Component {
     };
 
     this.createCategory = this.createCategory.bind(this);
+    this.renameCategory = this.renameCategory.bind(this);
     this.deleteCategory = this.deleteCategory.bind(this);
     this.createForum = this.createForum.bind(this);
   }
@@ -54,6 +55,20 @@ class Categories extends Component {
           ...this.state.categories,
           res.data.category
         ]
+      });
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
+  renameCategory(id, newName) {
+    axios.post(`/api/categories/rename/${id}`, {newName}, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        categories: this.state.categories.map(category => {
+          if(category.id===id)
+            return { ...category, name: newName };
+          return category
+        })
       });
     }).catch(err => {
       this.props.addAlert(err.response.data.message, 'error', err.response.status);
@@ -111,10 +126,7 @@ class Categories extends Component {
 
               <div className='category-navigation'>
                 <h3 className='category-name'><Link to={`/category/${category.id}`}>{category.name}</Link></h3>
-
-                {(isAuthenticated && user.is_moderator)?
-                <DeleteButton title='Confirm Delete' content='Are you sure you want to delete this category?' onConfirm={() => this.deleteCategory(category.id)} />
-                : null}
+                <ModeratorMenu type='category' value={category.name} onRename={value => this.renameCategory(category.id, value)} onDelete={() => this.deleteCategory(category.id)}></ModeratorMenu>
               </div>
 
               <div className='category-header'>

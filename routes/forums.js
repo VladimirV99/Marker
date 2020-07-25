@@ -33,6 +33,31 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
   }
 });
 
+router.post('/rename/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if(!req.user.is_moderator) {
+    res.status(401).json({ message: 'Unauthorized' });
+  } else {
+    if(!req.body.newName) {
+      res.status(400).json({ message: 'You must provide a forum name' });
+    } else {
+      Forum.findByPk(req.params.id).then(forum => {
+        if(!forum) {
+          res.status(404).json({ message: 'Forum not found' });
+        } else {
+          forum.name = req.body.newName;
+          forum.save().then(() => {
+            res.status(200).json({ message: 'Forum renamed' });
+          }).catch(err => {
+            res.status(500).json({ message: 'Something went wrong '});
+          });
+        }
+      }).catch(err => {
+        res.status(500).json({ message: 'Something went wrong '});
+      });
+    }
+  }
+});
+
 router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.user.is_moderator) {
     res.status(401).json({ message: 'Unauthorized' });
