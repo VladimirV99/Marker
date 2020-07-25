@@ -2,3 +2,7 @@
   background-color: var(--color-tertiary);
   padding: .5rem;
 }
+
+.reply-content {
+  height: 9em;
+}
