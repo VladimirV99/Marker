@@ -3,13 +3,18 @@ import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
 
+import Validation from '../../util/Validation';
+import ValidationBlock from '../validation/ValidationBlock';
+
 import './Reply.css';
 
 class Reply extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: ''
+      post_content: '',
+      post_validation: [],
+      post_error: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -17,7 +22,12 @@ class Reply extends Component {
   }
 
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    let res = Validation.validatePost(event.target.value);
+    this.setState({
+      post_content: event.target.value,
+      post_validation: res.validation,
+      post_error: res.error
+    });
   }
 
   handleSubmit(event) {
@@ -35,14 +45,19 @@ class Reply extends Component {
   }
 
   render() {
+    const { post_content, post_validation, post_error } = this.state;
+
+    const canSubmit = post_content && !post_error;
+
     return (
       <div className='reply'>
         <form onSubmit={this.handleSubmit}>
           <div className='form-group'>
             <label htmlFor='content'>Content</label>
-            <textarea className='form-control' name='content' value={this.state.content} onChange={this.handleChange}></textarea>
+            <textarea className='form-control' name='post_content' value={this.state.post_content} onChange={this.handleChange}></textarea>
+            <ValidationBlock validations={post_validation}></ValidationBlock>
           </div>
-          <input type='submit' className='btn btn-primary btn-block' value='Reply'></input>
+          <input type='submit' disabled={!canSubmit} className='btn btn-primary btn-block' value='Reply'></input>
         </form>
       </div>
     );

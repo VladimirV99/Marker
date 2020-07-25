@@ -3,11 +3,16 @@ import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
 
+import Validation from '../../util/Validation';
+import ValidationBlock from '../validation/ValidationBlock';
+
 class CreateCategory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      category_name: ''
+      category_name: '',
+      category_validation: [],
+      category_error: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -15,7 +20,12 @@ class CreateCategory extends Component {
   }
 
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    let res = Validation.validateCategory(event.target.value);
+    this.setState({
+      category_name: event.target.value,
+      category_validation: res.validation,
+      category_error: res.error
+    });
   }
 
   handleSubmit(event) {
@@ -33,12 +43,16 @@ class CreateCategory extends Component {
   }
 
   render() {
+    const { category_name, category_validation, category_error } = this.state;
+    const canSubmit = category_name && !category_error;
+
     return (
       <div className='container'>
         <form onSubmit={this.handleSubmit} className='forum-create'>
           <div className='form-group-inline'>
-            <input type='text' className='form-control' name='category_name' value={this.state.category_name} onChange={this.handleChange}></input>
-            <input type='submit' className='btn btn-primary' value='Create Category'></input>
+            <input type='text' className='form-control' name='category_name' value={category_name} onChange={this.handleChange}></input>
+            <input type='submit' disabled={!canSubmit} className='btn btn-primary' value='Create Category'></input>
+            <ValidationBlock validations={category_validation}></ValidationBlock>
           </div>
         </form>
       </div>

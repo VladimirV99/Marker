@@ -140,13 +140,17 @@ label {
   background-color: rgb(7, 126, 182);
 }
 
+.btn-confirm:disabled {
+  background-color: rgb(85, 159, 194);
+}
+
 .btn-cancel {
   background-color: rgb(85, 85, 85);
   color: white;
 }
 
 .btn-cancel:hover {
-  background-color: rgb(75, 75, 75);
+  background-color: rgb(63, 63, 63);
 }
 
 @media screen and (max-width: 768px) {

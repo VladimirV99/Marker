@@ -113,9 +113,7 @@ class Register extends Component {
         });
         break;
       default:
-        this.setState({ 
-          [event.target.name]: event.target.value
-        });
+        this.setState({ [event.target.name]: event.target.value });
     }
   }
 

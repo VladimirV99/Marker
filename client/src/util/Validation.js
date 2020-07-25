@@ -103,7 +103,11 @@ const validateThread = (thread) => {
   return validate(thread, [ lengthValidator(1, 30, 'Thread subject must between 1 and 60 characters long') ]);
 };
 
+const validatePost = (thread) => {
+  return validate(thread, [ lengthValidator(1, 300, 'Post content must between 1 and 300 characters long') ]);
+};
+
 export default {
   validateUsername, validateFirstName, validateLastName, validateEmail, validatePassword, validatePasswordConfirm,
-  validateCategory, validateForum, validateThread
+  validateCategory, validateForum, validateThread, validatePost
 }

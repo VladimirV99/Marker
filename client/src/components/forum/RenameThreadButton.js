@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import EditIcon from '../icon/EditIcon';
 import InputModal from '../modal/InputModal';
 
+import Validation from '../../util/Validation';
+
 import '../../Forum.css';
 
 function RenameThreadButton(props) {
@@ -21,7 +23,7 @@ function RenameThreadButton(props) {
         <span className='thread-rename' onClick={() => setShowPanel(true)}>
           <EditIcon></EditIcon>
         </span>
-        <InputModal show={showPanel} title='Rename thread' value={props.value} onConfirm={onConfirm} onCancel={() => setShowPanel(false)}></InputModal>
+        <InputModal show={showPanel} validate={true} validator={Validation.validateThread} title='Rename thread' value={props.value} onConfirm={onConfirm} onCancel={() => setShowPanel(false)}></InputModal>
       </Fragment>
     );
   } else {

@@ -3,11 +3,16 @@ import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
 
+import Validation from '../../util/Validation';
+import ValidationBlock from '../validation/ValidationBlock';
+
 class CreateForum extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      forum_name: ''
+      forum_name: '',
+      forum_validation: [],
+      forum_error: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -15,7 +20,12 @@ class CreateForum extends Component {
   }
 
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    let res = Validation.validateForum(event.target.value);
+    this.setState({
+      forum_name: event.target.value,
+      forum_validation: res.validation,
+      forum_error: res.error
+    });
   }
 
   handleSubmit(event) {
@@ -34,11 +44,15 @@ class CreateForum extends Component {
   }
 
   render() {
+    const { forum_name, forum_validation, forum_error } = this.state;
+    const canSubmit = forum_name && !forum_error;
+
     return (
       <form onSubmit={this.handleSubmit} className='forum-create'>
         <div className='form-group-inline'>
-          <input type='text' className='form-control' name='forum_name' value={this.state.forum_name} onChange={this.handleChange}></input>
-          <input type='submit' className='btn btn-primary' value='Create Forum'></input>
+          <input type='text' className='form-control' name='forum_name' value={forum_name} onChange={this.handleChange}></input>
+          <input type='submit' disabled={!canSubmit} className='btn btn-primary' value='Create Forum'></input>
+          <ValidationBlock validations={forum_validation}></ValidationBlock>
         </div>
       </form>
     );

@@ -18,7 +18,7 @@ function EditButton(props) {
       <span className='option-edit' onClick={() => setShowPanel(true)}>
         <EditIcon></EditIcon>
       </span>
-      <InputModal show={showPanel} title={props.title} value={props.value} onConfirm={onConfirm} onCancel={() => setShowPanel(false)}></InputModal>
+      <InputModal show={showPanel} validate={props.validate} validator={props.validator} title={props.title} value={props.value} onConfirm={onConfirm} onCancel={() => setShowPanel(false)}></InputModal>
     </div>
   );
 }

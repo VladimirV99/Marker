@@ -6,12 +6,19 @@ import axios from 'axios';
 import { addAlert, clearAlerts } from '../../actions/alertActions';
 import { createAuthHeaders } from '../../actions/authActions';
 
+import Validation from '../../util/Validation';
+import ValidationBlock from '../validation/ValidationBlock';
+
 class CreateThread extends Component {
   constructor(props) {
     super(props);
     this.state = {
       thread_subject: '',
-      thread_content: ''
+      thread_subject_validation: [],
+      thread_subject_error: false,
+      thread_content: '',
+      thread_content_validation: [],
+      thread_content_error: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -23,7 +30,27 @@ class CreateThread extends Component {
   }
 
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    let res;
+    switch(event.target.name) {
+      case 'thread_subject':
+        res = Validation.validateThread(event.target.value);
+        this.setState({ 
+          thread_subject: event.target.value,
+          thread_subject_validation: res.validation,
+          thread_subject_error: res.error
+        });
+        break;
+      case 'thread_content':
+        res = Validation.validatePost(event.target.value);
+        this.setState({ 
+          thread_content: event.target.value,
+          thread_content_validation: res.validation,
+          thread_content_error: res.error
+        });
+        break;
+      default:
+        this.setState({ [event.target.name]: event.target.value });
+    }
   }
 
   handleSubmit(event) {
@@ -46,18 +73,27 @@ class CreateThread extends Component {
   }
 
   render() {
+    const { 
+      thread_subject, thread_subject_validation, thread_subject_error,
+      thread_content, thread_content_validation, thread_content_error
+    } = this.state;
+
+    const canSubmit = (thread_subject && thread_content) && !(thread_subject_error || thread_content_error);
+
     return (
       <main className='container'>
         <form onSubmit={this.handleSubmit}>
           <div className='form-group'>
             <label htmlFor='subject'>Subject</label>
             <input type='text' className='form-control' name='thread_subject' onChange={this.handleChange}></input>
+            <ValidationBlock validations={thread_subject_validation}></ValidationBlock>
           </div>
           <div className='form-group'>
             <label htmlFor='content'>Content</label>
             <textarea className='form-control' name='thread_content' onChange={this.handleChange}></textarea>
+            <ValidationBlock validations={thread_content_validation}></ValidationBlock>
           </div>
-          <input type='submit' className='btn btn-primary btn-block' value='Create Thread'></input>
+          <input type='submit' disabled={!canSubmit} className='btn btn-primary btn-block' value='Create Thread'></input>
         </form>
       </main>
     );
