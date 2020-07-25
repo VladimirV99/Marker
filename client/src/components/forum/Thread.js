@@ -10,6 +10,7 @@ import { createAuthHeaders } from '../../actions/authActions';
 import Post from './Post';
 import Reply from './Reply';
 import Pagination from '../pagination/Pagination';
+import RenameThreadButton from './RenameThreadButton';
 
 class Thread extends Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class Thread extends Component {
     }
 
     this.onPageChange = this.onPageChange.bind(this);
+    this.renameThread = this.renameThread.bind(this);
     this.createPost = this.createPost.bind(this);
     this.deletePost = this.deletePost.bind(this);
     this.upvotePost = this.upvotePost.bind(this);
@@ -72,6 +74,19 @@ class Thread extends Component {
       this.setState({
         errorLoading: true
       });
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
+  renameThread(newName) {
+    axios.post(`/api/threads/rename/${this.state.thread.id}`, {newName}, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        thread: {
+          ...this.state.thread,
+          subject: newName
+        }
+      });
+    }).catch(err => {
       this.props.addAlert(err.response.data.message, 'error', err.response.status);
     });
   }
@@ -173,6 +188,7 @@ class Thread extends Component {
           </p>
           <h1>{thread.subject}</h1>
           Started by <Link to={`/user/${thread.author.username}`}>{thread.author.first_name} {thread.author.last_name}</Link> on {new Date(thread.created_at).toDateString()}.
+          <RenameThreadButton value={thread.subject} onConfirm={this.renameThread}></RenameThreadButton>
         </div>
         {
           posts.map(post => (

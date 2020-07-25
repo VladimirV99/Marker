@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getReadableTimeDifference } from '../../util/TimeHelper';
 
-import FileIcon from '../common/FileIcon';
+import FileIcon from '../icon/FileIcon';
 
 function ForumListItem(props) {
   const { forum } = props;

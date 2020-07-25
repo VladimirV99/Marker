@@ -37,6 +37,33 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
   }
 });
 
+router.post('/rename/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if(!req.params.id) {
+    res.status(400).json({ message: 'You must provide the thread id' });
+  } else if(!req.body.newName) {
+    res.status(400).json({ message: 'You must provide the thread subject' });
+  } else {
+    Thread.findByPk(req.params.id).then(thread => {
+      if(!thread) {
+        res.status(404).json({ message: 'Thread not found' });
+      } else {
+        if(thread.author_id == req.user.id || req.user.is_moderator) {
+          thread.subject = req.body.newName;
+          thread.save().then(() => {
+            res.status(200).json({ message: 'Thread renamed' });
+          }).catch(err => {
+            res.status(500).json({ message: 'Something went wrong' });
+          });
+        } else {
+          res.status(401).json({ message: 'Unauthorized' });
+        }
+      }
+    }).catch(err => {
+      res.status(500).json({ message: 'Something went wrong' });
+    });
+  }
+});
+
 router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide the thread id' });

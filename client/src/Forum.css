@@ -154,12 +154,22 @@
 }
 
 .thread-header {
+  position: relative;
   margin: 1.5rem 0;
   color: var(--color-text-tertiary);
 }
 
 .thread-header a {
   color: var(--color-text-tertiary);
+}
+
+.thread-rename {
+  position: absolute;
+  top: 2.5rem;
+  right: 1rem;
+  padding: .1rem;
+  cursor: pointer;
+  font-size: 1.5rem;
 }
 
 .icon {
