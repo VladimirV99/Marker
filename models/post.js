@@ -33,36 +33,235 @@ const PostModel = (sequelize, DataTypes) => {
     Post.hasOne(models.vote_count, { foreignKey: { allowNull: false, primaryKey: true } });
   };
 
-  Post.createPost = (newPost, thread, user) => {
+  Post.createPost = (content, thread_id, user) => {
     return new Promise((resolve, reject) => {
-      if(!newPost) {
-        reject({ status: 400, message: 'You must provide a post' });
-      } else if(!thread) {
+      if(!content) {
+        reject({ status: 400, message: 'You must provide post content' });
+      } else if(!thread_id) {
         reject({ status: 400, message: 'You must provide a thread' });
       } else if(!user) {
-        reject({ status: 400, message: 'You must provide a user' });
-      } else if(!newPost.content) {
-        reject({ status: 400, message: 'You must provide post content' });
+        reject({ status: 401, message: 'Unauthorized' });
       } else {
-        const { user:User } = sequelize.models;
-  
-        Post.create(newPost).then(post => {
-          post.setAuthor(user).then(() => {
-            post.createVote_count().then(() => {
-              thread.addPost(post).then(() => {
-                thread.post_count = thread.post_count + 1;
-                thread.save().then(() => {
-                  Post.findOne({ where: { id: post.id }, include: [{ model: User, as: 'author' }] }).then(post => {
-                    resolve(post);
+        const { thread:Thread, user:User } = sequelize.models;
+        Thread.findByPk(thread_id).then(thread => {
+          if(!thread) {
+            reject({ status: 404, message: 'Thread not found' });
+          } else {
+            let newPost = {
+              content
+            };
+            Post.create(newPost).then(post => {
+              post.setAuthor(user).then(() => {
+                post.createVote_count().then(() => {
+                  thread.addPost(post).then(() => {
+                    thread.post_count += 1;
+                    thread.save().then(() => {
+                      Post.findOne({ where: { id: post.id }, include: [{ model: User, as: 'author' }] }).then(post => {
+                        resolve(post);
+                      });
+                    });
                   });
                 });
+              }).catch(err => {
+                reject({ status: 500, message: 'Something went wrong' });
               });
+            }).catch(err => {
+              reject({ status: 400, message: err.errors[0].message });
             });
-          }).catch(err => {
-            reject({ status: 500, message: 'Something went wrong' });
-          });;
+          }
         }).catch(err => {
-          reject({ status: 400, message: err.errors[0].message });
+          reject({ status: 500, message: 'Something went wrong' });
+        });
+      }
+    });
+  }
+
+  Post.delete = (id, user) => {
+    return new Promise((resolve, reject) => {
+      if(!id) {
+        reject({ status: 400, message: 'You must provide the post id' });
+      } else {
+        const { user:User, thread:Thread, forum:Forum } = sequelize.models;
+        Post.findByPk(id, {
+          attributes: [ 'id', 'is_main' ],
+          include: [
+            { model: User, attributes: ['id'], as: 'author' },
+            { model: Thread, attributes: ['id'], include: { model: Forum, attributes: ['id'] } }
+          ]
+        }).then(post => {
+          if(!post) {
+            reject({ status: 404, message: 'Post not found' });
+          } else {
+            if((post.author.id == user.id) || user.is_moderator) {
+              if(!post.is_main) {
+                post.thread.post_count -= 1;
+                post.thread.save().then(() => {
+                  post.destroy().then(() => {
+                    resolve({ message: 'Post deleted' });
+                  }).catch(err => {
+                    reject({ status: 500, message: 'Something went wrong' });
+                  });
+                }).catch(err => {
+                  reject({ status: 500, message: 'Something went wrong' });
+                });
+              } else {
+                post.thread.forum.thread_count -= 1;
+                post.thread.forum.save().then(() => {
+                  post.thread.destroy().then(() => {
+                    resolve({ message: 'Thread deleted' });
+                  }).catch(err => {
+                    reject({ status: 500, message: 'Something went wrong' });
+                  });
+                }).catch(err => {
+                  reject({ status: 500, message: 'Something went wrong' });
+                });
+              }
+            } else {
+              reject({ status: 401, message: 'Unauthorized' });
+            }
+          }
+        }).catch(err => {
+          reject({ status: 500, message: 'Something went wrong' });
+        });
+      }
+    });
+  }
+
+  Post.upvote = (id, user) => {
+    return new Promise((resolve, reject) => {
+      if(!id) {
+        reject({ status: 400, message: 'You must provide the post id' });
+      } else {
+        const { vote_count:VoteCount, vote:Vote } = sequelize.models;
+        Post.findByPk(id, {include: VoteCount}).then(post => {
+          if(!post) {
+            reject({ status: 404, message: 'Post not found' });
+          } else {
+            if(post.authorId != user.id) {
+              Vote.findOne({ user_id: user.id, post_id:post.id }).then(vote => {
+                if(!vote) {
+                  Vote.create({ userId: user.id, postId:post.id, type: 1 }).then(vote => {
+                    post.vote_count.count += 1;
+                    post.vote_count.save().then(() => {
+                      resolve({
+                        id: post.id,
+                        count: post.vote_count.count,
+                        upvoted: true,
+                        user_id: user.id,
+                        message: 'Upvoted post'
+                      });
+                    });
+                  });
+                } else {
+                  if(vote.type != 1) {
+                    let diff = 1 - vote.type;
+                    vote.type = 1;
+                    vote.save().then(() => {
+                      post.vote_count.count += diff;
+                      post.vote_count.save().then(() => {
+                        resolve({
+                          id: post.id,
+                          count: post.vote_count.count,
+                          upvoted: true,
+                          user_id: user.id,
+                          message: 'Upvoted post'
+                        });
+                      });
+                    });
+                  } else {
+                    vote.destroy().then(() => {
+                      post.vote_count.count -= 1;
+                      post.vote_count.save().then(() => {
+                        resolve({
+                          id: post.id,
+                          count: post.vote_count.count,
+                          upvoted: false,
+                          user_id: user.id,
+                          message: 'Upvote removed'
+                        });
+                      });
+                    });
+                  }
+                }
+              }).catch(err => {
+                reject({ status: 500, message: 'Something went wrong' });
+              });
+            } else {
+              reject({ status: 401, message: 'You can\'t upvote your own post' });
+            }
+          }
+        }).catch(err => {
+          reject({ status: 500, message: 'Something went wrong' });
+        });
+      }
+    });
+  }
+
+  Post.upvote = (id, user) => {
+    return new Promise((resolve, reject) => {
+      if(!id) {
+        reject({ status: 400, message: 'You must provide the post id' });
+      } else {
+        const { vote_count:VoteCount, vote:Vote } = sequelize.models;
+        Post.findByPk(id, {include: VoteCount}).then(post => {
+          if(!post) {
+            reject({ status: 404, message: 'Post not found' });
+          } else {
+            if(post.authorId != user.id) {
+              Vote.findOne({ user_id: user.id, post_id:post.id }).then(vote => {
+                if(!vote) {
+                  Vote.create({ userId: user.id, postId:post.id, type: -1 }).then(vote => {
+                    post.vote_count.count -= 1;
+                    post.vote_count.save().then(() => {
+                      resolve({
+                        id: post.id,
+                        count: post.vote_count.count,
+                        downvoted: true,
+                        user_id: user.id,
+                        message: 'Downvoted post'
+                      });
+                    });
+                  });
+                } else {
+                  if(vote.type != -1) {
+                    let diff = -1 - vote.type;
+                    vote.type = -1;
+                    vote.save().then(() => {
+                      post.vote_count.count += diff;
+                      post.vote_count.save().then(() => {
+                        resolve({
+                          id: post.id,
+                          count: post.vote_count.count,
+                          downvoted: true,
+                          user_id: user.id,
+                          message: 'Downvoted post'
+                        });
+                      });
+                    });
+                  } else {
+                    vote.destroy().then(() => {
+                      post.vote_count.count += 1;
+                      post.vote_count.save().then(() => {
+                        resolve({
+                          id: post.id,
+                          count: post.vote_count.count,
+                          downvoted: false,
+                          user_id: user.id,
+                          message: 'Downvote removed'
+                        });
+                      });
+                    });
+                  }
+                }
+              }).catch(err => {
+                reject({ status: 500, message: 'Something went wrong' });
+              });
+            } else {
+              reject({ status: 401, message: 'You can\'t downvote your own post' });
+            }
+          }
+        }).catch(err => {
+          reject({ status: 500, message: 'Something went wrong' });
         });
       }
     });

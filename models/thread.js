@@ -30,46 +30,113 @@ const ThreadModel = (sequelize, DataTypes) => {
     Thread.belongsTo(models.forum, { onDelete: 'CASCADE' });
     Thread.belongsTo(models.user, { as: 'author' });
     Thread.hasMany(models.post, { onDelete: 'CASCADE' });
-  };
+  }
 
-  Thread.createThread = (newThread, forum, user) => {
+  Thread.createThread = (subject, content, forum_id, user) => {
     return new Promise((resolve, reject) => {
-      if(!newThread) {
-        reject({ status: 400, message: 'You must provide a thread' });
-      } else if(!newThread.subject) {
+      if(!subject) {
         reject({ status: 400, message: 'You must provide a subject' });
-      } else if(!newThread.content) {
+      } else if(!content) {
         reject({ status: 400, message: 'You must provide post content' });
-      } else if(!forum) {
+      } else if(!forum_id) {
         reject({ status: 400, message: 'You must provide a forum' });
       } else {
-        const { post:Post } = sequelize.models;
-
-        Thread.create(newThread).then(thread => {
-          thread.setAuthor(user).then(() => {
-            thread.setForum(forum).then(() => {
-              forum.thread_count += 1;
-              forum.save().then(() => {
-                let newPost = {
-                  content: newThread.content,
-                  is_main: true
-                };
-                Post.createPost(newPost, thread, user).then(post => {
-                  resolve({ thread, posts: [post] });
-                }).catch(err => {
-                  reject(err);
+        const { forum:Forum, post:Post } = sequelize.models;
+        Forum.findByPk(forum_id).then(forum => {
+          if(!forum) {
+            reject({ status: 404, message: 'Forum not found' });
+          } else {
+            let newThread = {
+              subject,
+              content
+            };
+            Thread.create(newThread).then(thread => {
+              thread.setAuthor(user).then(() => {
+                thread.setForum(forum).then(() => {
+                  forum.thread_count += 1;
+                  forum.save().then(() => {
+                    let newPost = {
+                      content: newThread.content,
+                      is_main: true
+                    };
+                    Post.createPost(newPost, thread, user).then(post => {
+                      resolve({ thread, posts: [post] });
+                    }).catch(err => {
+                      reject(err);
+                    });
+                  });
                 });
+              }).catch(err => {
+                reject({ status: 500, message: 'Something went wrong' });
               });
+            }).catch(err => {
+              reject({ status: 400, message: err.errors[0].message });
             });
-          }).catch(err => {
-            reject({ status: 500, message: 'Something went wrong' });
-          });
+          }
         }).catch(err => {
-          reject({ status: 400, message: err.errors[0].message });
+          reject({ status: 500, message: 'Something went wrong' });
         });
       }
     });
-  };
+  }
+
+  Thread.rename = (id, newName, user) => {
+    return new Promise((resolve, reject) => {
+      if(!id) {
+        reject({ status: 400, message: 'You must provide the thread id' });
+      } else if(!newName) {
+        reject({ status: 400, message: 'You must provide the thread subject' });
+      } else {
+        Thread.findByPk(id).then(thread => {
+          if(!thread) {
+            reject({ status: 404, message: 'Thread not found' });
+          } else {
+            if(thread.author_id == user.id || user.is_moderator) {
+              thread.subject = newName;
+              thread.save().then(() => {
+                resolve({ message: 'Thread renamed' });
+              }).catch(err => {
+                reject({ status: 500, message: 'Something went wrong' });
+              });
+            } else {
+              reject({ status: 401, message: 'Unauthorized' });
+            }
+          }
+        }).catch(err => {
+          reject({ status: 500, message: 'Something went wrong' });
+        });
+      }
+    });
+  }
+
+  Thread.delete = (id, user) => {
+    return new Promise((resolve, reject) => {
+      if(!id) {
+        reject({ status: 400, message: 'You must provide the thread id' });
+      } else {
+        Thread.findByPk(id, { include: [{ model: Forum }] }).then(thread => {
+          if(!thread) {
+            reject({ status: 404, message: 'Thread not found' });
+          } else {
+            if(thread.author_id == user.id || user.is_moderator) {
+              thread.forum.thread_count -= 1;
+              thread.forum.save().then(() => {
+                thread.destroy().then(() => {
+                  resolve({ message: 'Thread deleted' });
+                }).catch(err => {
+                  reject({ status: 500, message: 'Something went wrong' });
+                });
+              });
+            } else {
+              reject({ status: 401, message: 'Unauthorized' });
+            }
+          }
+        }).catch(err => {
+          reject({ status: 500, message: 'Something went wrong' });
+        });
+      }
+    });
+  }
 
   return Thread;
 }

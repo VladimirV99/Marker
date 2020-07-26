@@ -1,87 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { setCache, getCache, deleteCache } = require('../config/redis');
+const { setCache, getCache } = require('../config/redis');
 const { Category, Forum, Thread, Post, User } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.user.is_moderator) {
-    res.status(401).json({ message: 'Unauthorized' });
-  } else {
-    if(!req.body.name) {
-      res.status(400).json({ message: 'You must provide a forum name' });
-    } else if(!req.body.category) {
-      res.status(400).json({ message: 'You must provide a category' });
-    } else {
-      Category.findByPk(req.body.category).then(category => {
-        if(!category) {
-          res.status(404).json({ message: 'Category not found' });
-        } else {
-          let newForum = {
-            name: req.body.name
-          };
-          Forum.createForum(newForum, category).then(forum => {
-            res.status(201).json({ message: 'Forum Created', forum });
-            deleteCache('forums/all');
-            deleteCache(`forums/category/${req.body.category}`);
-          }).catch(err => {
-            res.status(err.status).json({ message: err.message });
-          });
-        }
-      }).catch(err => {
-        res.status(500).json({ message: 'Something went wrong' });
-      });
-    }
-  }
+  Forum.createForum(req.body.name, req.body.category, req.user.model).then(forum => {
+    res.status(201).json({ message: 'Forum Created', forum });
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.post('/rename/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.user.is_moderator) {
-    res.status(401).json({ message: 'Unauthorized' });
-  } else {
-    if(!req.body.newName) {
-      res.status(400).json({ message: 'You must provide a forum name' });
-    } else {
-      Forum.findByPk(req.params.id).then(forum => {
-        if(!forum) {
-          res.status(404).json({ message: 'Forum not found' });
-        } else {
-          forum.name = req.body.newName;
-          forum.save().then(() => {
-            res.status(200).json({ message: 'Forum renamed' });
-            deleteCache('forums/all');
-            deleteCache(`forums/category/${forum.categoryId}`);
-          }).catch(err => {
-            res.status(500).json({ message: 'Something went wrong '});
-          });
-        }
-      }).catch(err => {
-        res.status(500).json({ message: 'Something went wrong '});
-      });
-    }
-  }
+  Forum.rename(req.params.id, req.body.newName, req.user.model).then(result => {
+    res.status(200).json(result);
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.user.is_moderator) {
-    res.status(401).json({ message: 'Unauthorized' });
-  } else {
-    Forum.findByPk(req.params.id).then(forum => {
-      if(!forum) {
-        res.status(404).json({ message: 'Forum not found' });
-      } else {
-        forum.destroy().then(() => {
-          res.status(200).json({ message: 'Forum deleted' });
-          deleteCache('forums/all');
-          deleteCache(`forums/category/${forum.categoryId}`);
-        }).catch(err => {
-          res.status(500).json({ message: 'Something went wrong '});
-        });
-      }
-    }).catch(err => {
-      res.status(500).json({ message: 'Something went wrong '});
-    });
-  }
+  Forum.delete(req.params.id, req.user.model).then(result => {
+    res.status(200).json(result);
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.get('/category/:id', getCache('forums/category/', true), (req, res) => {
@@ -112,7 +56,7 @@ router.get('/category/:id', getCache('forums/category/', true), (req, res) => {
   }
 });
 
-router.get('/get/:id/page/:page/:itemsPerPage', getCache('forums/', true), (req, res) => {
+router.get('/get/:id/page/:page/:itemsPerPage', (req, res) => {
   let itemsPerPage = 5;
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide a forum' });
@@ -139,9 +83,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', getCache('forums/', true), (req,
             { model: User, as: 'author', attributes: ['id', 'username'] }
           ]
         }).then(result => {
-          let response = { category: forum.category, forum: {id: forum.id, name: forum.name}, threads: result.rows, total: result.count }
-          res.status(200).json(response);
-          setCache('forums/'+req.params.id, {status: 200, response}, 300);
+          res.status(200).json({ category: forum.category, forum: {id: forum.id, name: forum.name}, threads: result.rows, total: result.count });
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong' });
         });
@@ -152,7 +94,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', getCache('forums/', true), (req,
   }
 });
 
-router.get('/get/:id', (req, res) => {
+router.get('/get/:id', getCache('forums/', true), (req, res) => {
   if(!req.params.id) {
     res.status(400).json({ message: 'You must provide a forum' });
   } else {
@@ -160,7 +102,9 @@ router.get('/get/:id', (req, res) => {
       if(!forum) {
         res.status(404).json({ message: 'Forum not found' });
       } else {
-        res.status(200).json({ category: forum.category, forum: {id: forum.id, name: forum.name} });
+        let response = { category: forum.category, forum: {id: forum.id, name: forum.name} };
+        res.status(200).json(response);
+        setCache('forums/'+req.params.id, {status: 200, response}, 300);
       }
     }).catch(err => {
       res.status(500).json({ message: 'Something went wrong' });

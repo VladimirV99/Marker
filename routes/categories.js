@@ -1,79 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { setCache, getCache, deleteCache } = require('../config/redis');
+const { setCache, getCache } = require('../config/redis');
 const { Category } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.user.is_moderator) {
-    res.status(401).json({ message: 'Unauthorized' });
-  } else {
-    if(!req.body.name) {
-      res.status(400).json({ message: 'You must provide a category name' });
-    } else {
-      let newCategory = {
-        name: req.body.name
-      };
-      Category.create(newCategory).then(category => {
-        res.status(201).json({ message: 'Category Created', category });
-        deleteCache('categories/all');
-        deleteCache('forums/all');
-      }).catch(err => {
-        res.status(400).json({ message: err.errors[0].message });
-      });
-    }
-  }
+  Category.createCategory(req.body.name, req.user.model).then(category => {
+    res.status(201).json({ message: 'Category Created', category });
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.post('/rename/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.user.is_moderator) {
-    res.status(401).json({ message: 'Unauthorized' });
-  } else {
-    if(!req.body.newName) {
-      res.status(400).json({ message: 'You must provide a category name' });
-    } else {
-      Category.findByPk(req.params.id).then(category => {
-        if(!category) {
-          res.status(404).json({ message: 'Category not found' });
-        } else {
-          category.name = req.body.newName;
-          category.save().then(() => {
-            res.status(200).json({ message: 'Category renamed' });
-            deleteCache('categories/all');
-            deleteCache('forums/all');
-            deleteCache(`forums/category/${req.params.id}`);
-          }).catch(err => {
-            res.status(500).json({ message: 'Something went wrong '});
-          });
-        }
-      }).catch(err => {
-        res.status(500).json({ message: 'Something went wrong '});
-      });
-    }
-  }
+  Category.createCategory(req.params.id, req.body.newName, req.user.model).then(result => {
+    res.status(200).json(result);
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.user.is_moderator) {
-    res.status(401).json({ message: 'Unauthorized' });
-  } else {
-    Category.findByPk(req.params.id).then(category => {
-      if(!category) {
-        res.status(404).json({ message: 'Category not found' });
-      } else {
-        category.destroy().then(() => {
-          res.status(200).json({ message: 'Category deleted' });
-          deleteCache('categories/all');
-          deleteCache('forums/all');
-          deleteCache(`forums/category/${req.params.id}`);
-        }).catch(err => {
-          res.status(500).json({ message: 'Something went wrong '});
-        });
-      }
-    }).catch(err => {
-      res.status(500).json({ message: 'Something went wrong '});
-    });
-  }
+  Category.delete(req.params.id, req.user.model).then(result => {
+    res.status(200).json(result);
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.get('/all', getCache('categories/all'), (req, res) => {

@@ -114,7 +114,7 @@ class Thread extends Component {
     axios.delete(`/api/posts/delete/${post.id}`, createAuthHeaders(this.props.auth)).then(res => {
       this.setState({ postCount: this.state.postCount-1 });
       if(post.is_main)
-        this.props.history.push(`/forums/${this.state.forum.id}`);
+        this.props.history.push(`/forum/${this.state.forum.id}`);
       else
         this.onPageChange(this.state.page);
     }).catch(err => {

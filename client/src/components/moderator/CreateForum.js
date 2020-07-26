@@ -40,7 +40,11 @@ class CreateForum extends Component {
     };
 
     this.props.createForum(newForum);
-    this.setState({ forum_name: '' });
+    this.setState({
+      forum_name: '',
+      forum_validation: [],
+      forum_error: false
+    });
   }
 
   render() {

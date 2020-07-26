@@ -6,97 +6,27 @@ const { User, Category, Forum, Thread, Post, VoteCount } = require('../config/da
 const { getUser } = require('../util/auth');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.body.subject) {
-    res.status(400).json({ message: 'You must provide a subject' });
-  } else if(!req.body.forum) {
-    res.status(400).json({ message: 'You must provide a forum' });
-  } else if(!req.body.content) {
-    res.status(400).json({ message: 'You must provide post content' });
-  } else {
-    Forum.findByPk(req.body.forum).then(forum => {
-      if(!forum) {
-        res.status(404).json({ message: 'Forum not found' });
-      } else {
-        User.findByPk(req.user.id).then(user => {
-          let newThread = {
-            subject: req.body.subject,
-            content: req.body.content
-          };
-          Thread.createThread(newThread, forum, user).then(result => {
-            res.status(201).json({ message: 'Thread Created', thread: result.thread, posts: result.posts });
-          }).catch(err => {
-            res.status(err.status).json({ message: err.message });
-          });
-        }).catch(err => {
-          res.status(500).json({ message: 'Something went wrong' });
-        });
-      }
-    }).catch(err => {
-      res.status(500).json({ message: 'Something went wrong' });
-    });
-  }
+  Thread.createThread(req.body.subject, req.body.content, req.body.forum, req.user.model).then(result => {
+    res.status(201).json({ message: 'Thread Created', thread: result.thread, posts: result.posts });
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.post('/rename/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.params.id) {
-    res.status(400).json({ message: 'You must provide the thread id' });
-  } else if(!req.body.newName) {
-    res.status(400).json({ message: 'You must provide the thread subject' });
-  } else {
-    Thread.findByPk(req.params.id).then(thread => {
-      if(!thread) {
-        res.status(404).json({ message: 'Thread not found' });
-      } else {
-        if(thread.author_id == req.user.id || req.user.is_moderator) {
-          thread.subject = req.body.newName;
-          thread.save().then(() => {
-            res.status(200).json({ message: 'Thread renamed' });
-          }).catch(err => {
-            res.status(500).json({ message: 'Something went wrong' });
-          });
-        } else {
-          res.status(401).json({ message: 'Unauthorized' });
-        }
-      }
-    }).catch(err => {
-      res.status(500).json({ message: 'Something went wrong' });
-    });
-  }
+  Thread.rename(req.params.id, req.body.newName, req.user.model).then(result => {
+    res.status(200).json(result);
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if(!req.params.id) {
-    res.status(400).json({ message: 'You must provide the thread id' });
-  } else {
-    Thread.findByPk(req.params.id).then(thread => {
-      if(!thread) {
-        res.status(404).json({ message: 'Thread not found' });
-      } else {
-        if(thread.author_id == req.user.id || req.user.is_moderator) {
-          Forum.findByPk(thread.forum_id).then(forum => {
-            if(!forum) {
-              res.status(404).json({ message: 'Thread not found' });
-            } else {
-              forum.thread_count = forum.thread_count - 1;
-              forum.save().then(() => {
-                thread.destroy().then(() => {
-                  res.status(200).json({ message: 'Thread deleted' });
-                }).catch(err => {
-                  res.status(500).json({ message: 'Something went wrong' });
-                });
-              });
-            }
-          }).catch(err => {
-            res.status(500).json({ message: 'Something went wrong' });
-          });
-        } else {
-          res.status(401).json({ message: 'Unauthorized' });
-        }
-      }
-    }).catch(err => {
-      res.status(500).json({ message: 'Something went wrong' });
-    });
-  }
+  Thread.delete(req.params.id, req.user.model).then(result => {
+    res.status(200).json(result);
+  }).catch(err => {
+    res.status(err.status).json({ message: err.message });
+  });
 });
 
 router.get('/get/:id/page/:page/:itemsPerPage', getUser, (req, res) => {

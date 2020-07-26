@@ -34,14 +34,18 @@ class Reply extends Component {
     event.preventDefault();
     this.props.clearAlerts();
 
-    const { content } = this.state;
+    const { post_content } = this.state;
 
     let newPost = {
-      content
+      content: post_content
     };
 
     this.props.createPost(newPost);
-    this.setState({ content: '' });
+    this.setState({
+      post_content: '',
+      post_validation: [],
+      post_error: false
+    });
   }
 
   render() {

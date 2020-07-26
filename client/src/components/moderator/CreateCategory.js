@@ -39,7 +39,11 @@ class CreateCategory extends Component {
     };
 
     this.props.createCategory(newCategory);
-    this.setState({ category_name: '' });
+    this.setState({
+      category_name: '',
+      category_validation: [],
+      category_error: false
+    });
   }
 
   render() {
