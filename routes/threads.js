@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const Sequelize = require('sequelize');
-const { User, Category, Forum, Thread, Post, VoteCount } = require('../config/database');
+const { User, Category, Forum, Thread, Post, VoteBalance } = require('../config/database');
 const { getUser } = require('../util/auth');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -57,7 +57,7 @@ router.get('/get/:id/page/:page/:itemsPerPage', getUser, (req, res) => {
           limit: itemsPerPage,
           include: [
             { model: User, attributes: ['id', 'username', 'first_name', 'last_name', 'photo'], as: 'author' },
-            { model: VoteCount, attributes: [[Sequelize.fn('COALESCE', Sequelize.col('count'), 0), 'count']] },
+            { model: VoteBalance, attributes: [[Sequelize.fn('COALESCE', Sequelize.col('balance'), 0), 'balance']] },
             { 
               model: User,
               attributes: ['id'],

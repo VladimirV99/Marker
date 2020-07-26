@@ -132,7 +132,7 @@ class Thread extends Component {
                 votes = [{ id: res.data.user_id, vote: { type: 1 } }];
             return {
               ...post,
-              vote_count: { count: res.data.count },
+              votebalance: { balance: res.data.balance },
               votes
             };
           }
@@ -154,7 +154,7 @@ class Thread extends Component {
                 votes = [{ id: res.data.user_id, vote: { type: -1 } }];
             return {
               ...post,
-              vote_count: { count: res.data.count },
+              votebalance: { balance: res.data.balance },
               votes
             };
           }

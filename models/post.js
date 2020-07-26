@@ -30,7 +30,7 @@ const PostModel = (sequelize, DataTypes) => {
     Post.belongsTo(models.thread, { onDelete: 'CASCADE' });
     Post.belongsTo(models.user, { as: 'author' });
     Post.belongsToMany(models.user, { as: 'votes', through: models.vote });
-    Post.hasOne(models.vote_count, { foreignKey: { allowNull: false, primaryKey: true } });
+    Post.hasOne(models.votebalance, { foreignKey: { allowNull: false, primaryKey: true } });
   };
 
   Post.createPost = (content, thread_id, user) => {
@@ -52,7 +52,7 @@ const PostModel = (sequelize, DataTypes) => {
             };
             Post.create(newPost).then(post => {
               post.setAuthor(user).then(() => {
-                post.createVote_count().then(() => {
+                post.createVotebalance().then(() => {
                   thread.addPost(post).then(() => {
                     thread.post_count += 1;
                     thread.save().then(() => {
@@ -132,20 +132,20 @@ const PostModel = (sequelize, DataTypes) => {
       if(!id) {
         reject({ status: 400, message: 'You must provide the post id' });
       } else {
-        const { vote_count:VoteCount, vote:Vote } = sequelize.models;
-        Post.findByPk(id, {include: VoteCount}).then(post => {
+        const { votebalance:VoteBalance, vote:Vote } = sequelize.models;
+        Post.findByPk(id, {include: VoteBalance}).then(post => {
           if(!post) {
             reject({ status: 404, message: 'Post not found' });
           } else {
             if(post.authorId != user.id) {
-              Vote.findOne({ user_id: user.id, post_id:post.id }).then(vote => {
+              Vote.findOne({ where: { user_id: user.id, post_id:post.id } }).then(vote => {
                 if(!vote) {
                   Vote.create({ userId: user.id, postId:post.id, type: 1 }).then(vote => {
-                    post.vote_count.count += 1;
-                    post.vote_count.save().then(() => {
+                    post.votebalance.balance += 1;
+                    post.votebalance.save().then(() => {
                       resolve({
                         id: post.id,
-                        count: post.vote_count.count,
+                        balance: post.votebalance.balance,
                         upvoted: true,
                         user_id: user.id,
                         message: 'Upvoted post'
@@ -157,11 +157,11 @@ const PostModel = (sequelize, DataTypes) => {
                     let diff = 1 - vote.type;
                     vote.type = 1;
                     vote.save().then(() => {
-                      post.vote_count.count += diff;
-                      post.vote_count.save().then(() => {
+                      post.votebalance.balance += diff;
+                      post.votebalance.save().then(() => {
                         resolve({
                           id: post.id,
-                          count: post.vote_count.count,
+                          balance: post.votebalance.balance,
                           upvoted: true,
                           user_id: user.id,
                           message: 'Upvoted post'
@@ -170,11 +170,11 @@ const PostModel = (sequelize, DataTypes) => {
                     });
                   } else {
                     vote.destroy().then(() => {
-                      post.vote_count.count -= 1;
-                      post.vote_count.save().then(() => {
+                      post.votebalance.balance -= 1;
+                      post.votebalance.save().then(() => {
                         resolve({
                           id: post.id,
-                          count: post.vote_count.count,
+                          balance: post.votebalance.balance,
                           upvoted: false,
                           user_id: user.id,
                           message: 'Upvote removed'
@@ -197,25 +197,25 @@ const PostModel = (sequelize, DataTypes) => {
     });
   }
 
-  Post.upvote = (id, user) => {
+  Post.downvote = (id, user) => {
     return new Promise((resolve, reject) => {
       if(!id) {
         reject({ status: 400, message: 'You must provide the post id' });
       } else {
-        const { vote_count:VoteCount, vote:Vote } = sequelize.models;
-        Post.findByPk(id, {include: VoteCount}).then(post => {
+        const { votebalance:VoteBalance, vote:Vote } = sequelize.models;
+        Post.findByPk(id, {include: VoteBalance}).then(post => {
           if(!post) {
             reject({ status: 404, message: 'Post not found' });
           } else {
             if(post.authorId != user.id) {
-              Vote.findOne({ user_id: user.id, post_id:post.id }).then(vote => {
+              Vote.findOne({ where: { user_id: user.id, post_id:post.id } }).then(vote => {
                 if(!vote) {
                   Vote.create({ userId: user.id, postId:post.id, type: -1 }).then(vote => {
-                    post.vote_count.count -= 1;
-                    post.vote_count.save().then(() => {
+                    post.votebalance.balance -= 1;
+                    post.votebalance.save().then(() => {
                       resolve({
                         id: post.id,
-                        count: post.vote_count.count,
+                        balance: post.votebalance.balance,
                         downvoted: true,
                         user_id: user.id,
                         message: 'Downvoted post'
@@ -227,11 +227,11 @@ const PostModel = (sequelize, DataTypes) => {
                     let diff = -1 - vote.type;
                     vote.type = -1;
                     vote.save().then(() => {
-                      post.vote_count.count += diff;
-                      post.vote_count.save().then(() => {
+                      post.votebalance.balance += diff;
+                      post.votebalance.save().then(() => {
                         resolve({
                           id: post.id,
-                          count: post.vote_count.count,
+                          balance: post.votebalance.balance,
                           downvoted: true,
                           user_id: user.id,
                           message: 'Downvoted post'
@@ -240,11 +240,11 @@ const PostModel = (sequelize, DataTypes) => {
                     });
                   } else {
                     vote.destroy().then(() => {
-                      post.vote_count.count += 1;
-                      post.vote_count.save().then(() => {
+                      post.votebalance.balance += 1;
+                      post.votebalance.save().then(() => {
                         resolve({
                           id: post.id,
-                          count: post.vote_count.count,
+                          balance: post.votebalance.balance,
                           downvoted: false,
                           user_id: user.id,
                           message: 'Downvote removed'

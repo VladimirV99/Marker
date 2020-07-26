@@ -33,6 +33,8 @@ class User extends Component {
     this.handleRemoveModerator = this.handleRemoveModerator.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.upvotePost = this.upvotePost.bind(this);
+    this.downvotePost = this.downvotePost.bind(this);
     this.deletePost = this.deletePost.bind(this);
   }
 
@@ -67,7 +69,7 @@ class User extends Component {
       pageLoading: true,
       pageLoadingError: false
     });
-    axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/${itemsPerPage}`, createAuthHeaders({auth: this.props.auth})).then(res => {
+    axios.get(`/api/posts/user/${this.state.user.username}/page/${page}/${itemsPerPage}`, createAuthHeaders(this.props.auth)).then(res => {
       if(res.data.posts.length===0 && res.data.total!==0) {
         this.setState({
           postCount: res.data.total
@@ -124,6 +126,50 @@ class User extends Component {
 
   closeModal() {
     this.setState({ showModeratorPanel: false });
+  }
+
+  upvotePost(id) {
+    axios.post(`/api/posts/upvote/${id}`, {}, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        posts: this.state.posts.map(post => {
+          if(post.id===res.data.id) {
+            let votes = [];
+            if(res.data.upvoted)
+                votes = [{ id: res.data.user_id, vote: { type: 1 } }];
+            return {
+              ...post,
+              votebalance: { balance: res.data.balance },
+              votes
+            };
+          }
+          return post;
+        })
+      });
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  };
+
+  downvotePost(id) {
+    axios.post(`/api/posts/downvote/${id}`, {}, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        posts: this.state.posts.map(post => {
+          if(post.id===res.data.id) {
+            let votes = [];
+            if(res.data.downvoted)
+                votes = [{ id: res.data.user_id, vote: { type: -1 } }];
+            return {
+              ...post,
+              votebalance: { balance: res.data.balance },
+              votes
+            };
+          }
+          return post;
+        })
+      });
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
   }
 
   deletePost(id) {
@@ -207,7 +253,7 @@ class User extends Component {
               postCount>0 ? (
                 <Fragment>
                   {posts.map(post => (
-                    <UserPost key={post.id} author={user} post={post} deletePost={this.deletePost}></UserPost>
+                    <UserPost key={post.id} author={user} post={post} deletePost={this.deletePost} upvotePost={this.upvotePost} downvotePost={this.downvotePost}></UserPost>
                     ))}
                   <Pagination currentPage={page} totalPages={totalPages} displayPages={displayPages} onPageChange={this.onPageChange}></Pagination>
                 </Fragment>

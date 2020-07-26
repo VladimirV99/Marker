@@ -21,7 +21,7 @@ function Post(props) {
       </div>
 
       <div className='post-body'>
-        <Vote id={post.id} author_id={post.author.id} balance={post.vote_count?post.vote_count.count:0} 
+        <Vote id={post.id} author_id={post.author.id} balance={post.votebalance.balance} 
           vote={post.votes.length===1?post.votes[0].vote.type:0} upvote={props.upvotePost} downvote={props.downvotePost}>
         </Vote>
         <p className='post-content'>
