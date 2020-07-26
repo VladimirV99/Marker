@@ -29,7 +29,7 @@ function getCache(path, appendId=false) {
 }
 
 function deleteCache(path) {
-  redis_client.delete(path);
+  redis_client.del(path);
 }
 
 module.exports = {

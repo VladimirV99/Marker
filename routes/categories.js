@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { setCache, getCache } = require('../config/redis');
+const { setCache, getCache, deleteCache } = require('../config/redis');
 const { Category } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -16,6 +16,8 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       };
       Category.create(newCategory).then(category => {
         res.status(201).json({ message: 'Category Created', category });
+        deleteCache('categories/all');
+        deleteCache('forums/all');
       }).catch(err => {
         res.status(400).json({ message: err.errors[0].message });
       });
@@ -37,6 +39,9 @@ router.post('/rename/:id', passport.authenticate('jwt', { session: false }), (re
           category.name = req.body.newName;
           category.save().then(() => {
             res.status(200).json({ message: 'Category renamed' });
+            deleteCache('categories/all');
+            deleteCache('forums/all');
+            deleteCache(`forums/category/${req.params.id}`);
           }).catch(err => {
             res.status(500).json({ message: 'Something went wrong '});
           });
@@ -58,6 +63,9 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
       } else {
         category.destroy().then(() => {
           res.status(200).json({ message: 'Category deleted' });
+          deleteCache('categories/all');
+          deleteCache('forums/all');
+          deleteCache(`forums/category/${req.params.id}`);
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong '});
         });

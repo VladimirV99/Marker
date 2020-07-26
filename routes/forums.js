@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { setCache, getCache } = require('../config/redis');
+const { setCache, getCache, deleteCache } = require('../config/redis');
 const { Category, Forum, Thread, Post, User } = require('../config/database');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -22,6 +22,8 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           };
           Forum.createForum(newForum, category).then(forum => {
             res.status(201).json({ message: 'Forum Created', forum });
+            deleteCache('forums/all');
+            deleteCache(`forums/category/${req.body.category}`);
           }).catch(err => {
             res.status(err.status).json({ message: err.message });
           });
@@ -47,6 +49,8 @@ router.post('/rename/:id', passport.authenticate('jwt', { session: false }), (re
           forum.name = req.body.newName;
           forum.save().then(() => {
             res.status(200).json({ message: 'Forum renamed' });
+            deleteCache('forums/all');
+            deleteCache(`forums/category/${forum.categoryId}`);
           }).catch(err => {
             res.status(500).json({ message: 'Something went wrong '});
           });
@@ -68,6 +72,8 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
       } else {
         forum.destroy().then(() => {
           res.status(200).json({ message: 'Forum deleted' });
+          deleteCache('forums/all');
+          deleteCache(`forums/category/${forum.categoryId}`);
         }).catch(err => {
           res.status(500).json({ message: 'Something went wrong '});
         });
