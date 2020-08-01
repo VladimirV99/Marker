@@ -12,6 +12,7 @@ Marker is a forum designed for college students to help each other in solving pr
 - **Threads** - Discussions on a certain topic
 - **Posts** - User written comment in a thread
 - **Voting** - Every post has a vote balance to suggest how helpful it was
+- **Responsive** - Webpages adapt to the size of the screen
 - **Dark mode** - Logged in users can switch between the light and dark theme
 - **Caching** - Most common pages are cached to ease the load on the server
 
@@ -31,17 +32,21 @@ Note: if you use docker instead of podman you'll need to change the dbstart and 
 ## Environment variables
 
 - NODE_ENV - Set to 'production' to use production mode
-- PORT - Port to run the server on
-- REDIS_PORT - Port of the redis cache server
-- DB_HOST - Database connection URL
-- DB_NAME - Name of the database
-- DB_USER - Database username
-- DB_PASSWORD - Database password
-- PASSPORT_SECRET - Key used for authentication
+- PORT - Port to run the server on (default 5000)
+- REDIS_PORT - Port of the redis cache server (default 6379)
+- DB_HOST - Database connection URL (default 'localhost')
+- DB_NAME - Name of the database (default 'marker')
+- DB_USER - Database username (default 'root')
+- DB_PASSWORD - Database password (default 'marker')
+- PASSPORT_SECRET - Key used for authentication (default 'marker')
 
-## Starting the server
+## Starting the website
 
-First start the MySQL database in a docker/podman container
+First if you don't have a MySQL database  docker/podman container set up run
+
+    npm run dbmake
+
+then start it
 
     npm run dbstart
 
@@ -49,7 +54,7 @@ and start the redis server we use for caching common pages
 
     npm run redisstart
 
-then you can start the back end server. It will automatically restart itself on when a file is changed
+Now you can start the back end server. It will automatically restart itself on when a file is changed
 
     npm run dev
 
