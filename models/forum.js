@@ -15,8 +15,8 @@ const ForumModel = (sequelize, DataTypes) => {
           msg: 'Forum name can\'t be empty'
         },
         len: {
-          args: [1, 30],
-          msg: 'Forum name must be between 1 and 30 characters long'
+          args: [1, 50],
+          msg: 'Forum name must be between 1 and 50 characters long'
         }
       }
     },

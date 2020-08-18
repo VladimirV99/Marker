@@ -13,8 +13,8 @@ const PostModel = (sequelize, DataTypes) => {
           msg: 'Post content can\'t be empty'
         },
         len: {
-          args: [1, 300],
-          msg: 'Post content must be between 1 and 300 characters long'
+          args: [1, 600],
+          msg: 'Post content must be between 1 and 600 characters long'
         }
       }
     },

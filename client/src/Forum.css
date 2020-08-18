@@ -29,6 +29,7 @@
 .forum {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: stretch;
   background-color: var(--color-tertiary);
   border-bottom: 1px solid var(--color-tertiary-muted);
@@ -46,7 +47,7 @@
   border-bottom: none;
 }
 
-.forum-title {
+.forum-header {
   padding: .5rem;
   flex-basis: 0;
   flex-grow: 12;
@@ -54,6 +55,10 @@
   align-items: center;
   border-right: 1px solid var(--color-tertiary-muted);
   word-break: break-all;
+}
+
+.forum-title {
+  flex-grow: 1;
 }
 
 .forum-title p {
@@ -176,6 +181,7 @@
 .icon {
   width: 60px;
   fill: var(--color-text-tertiary);
+  flex-shrink: 0;
 }
 
 .post-input-content {

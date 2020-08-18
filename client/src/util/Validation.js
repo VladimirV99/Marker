@@ -92,19 +92,19 @@ const validatePasswordConfirm = (password, password_confirm) => {
 };
 
 const validateCategory = (category) => {
-  return validate(category, [ lengthValidator(1, 20, 'Category name must between 1 and 20 characters long') ]);
+  return validate(category, [ lengthValidator(1, 30, 'Category name must between 1 and 30 characters long') ]);
 };
 
 const validateForum = (forum) => {
-  return validate(forum, [ lengthValidator(1, 30, 'Forum name must between 1 and 20 characters long') ]);
+  return validate(forum, [ lengthValidator(1, 50, 'Forum name must between 1 and 50 characters long') ]);
 };
 
 const validateThread = (thread) => {
-  return validate(thread, [ lengthValidator(1, 30, 'Thread subject must between 1 and 60 characters long') ]);
+  return validate(thread, [ lengthValidator(1, 60, 'Thread subject must between 1 and 60 characters long') ]);
 };
 
 const validatePost = (thread) => {
-  return validate(thread, [ lengthValidator(1, 300, 'Post content must between 1 and 300 characters long') ]);
+  return validate(thread, [ lengthValidator(1, 600, 'Post content must between 1 and 600 characters long') ]);
 };
 
 export default {

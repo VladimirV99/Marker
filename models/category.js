@@ -19,8 +19,8 @@ const CategoryModel = (sequelize, DataTypes) => {
           msg: 'Category name can\'t be empty'
         },
         len: {
-          args: [1, 20],
-          msg: 'Category name must be between 1 and 20 characters long'
+          args: [1, 30],
+          msg: 'Category name must be between 1 and 30 characters long'
         }
       }
     }

@@ -2,6 +2,17 @@
   float: right;
 }
 
+.forum .moderator-menu {
+  float: unset;
+  flex-shrink: 0;
+}
+
+@media screen and (max-width: 500px) {
+  .forum .moderator-menu {
+    display: none;
+  }
+}
+
 .option {
   display: inline-block;
 }

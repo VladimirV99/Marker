@@ -23,6 +23,8 @@ class Category extends Component {
     this.renameCategory = this.renameCategory.bind(this);
     this.deleteCategory = this.deleteCategory.bind(this);
     this.createForum = this.createForum.bind(this);
+    this.renameForum = this.renameForum.bind(this);
+    this.deleteForum = this.deleteForum.bind(this);
   }
 
   componentDidMount() {
@@ -80,6 +82,35 @@ class Category extends Component {
     });
   }
 
+  renameForum(forum, newName) {
+    axios.post(`/api/forums/rename/${forum.id}`, {newName}, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        forums: this.state.forums.map(item => {
+          if(item.id === forum.id) {
+            return {
+              ...item,
+              name: newName
+            };
+          }
+          return item;
+        })
+      });
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
+  deleteForum(forum) {
+    axios.delete(`/api/forums/delete/${forum.id}`, createAuthHeaders(this.props.auth)).then(res => {
+      this.setState({
+        forums: this.state.forums.filter(item => { return item.id !== forum.id })
+      });
+    }).catch(err => {
+      this.props.addAlert(err.response.data.message, 'error', err.response.status);
+    });
+  }
+
+
   componentWillUnmount() {
     this.props.clearAlerts();
   }
@@ -109,7 +140,7 @@ class Category extends Component {
             </div>
 
             <div className='category-header'>
-              <div className='forum-title'>Title</div>
+              <div className='forum-header'>Title</div>
               <div className='forum-threads'>Threads</div>
               <div className='forum-last'>Last Thread</div>
             </div>
@@ -117,7 +148,7 @@ class Category extends Component {
             { 
               forums.length>0 ?
                 forums.map(forum => (
-                  <ForumListItem key={forum.id} forum={forum}></ForumListItem>
+                  <ForumListItem key={forum.id} forum={forum} onRename={this.renameForum} onDelete={this.deleteForum}></ForumListItem>
                 )) : <div className='forum'><h3>There are no forums in this category</h3></div>
             }
 

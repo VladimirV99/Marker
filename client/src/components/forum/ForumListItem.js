@@ -2,19 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getReadableTimeDifference } from '../../util/TimeHelper';
 
+import ModeratorMenu from '../moderator/ModeratorMenu';
 import FileIcon from '../icon/FileIcon';
 
 function ForumListItem(props) {
-  const { forum } = props;
+  const { forum, onRename, onDelete } = props;
 
   return (
     <div className='forum'>
-      <div className='forum-title'>
+      <div className='forum-header'>
         <FileIcon></FileIcon>
-        <div>
+        <div className='forum-title'>
           <p><Link to={`/forum/${forum.id}`}><strong>{forum.name}</strong></Link></p>
           <p className='text-muted'>{forum.name}</p>
         </div>
+        <ModeratorMenu type='forum' value={forum.name} onRename={value => onRename(forum, value)} onDelete={() => onDelete(forum)}></ModeratorMenu>
       </div>
 
       <div className='forum-threads'>

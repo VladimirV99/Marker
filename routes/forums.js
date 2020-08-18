@@ -114,13 +114,14 @@ router.get('/get/:id', getCache('forums/', true), (req, res) => {
 
 router.get('/all', getCache('forums/all'), (req, res) => {
   Category.findAll({
-    include: [{ model: Forum, include: [
-      {
+    include: [{
+      model: Forum, include: [{
         model: Thread, limit: 1, order: [['id', 'DESC']], attributes: ['id', 'subject', 'updated_at', 'authorId'],
         include: [{ model: User, as: 'author', attributes: ['id', 'username'] }]
-      }
-    ]}
-  ], order: [['id', 'ASC']] }).then(categories => {
+      }]
+    }],
+    order: [['id', 'ASC']]
+  }).then(categories => {
     res.status(200).json({ categories });
     setCache('forums/all', {status: 200, response: {categories}}, 60);
   }).catch(err => {
