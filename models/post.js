@@ -33,7 +33,7 @@ const PostModel = (sequelize, DataTypes) => {
     Post.hasOne(models.votebalance, { foreignKey: { allowNull: false, primaryKey: true } });
   };
 
-  Post.createPost = (content, thread_id, user) => {
+  Post.createPost = (content, thread_id, user, is_main=false) => {
     return new Promise((resolve, reject) => {
       if(!content) {
         reject({ status: 400, message: 'You must provide post content' });
@@ -48,7 +48,8 @@ const PostModel = (sequelize, DataTypes) => {
             reject({ status: 404, message: 'Thread not found' });
           } else {
             let newPost = {
-              content
+              content,
+              is_main
             };
             Post.create(newPost).then(post => {
               post.setAuthor(user).then(() => {

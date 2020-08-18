@@ -46,20 +46,12 @@ const ThreadModel = (sequelize, DataTypes) => {
           if(!forum) {
             reject({ status: 404, message: 'Forum not found' });
           } else {
-            let newThread = {
-              subject,
-              content
-            };
-            Thread.create(newThread).then(thread => {
+            Thread.create({ subject }).then(thread => {
               thread.setAuthor(user).then(() => {
                 thread.setForum(forum).then(() => {
                   forum.thread_count += 1;
                   forum.save().then(() => {
-                    let newPost = {
-                      content: newThread.content,
-                      is_main: true
-                    };
-                    Post.createPost(newPost, thread, user).then(post => {
+                    Post.createPost(content, thread.id, user, true).then(post => {
                       resolve({ thread, posts: [post] });
                     }).catch(err => {
                       reject(err);

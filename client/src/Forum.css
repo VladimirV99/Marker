@@ -178,6 +178,10 @@
   fill: var(--color-text-tertiary);
 }
 
+.post-input-content {
+  height: 9rem;
+}
+
 @media screen and (max-width: 560px) {
   .forum-last {
     display: none;

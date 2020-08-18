@@ -58,7 +58,7 @@ class Reply extends Component {
         <form onSubmit={this.handleSubmit}>
           <div className='form-group'>
             <label htmlFor='content'>Content:</label>
-            <textarea className='form-control reply-content' name='post_content' value={this.state.post_content} onChange={this.handleChange}></textarea>
+            <textarea className='form-control post-input-content' name='post_content' value={this.state.post_content} onChange={this.handleChange}></textarea>
             <ValidationBlock validations={post_validation}></ValidationBlock>
           </div>
           <input type='submit' disabled={!canSubmit} className='btn btn-primary btn-block' value='Reply'></input>
