@@ -45,7 +45,8 @@ class Forum extends Component {
         category: res.data.category,
         forum: res.data.forum,
         threads: res.data.threads,
-        threadCount: res.data.total
+        threadCount: res.data.total,
+        page
       });
     }).catch(err => {
       this.setState({
