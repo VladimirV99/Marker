@@ -1,3 +1,5 @@
+const { encodePost } = require("../util/encoder");
+
 const PostModel = (sequelize, DataTypes) => {
   let Post = sequelize.define('post', {
     id: {
@@ -48,7 +50,7 @@ const PostModel = (sequelize, DataTypes) => {
             reject({ status: 404, message: 'Thread not found' });
           } else {
             let newPost = {
-              content,
+              content: encodePost(content),
               is_main
             };
             Post.create(newPost).then(post => {

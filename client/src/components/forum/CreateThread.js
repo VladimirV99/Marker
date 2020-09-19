@@ -6,6 +6,7 @@ import axios from 'axios';
 import { addAlert, clearAlerts } from '../../actions/alertActions';
 import { createAuthHeaders } from '../../actions/authActions';
 
+import Editor from '../common/Editor';
 import Validation from '../../util/Validation';
 import ValidationBlock from '../validation/ValidationBlock';
 
@@ -132,7 +133,7 @@ class CreateThread extends Component {
           </div>
           <div className='form-group'>
             <label htmlFor='content'>Content</label>
-            <textarea className='form-control post-input-content' name='thread_content' onChange={this.handleChange}></textarea>
+            <Editor name='thread_content' value={this.state.thread_content} onChange={this.handleChange}></Editor>
             <ValidationBlock validations={thread_content_validation}></ValidationBlock>
           </div>
           <input type='submit' disabled={!canSubmit} className='btn btn-primary btn-block' value='Create Thread'></input>

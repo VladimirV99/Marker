@@ -184,10 +184,6 @@
   flex-shrink: 0;
 }
 
-.post-input-content {
-  height: 9rem;
-}
-
 @media screen and (max-width: 560px) {
   .forum-last {
     display: none;

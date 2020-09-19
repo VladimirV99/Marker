@@ -64,4 +64,8 @@ const getReadableTimeDifferenceFrom = (from, to) => {
   }
 };
 
-export { getReadableTimeDifferenceFrom, getReadableTimeDifference };
+const getReadableDate = date => {
+  return new Date(date).toLocaleString('en-GB', { timeZone: 'UTC' });
+}
+
+export { getReadableTimeDifferenceFrom, getReadableTimeDifference, getReadableDate };

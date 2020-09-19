@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { clearAlerts } from '../../actions/alertActions';
 
+import Editor from '../common/Editor';
 import Validation from '../../util/Validation';
 import ValidationBlock from '../validation/ValidationBlock';
 
@@ -57,8 +58,7 @@ class Reply extends Component {
       <div className='reply'>
         <form onSubmit={this.handleSubmit}>
           <div className='form-group'>
-            <label htmlFor='content'>Content:</label>
-            <textarea className='form-control post-input-content' name='post_content' value={this.state.post_content} onChange={this.handleChange}></textarea>
+            <Editor name='post_content' value={this.state.post_content} onChange={this.handleChange}></Editor>
             <ValidationBlock validations={post_validation}></ValidationBlock>
           </div>
           <input type='submit' disabled={!canSubmit} className='btn btn-primary btn-block' value='Reply'></input>

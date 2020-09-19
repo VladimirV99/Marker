@@ -102,7 +102,7 @@ class Thread extends Component {
         this.onPageChange(pageCount);
       } else {
         this.setState({
-          posts: [...this.state.posts, { ...res.data.post, created_at: Date.now(), vote_count: { count: 0 }, votes: [] }],
+          posts: [...this.state.posts, { ...res.data.post, created_at: Date.now(), votebalance: { balance: 0 }, votes: [] }],
         });
       }
     }).catch(err => {
