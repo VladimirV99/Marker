@@ -1,0 +1,6 @@
+.vscode/
+**/node_modules/**
+db/**
+public/photos
+!no_photo
+dump.rdb
