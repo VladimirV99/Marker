@@ -8,7 +8,8 @@ RUN npm run build --prefix client
 RUN npm install
 
 ENV NODE_ENV=production
+ENV PORT=5000
 
-EXPOSE 5000
+EXPOSE $PORT
 
 ENTRYPOINT ["npm", "run", "start"]
